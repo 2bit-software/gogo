@@ -31,11 +31,11 @@ type Executor struct {
 	stdIn  io.Reader
 }
 
-func New(input ...string) *Executor {
-	return NewWithContext(context.Background(), input...)
+func Cmd(input ...string) *Executor {
+	return CmdWithCtx(context.Background(), input...)
 }
 
-func NewWithContext(ctx context.Context, cmd ...string) *Executor {
+func CmdWithCtx(ctx context.Context, cmd ...string) *Executor {
 	actualCmd := ""
 	var args []string
 	if len(cmd) == 1 {

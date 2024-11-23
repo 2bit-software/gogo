@@ -115,7 +115,7 @@ func Run(opts RunOpts, args []string) error {
 	}
 	debug.Printf("Running built binary: %s with args %v\n", opts.BinaryFilepath, args)
 	// run the binary with the desire target func and arguments, unless it exists in the cache
-	out, err := sh.New(opts.BinaryFilepath).SetArgs(args...).StdOut()
+	out, err := sh.Cmd(opts.BinaryFilepath).SetArgs(args...).StdOut()
 	if err != nil {
 		errString := err.Error()
 		if errString == "exit status 1" {
@@ -211,8 +211,8 @@ func generateFuncListOutput(funcs []function, width int) []string {
 
 	// Create color schemes for alternating rows
 	evenRow := color.New(color.FgHiWhite)
-	//evenRow := color.New(color.BgHiBlack, color.FgWhite)
-	//oddRow := color.New(color.FgHiWhite)
+	//evenRow := color.Cmd(color.BgHiBlack, color.FgWhite)
+	//oddRow := color.Cmd(color.FgHiWhite)
 	oddRow := color.New(color.FgHiBlue)
 
 	var lines []string

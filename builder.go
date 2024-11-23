@@ -219,18 +219,18 @@ func renderFromTemplates(rd renderData, funcMap map[string]any) (string, error) 
 // buildBinary formats, gets dependencies, and builds the binary
 func buildBinary(optimize bool, sourceDir, to string) error {
 	// go mod tidy
-	err := sh.New("go", "mod", "tidy").Dir(sourceDir).Run()
+	err := sh.Cmd("go", "mod", "tidy").Dir(sourceDir).Run()
 	if err != nil {
 		return fmt.Errorf("failed to tidy go modules: %w", err)
 	}
 
-	formatOutput, err := sh.New("go", "fmt", ".").Dir(sourceDir).String()
+	formatOutput, err := sh.Cmd("go", "fmt", ".").Dir(sourceDir).String()
 	if err != nil {
 		return fmt.Errorf("failed to format rendered document: `%v` due to %w", formatOutput, err)
 	}
 
 	// go get
-	err = sh.New("go", "get").Dir(sourceDir).Run()
+	err = sh.Cmd("go", "get").Dir(sourceDir).Run()
 	if err != nil {
 		return fmt.Errorf("failed to get dependencies: %w", err)
 	}
@@ -256,7 +256,7 @@ func buildBinary(optimize bool, sourceDir, to string) error {
 	cmd = append(cmd, sourceDir)
 
 	// build
-	out, err := sh.New(cmd...).Dir(sourceDir).String()
+	out, err := sh.Cmd(cmd...).Dir(sourceDir).String()
 	if err != nil {
 		_ = os.Remove(to)
 		return fmt.Errorf("failed to build binary: `%v` due to: %w", out, err)

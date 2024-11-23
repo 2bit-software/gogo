@@ -43,7 +43,7 @@ func GetCurrentShortSha() (string, error) {
 // GetCurrentSha returns the current SHA of the git repository. It first tries using the git cli tool,
 // then falls back to reading the .git/HEAD file.
 func GetCurrentSha() (string, error) {
-	headSha, err := sh.New("git", "rev-parse", "--verify", "HEAD").StdOut()
+	headSha, err := sh.Cmd("git", "rev-parse", "--verify", "HEAD").StdOut()
 	if err == nil {
 		return strings.TrimSpace(headSha), nil
 	}
@@ -120,7 +120,7 @@ func isRootPath(path string) bool {
 // GetGitStatus returns the state of the git repository, either "Clean" or "Dirty".
 func GetGitStatus() string {
 	state := "Unknown"
-	statusOutput, err := sh.New("git", "status", "-s").StdOut()
+	statusOutput, err := sh.Cmd("git", "status", "-s").StdOut()
 	if err != nil {
 		return state
 	}
@@ -239,7 +239,7 @@ func CompileGo(inputFolderPath, outputFolderPath, tags, binaryName, strOs, strAr
 
 	cmdStr += fmt.Sprintf(" -o \"%s\" \"%s\"", filepath.Join(outputFolderPath, filename), inputFolderPath)
 	// Execute the build command
-	if out, err := sh.New(cmdStr).String(); err != nil {
+	if out, err := sh.Cmd(cmdStr).String(); err != nil {
 		return fmt.Errorf("could not build binary: %s: %w", out, err)
 	}
 
