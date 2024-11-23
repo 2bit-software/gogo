@@ -22,8 +22,8 @@ import (
 	"github.com/muesli/reflow/indent"
 	"github.com/muesli/reflow/wordwrap"
 
-	"github.com/2bit-software/gogo/pkg/cmdr"
 	"github.com/2bit-software/gogo/pkg/fs"
+	"github.com/2bit-software/gogo/pkg/sh"
 )
 
 const MAIN_FILENAME = "main.gogo.go"
@@ -115,7 +115,7 @@ func Run(opts RunOpts, args []string) error {
 	}
 	debug.Printf("Running built binary: %s with args %v\n", opts.BinaryFilepath, args)
 	// run the binary with the desire target func and arguments, unless it exists in the cache
-	out, err := cmdr.New(opts.BinaryFilepath).SetArgs(args...).StdOut()
+	out, err := sh.New(opts.BinaryFilepath).SetArgs(args...).StdOut()
 	if err != nil {
 		errString := err.Error()
 		if errString == "exit status 1" {
