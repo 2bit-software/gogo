@@ -79,13 +79,13 @@ func main() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+	viper.AutomaticEnv()
 	// root command flags
-	// TODO: this should be opt-in based on configuration during building
 	rootCmd.PersistentFlags().StringP("config", "c", "", "config file (default is ./config.yaml)")
 	_ = viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
 	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "enable verbose mode")
 	_ = viper.BindPFlag("verbose", rootCmd.PersistentFlags().Lookup("verbose"))
-	rootCmd.Flags().StringP("stringFlag", "s", "default", "help text")
+	rootCmd.Flags().StringP("stringFlag", "s", "", "help text")
 }
 
 func initConfig() {
@@ -110,28 +110,48 @@ func initConfig() {
 	}
 }
 
-func toPtr[T any](v T) *T {
-	return &v
-}
-
 var rootCmd = &cobra.Command{
 	Use:   "rootFlag",
 	Short: "",
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
-		if args[0] != "" {
-			// if verbose is set, log what we're doing
-			if viper.GetBool("verbose") {
-				fmt.Printf("Setting stringFlag to: %v\n", args[0])
+		if len(args) > 0 && args[0] != "" {
+			if args[0] == `""` {
+				viper.Set("stringFlag", "")
+			} else {
+				viper.Set("stringFlag", args[0])
 			}
-			viper.Set("stringFlag", args[0])
 		}
 		argStringFlag := viper.GetString("stringFlag")
+
+		ok := detectArgumentRequirements([]string{"stringFlag"})
+		if !ok {
+			fmt.Printf("Missing required arguments\n\n")
+			_ = cmd.Help()
+			os.Exit(1)
+		}
+
 		err := rootFlag(argStringFlag)
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
 		}
 	},
+}
+
+func detectArgumentRequirements(args []string) bool {
+	// if there are no required args, just accept the input
+	if len(args) == 0 {
+		return true
+	}
+	for _, arg := range args {
+		if arg == "" {
+			continue
+		}
+		if !viper.IsSet(arg) {
+			return false
+		}
+	}
+	return true
 }
 

@@ -1,5 +1,4 @@
-([]string) (len=3) {
-  (string) (len=34) "AdvancedFunction\tset a description",
-  (string) (len=30) "MoreFunction    \ta description",
-  (string) ""
+([]string) (len=2) {
+  (string) (len=35) "AdvancedFunction  set a description",
+  (string) (len=31) "MoreFunction      a description"
 }

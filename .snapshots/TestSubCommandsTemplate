@@ -79,14 +79,15 @@ func main() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+	viper.AutomaticEnv()
 	// root command flags
-	// TODO: this should be opt-in based on configuration during building
 	rootCmd.PersistentFlags().StringP("config", "c", "", "config file (default is ./config.yaml)")
 	_ = viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
 	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "enable verbose mode")
 	_ = viper.BindPFlag("verbose", rootCmd.PersistentFlags().Lookup("verbose"))
 	rootCmd.Flags().StringP("config", "c", "", "config file (default is ./config.yaml)")
 	rootCmd.Flags().BoolP("verbose", "v", false, "enable verbose mode")
+
 	// attach subcommands
 	rootCmd.AddCommand(subCommandACmd)
 
@@ -117,31 +118,34 @@ func initConfig() {
 	}
 }
 
-func toPtr[T any](v T) *T {
-	return &v
-}
-
 var rootCmd = &cobra.Command{
 	Use:   "PrintHello",
 	Short: "A short description",
 	Long:  "A much longer description. Much wow!",
 	Run: func(cmd *cobra.Command, args []string) {
-		if args[0] != "" {
-			// if verbose is set, log what we're doing
-			if viper.GetBool("verbose") {
-				fmt.Printf("Setting config to: %v\n", args[0])
+		if len(args) > 0 && args[0] != "" {
+			if args[0] == `""` {
+				viper.Set("config", "")
+			} else {
+				viper.Set("config", args[0])
 			}
-			viper.Set("config", args[0])
 		}
-		if args[1] != "" {
-			// if verbose is set, log what we're doing
-			if viper.GetBool("verbose") {
-				fmt.Printf("Setting verbose to: %v\n", args[1])
+		if len(args) > 1 && args[1] != "" {
+			if args[1] == `""` {
+				viper.Set("verbose", "")
+			} else {
+				viper.Set("verbose", args[1])
 			}
-			viper.Set("verbose", args[1])
 		}
 		argConfig := viper.GetString("config")
 		argVerbose := viper.GetBool("verbose")
+
+		ok := detectArgumentRequirements([]string{"config", "verbose"})
+		if !ok {
+			fmt.Printf("Missing required arguments\n\n")
+			_ = cmd.Help()
+			os.Exit(1)
+		}
 		PrintHello(argConfig, argVerbose)
 	},
 }
@@ -151,25 +155,32 @@ var subCommandACmd = &cobra.Command{
 	Use:   "SubCommandA [print] [shout] [flags]",
 	Short: "A short description for SubCmdA",
 	Long: "A much longer description for SubCmdA. Much wow!" +
-		"Arguments:" +
-		"print    Print extra information on the result." + "shout    Words to shout.",
+		"\nArguments: " +
+		"\n\tprint: [bool]  Print extra information on the result." + "\n\tshout: [string]  Words to shout.",
 	Run: func(cmd *cobra.Command, args []string) {
-		if args[0] != "" {
-			// if verbose is set, log what we're doing
-			if viper.GetBool("verbose") {
-				fmt.Printf("Setting print to: %v\n", args[0])
+		if len(args) > 0 && args[0] != "" {
+			if args[0] == `""` {
+				viper.Set("print", "")
+			} else {
+				viper.Set("print", args[0])
 			}
-			viper.Set("print", args[0])
 		}
-		if args[1] != "" {
-			// if verbose is set, log what we're doing
-			if viper.GetBool("verbose") {
-				fmt.Printf("Setting shout to: %v\n", args[1])
+		if len(args) > 1 && args[1] != "" {
+			if args[1] == `""` {
+				viper.Set("shout", "")
+			} else {
+				viper.Set("shout", args[1])
 			}
-			viper.Set("shout", args[1])
 		}
 		argPrint := viper.GetBool("print")
 		argShout := viper.GetString("shout")
+
+		ok := detectArgumentRequirements([]string{"print", "shout"})
+		if !ok {
+			fmt.Printf("Missing required arguments\n\n")
+			_ = cmd.Help()
+			os.Exit(1)
+		}
 		SubCommandA(argPrint, argShout)
 	},
 }
@@ -181,5 +192,21 @@ func initSubCommandAFlags() {
 	subCommandACmd.Flags().String("shout", "", "Words to shout.")
 	_ = viper.BindPFlag("shout", subCommandACmd.Flags().Lookup("shout"))
 	_ = viper.BindEnv("shout", "SUBCOMMANDA_SHOUT")
+}
+
+func detectArgumentRequirements(args []string) bool {
+	// if there are no required args, just accept the input
+	if len(args) == 0 {
+		return true
+	}
+	for _, arg := range args {
+		if arg == "" {
+			continue
+		}
+		if !viper.IsSet(arg) {
+			return false
+		}
+	}
+	return true
 }
 

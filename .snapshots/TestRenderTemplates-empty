@@ -79,8 +79,8 @@ func main() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+	viper.AutomaticEnv()
 	// root command flags
-	// TODO: this should be opt-in based on configuration during building
 	rootCmd.PersistentFlags().StringP("config", "c", "", "config file (default is ./config.yaml)")
 	_ = viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
 	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "enable verbose mode")
@@ -109,10 +109,6 @@ func initConfig() {
 	}
 }
 
-func toPtr[T any](v T) *T {
-	return &v
-}
-
 var rootCmd = &cobra.Command{
 	Use:   "rootFlag",
 	Short: "",
@@ -120,5 +116,21 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		rootFlag()
 	},
+}
+
+func detectArgumentRequirements(args []string) bool {
+	// if there are no required args, just accept the input
+	if len(args) == 0 {
+		return true
+	}
+	for _, arg := range args {
+		if arg == "" {
+			continue
+		}
+		if !viper.IsSet(arg) {
+			return false
+		}
+	}
+	return true
 }
 

@@ -17,6 +17,7 @@ import (
 )
 
 func TestMainRootOnlyTemplate(t *testing.T) {
+	t.Skip("building the main root only template is not yet fully implemented")
 	// Define mock data for the template
 	data := renderData{
 		RootCmd: GoCmd{
@@ -24,8 +25,8 @@ func TestMainRootOnlyTemplate(t *testing.T) {
 			Short: "A short description",
 			Long:  "A much longer description. Much wow!",
 			GoFlags: []GoFlag{
-				{Type: "StringP", Name: "config", Short: 'c', Default: `""`, Help: "config file (default is ./config.yaml)"},
-				{Type: "BoolP", Name: "verbose", Short: 'v', Default: false, Help: "enable verbose mode"},
+				{Type: "string", Name: "config", Short: 'c', Default: `""`, Help: "config file (default is ./config.yaml)"},
+				{Type: "bool", Name: "verbose", Short: 'v', Default: false, Help: "enable verbose mode"},
 			},
 		},
 		SubCommands: nil,

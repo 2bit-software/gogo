@@ -20,7 +20,7 @@
             {{- if $sub.GoFlags}}
 func init{{ Capitalize $sub.Name}}Flags() {
                 {{- range $flag := $sub.GoFlags}}
-    {{- if ne $flag.Short 0 }}{{ LowerFirstLetter $sub.Name }}Cmd.Flags().{{ Capitalize $flag.Type}}P("{{$flag.Name}}", "{{ ByteToString $flag.Short}}", {{ QuoteDefault $flag.Default}}, "{{$flag.Help}}")
+    {{- if ne $flag.Short 0 }}{{ LowerFirstLetter $sub.Name }}Cmd.Flags().{{ Capitalize $flag.Type}}P("{{$flag.Name}}", "{{ ByteToString $flag.Short}}", {{ QuoteDefault $flag.HasDefault $flag.Default}}, "{{$flag.Help}}")
     {{- else}}
         {{ LowerFirstLetter $sub.Name }}Cmd.Flags().{{ Capitalize $flag.Type}}("{{$flag.Name}}", {{ QuoteDefault $flag.HasDefault $flag.Default}}, "{{$flag.Help}}")
     {{- end}}

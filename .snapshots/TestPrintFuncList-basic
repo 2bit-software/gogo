@@ -1,11 +1,10 @@
-([]string) (len=9) {
-  (string) (len=42) "BasicDescription        \tset a description",
-  (string) (len=26) "BasicArgument           \t-",
-  (string) (len=26) "BasicDescriptionArgument\t-",
-  (string) (len=85) "BasicCtxChained         \tset a description, this can use any go code to set the value",
-  (string) (len=26) "BasicArgumentChained    \t-",
-  (string) (len=41) "BasicSetHelp            \tis this a thing?",
-  (string) (len=84) "NoGoGoCtx               \tnot valid because the first parameter is not a gogo.Context",
-  (string) (len=84) "GoGoCtxInWrongPos       \tnot valid because the first parameter is not a gogo.Context",
-  (string) ""
+([]string) (len=8) {
+  (string) (len=43) "BasicDescription          set a description",
+  (string) (len=27) "BasicArgument             -",
+  (string) (len=27) "BasicDescriptionArgument  -",
+  (string) (len=86) "BasicCtxChained           set a description, this can use any go code to set the value",
+  (string) (len=27) "BasicArgumentChained      -",
+  (string) (len=42) "BasicSetHelp              is this a thing?",
+  (string) (len=85) "NoGoGoCtx                 not valid because the first parameter is not a gogo.Context",
+  (string) (len=85) "GoGoCtxInWrongPos         not valid because the first parameter is not a gogo.Context"
 }
