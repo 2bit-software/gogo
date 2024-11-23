@@ -8,7 +8,7 @@ thoughts on how this works:
 6. pass the arguments to the function
 
 # Goals of this tool are to work in the following ways:
-1. if none are found, recursively search the current and parent folders for:
+1. recursively search the current and parent folders for:
    1. a ".gogo" folder
    2. a "gogofiles" folder
    3. a ".gogobuild" file, which is a gogo configuration file (To be designed): we follow directions in config
@@ -76,19 +76,6 @@ In the secondary mode, we'll output a single binary for every function in the di
 directory into the local namespace, allowing the functions to be called like scripts. All global functions have this done automatically.
 
 This means that the configuration of this is understood before reading the files themselves (driven by arguments to the gogo binary)
-
-# TODO
-* implement this https://magefile.org/compiling/ re: goos and goarch implementation
-* implement something like this https://magefile.org/filesources/ or https://github.com/DavidGamba/dgtools/tree/680301dc848c84e02455f290d2d2c0efde4f70bc/fsmodtime
-* dep management: https://magefile.org/dependencies/ or https://github.com/DavidGamba/go-getoptions/blob/master/dag/README.adoc
-* allow setting build tags when including the function library
-* REMOVE THE "RUN LOCALLY TAGGED FILES" MODE. Instead add the ability in some config to point to different folders to search for functions (global sources)
-* We should audit that none of the variables/inputs are reserved keywords
-* or rename the inputs under the hood so they don't collide with reserved keywords
-* Allow a configuration setting that sets a prefix for all variables.
-* Provide some option so that the generated main file is not deleted
-* Same with resulting binaries
-* Support functions that have error returns, handle the result, and do something with it
 
 # Scenarios
 
