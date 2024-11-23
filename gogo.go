@@ -63,13 +63,10 @@ func Run(opts RunOpts, args []string) error {
 	if opts.OutputDir == "" {
 		opts.OutputDir = "/tmp"
 	}
-
-	// if there are no args, then it should:
-	// list out all the available functions in the local space, if any
-	// and list any available functions in the global space, if any
 	if len(args) == 0 {
-		return ShowFuncList(opts)
+		return fmt.Errorf("no function provided")
 	}
+
 	debug.Printf("Running function: %s\n", args[0])
 	funcToRun := args[0]
 	// search for gogo files to run in local namespaces
@@ -146,14 +143,14 @@ func BuildLocal(opts RunOpts) error {
 }
 
 // ShowFuncList lists all the available functions in the local and global namespaces
-func ShowFuncList(opts RunOpts) error {
+func ShowFuncList(opts RunOpts) (int, error) {
 	// then we are listing the available functions
 	funcList, err := BuildFuncList(opts)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	printFuncList(generateFuncListOutput(funcList, opts.ScreenWidth))
-	return nil
+	return len(funcList), nil
 }
 
 // BuildFuncList builds a list of functions that can be run. It combines
