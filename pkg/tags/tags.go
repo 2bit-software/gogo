@@ -4,6 +4,7 @@
 // of the GNU Affero General Public License, version 3.
 // If a copy of the AGPL was not distributed with this file, You
 // can obtain one at https://www.gnu.org/licenses/.
+
 package tags
 
 import (

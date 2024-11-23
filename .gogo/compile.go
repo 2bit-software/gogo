@@ -134,7 +134,7 @@ func GetGitStatus() string {
 
 // CompileGo compiles a Go binary, assuming filePath contains a main package.
 // It will output to [inputFolderPath|outputFolderPath]/binaryName-<GOOS>-<GOARCH>.
-func CompileGo(inputFolderPath, outputFolderPath, tags, binaryName, strOs, strArch string) error {
+func CompileGo(inputFolderPath, outputFolderPath, tags, binaryName, versionPath, strOs, strArch string) error {
 	fmt.Printf("Compiling Go binary with arguments: inputFolderPath=%s, outputFolderPath=%s, tags=%s, binaryName=%s, strOs=%s, strArch=%s\n", inputFolderPath, outputFolderPath, tags, binaryName, strOs, strArch)
 	wd, err := os.Getwd()
 	if err != nil {
@@ -168,9 +168,6 @@ func CompileGo(inputFolderPath, outputFolderPath, tags, binaryName, strOs, strAr
 		return err
 	}
 	who := currentUser.Username
-
-	// Set the location
-	location := "main"
 
 	// Determine the state of the git repository
 	state := GetGitStatus()
@@ -223,6 +220,12 @@ func CompileGo(inputFolderPath, outputFolderPath, tags, binaryName, strOs, strAr
 	err = os.Setenv("CGO_ENABLED", "0")
 	if err != nil {
 		fmt.Println("could not set CGO_ENABLED=0")
+	}
+
+	// Set the location
+	location := "main"
+	if versionPath != "" {
+		location = versionPath
 	}
 
 	// Construct ldflags
