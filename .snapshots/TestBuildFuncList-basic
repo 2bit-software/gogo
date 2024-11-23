@@ -1,0 +1,239 @@
+([]gogo.function) (len=8) {
+  (gogo.function) {
+    Name: (string) (len=16) "BasicDescription",
+    Comment: (string) "",
+    Description: (string) (len=17) "set a description",
+    Example: (string) "",
+    Arguments: ([]gogo.argument) <nil>,
+    UseGoGoCtx: (bool) true,
+    GoGoCtxVariableName: (string) (len=3) "ctx",
+    ErrorReturn: (bool) true
+  },
+  (gogo.function) {
+    Name: (string) (len=13) "BasicArgument",
+    Comment: (string) "",
+    Description: (string) "",
+    Example: (string) "",
+    Arguments: ([]gogo.argument) (len=2) {
+      (gogo.argument) {
+        Name: (string) (len=4) "var1",
+        Type: (string) (len=6) "string",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      },
+      (gogo.argument) {
+        Name: (string) (len=4) "var2",
+        Type: (string) (len=4) "bool",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      }
+    },
+    UseGoGoCtx: (bool) true,
+    GoGoCtxVariableName: (string) (len=3) "ctx",
+    ErrorReturn: (bool) true
+  },
+  (gogo.function) {
+    Name: (string) (len=24) "BasicDescriptionArgument",
+    Comment: (string) "",
+    Description: (string) "",
+    Example: (string) "",
+    Arguments: ([]gogo.argument) (len=2) {
+      (gogo.argument) {
+        Name: (string) (len=4) "var1",
+        Type: (string) (len=6) "string",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) (len=32) "describe what this argument does",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      },
+      (gogo.argument) {
+        Name: (string) (len=4) "var2",
+        Type: (string) (len=4) "bool",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      }
+    },
+    UseGoGoCtx: (bool) true,
+    GoGoCtxVariableName: (string) (len=3) "ctx",
+    ErrorReturn: (bool) true
+  },
+  (gogo.function) {
+    Name: (string) (len=15) "BasicCtxChained",
+    Comment: (string) "",
+    Description: (string) (len=60) "set a description, this can use any go code to set the value",
+    Example: (string) "",
+    Arguments: ([]gogo.argument) (len=2) {
+      (gogo.argument) {
+        Name: (string) (len=4) "var1",
+        Type: (string) (len=6) "string",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      },
+      (gogo.argument) {
+        Name: (string) (len=4) "var2",
+        Type: (string) (len=4) "bool",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      }
+    },
+    UseGoGoCtx: (bool) true,
+    GoGoCtxVariableName: (string) (len=3) "ctx",
+    ErrorReturn: (bool) true
+  },
+  (gogo.function) {
+    Name: (string) (len=20) "BasicArgumentChained",
+    Comment: (string) "",
+    Description: (string) "",
+    Example: (string) "",
+    Arguments: ([]gogo.argument) (len=2) {
+      (gogo.argument) {
+        Name: (string) (len=4) "var1",
+        Type: (string) (len=6) "string",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) (len=32) "describe what this argument does",
+        Help: (string) "",
+        Default: (string) (len=1) "1",
+        AllowedValues: ([]interface {}) (len=3) {
+          (string) (len=1) "1",
+          (string) (len=1) "2",
+          (string) (len=1) "3"
+        },
+        RestrictedValues: ([]interface {}) (len=3) {
+          (string) (len=1) "4",
+          (string) (len=1) "5",
+          (string) (len=1) "6"
+        }
+      },
+      (gogo.argument) {
+        Name: (string) (len=4) "var2",
+        Type: (string) (len=4) "bool",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      }
+    },
+    UseGoGoCtx: (bool) true,
+    GoGoCtxVariableName: (string) (len=3) "ctx",
+    ErrorReturn: (bool) true
+  },
+  (gogo.function) {
+    Name: (string) (len=12) "BasicSetHelp",
+    Comment: (string) (len=16) "is this a thing?",
+    Description: (string) "",
+    Example: (string) "",
+    Arguments: ([]gogo.argument) (len=2) {
+      (gogo.argument) {
+        Name: (string) (len=4) "var1",
+        Type: (string) (len=6) "string",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      },
+      (gogo.argument) {
+        Name: (string) (len=4) "var2",
+        Type: (string) (len=4) "bool",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      }
+    },
+    UseGoGoCtx: (bool) false,
+    GoGoCtxVariableName: (string) (len=3) "ctx",
+    ErrorReturn: (bool) true
+  },
+  (gogo.function) {
+    Name: (string) (len=9) "NoGoGoCtx",
+    Comment: (string) (len=59) "not valid because the first parameter is not a gogo.Context",
+    Description: (string) "",
+    Example: (string) "",
+    Arguments: ([]gogo.argument) <nil>,
+    UseGoGoCtx: (bool) false,
+    GoGoCtxVariableName: (string) "",
+    ErrorReturn: (bool) true
+  },
+  (gogo.function) {
+    Name: (string) (len=17) "GoGoCtxInWrongPos",
+    Comment: (string) (len=59) "not valid because the first parameter is not a gogo.Context",
+    Description: (string) "",
+    Example: (string) "",
+    Arguments: ([]gogo.argument) (len=3) {
+      (gogo.argument) {
+        Name: (string) (len=4) "var1",
+        Type: (string) (len=6) "string",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      },
+      (gogo.argument) {
+        Name: (string) (len=3) "ctx",
+        Type: (string) (len=12) "gogo.Context",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      },
+      (gogo.argument) {
+        Name: (string) (len=4) "var2",
+        Type: (string) (len=4) "bool",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      }
+    },
+    UseGoGoCtx: (bool) false,
+    GoGoCtxVariableName: (string) "",
+    ErrorReturn: (bool) true
+  }
+}

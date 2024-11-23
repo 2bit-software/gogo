@@ -1,0 +1,47 @@
+{{- define "runCmd" }}
+{{- $sub := . }}
+{{- range $index, $flag := $sub.GoFlags}}
+        if len(args) > {{$index}} && args[{{$index}}] != "" {
+            if args[{{$index}}] == `""` {
+                viper.Set("{{$flag.Name}}", "")
+            } else {
+                viper.Set("{{$flag.Name}}", args[{{$index}}])
+            }
+        }
+    {{- end}}
+    {{- range $index, $flag := $sub.GoFlags}}
+        {{- if eq $flag.Type "string"}}
+            arg{{ Capitalize $flag.Name }} := viper.GetString("{{ $flag.Name }}")
+        {{- else if eq $flag.Type "int"}}
+            arg{{ Capitalize $flag.Name }} := viper.GetInt("{{ $flag.Name }}")
+        {{- else if eq $flag.Type "bool"}}
+            arg{{ Capitalize $flag.Name }} := viper.GetBool("{{ $flag.Name }}")
+        {{- else if eq $flag.Type "float64"}}
+            arg{{ Capitalize $flag.Name }} := viper.GetFloat64("{{ $flag.Name }}")
+        {{- else}}
+            // UNKNOWN TYPE: {{ $flag.Type }} for flag {{ $flag.Name }}
+        {{- end}}
+    {{- end}}
+    {{- /* Now check if we have all the arguments we need */}}
+    {{- if $sub.GoFlags }}
+
+    ok := detectArgumentRequirements({{ BuildStringArgList $sub.GoFlags }})
+    if !ok {
+        fmt.Printf("Missing required arguments\n\n")
+        _ = cmd.Help()
+        os.Exit(1)
+    }
+    {{ end}}
+
+    {{- if $sub.UseGoGoContext }}
+    ctx := &gogoContext{stdContext.Background()}
+    {{ end}}
+    {{- if $sub.ErrorReturn }}
+     err := {{- end }} {{- $sub.Name}}({{- if $sub.UseGoGoContext }}ctx, {{- end}}{{- range $index, $flag := $sub.GoFlags}} {{- if ne $index 0}}, {{end}} arg{{ Capitalize $flag.Name }} {{- end}})
+     {{- if $sub.ErrorReturn }}
+        if err != nil {
+            fmt.Printf("Error: %v\n", err)
+            os.Exit(1)
+        }
+    {{- end}}
+ {{- end}}

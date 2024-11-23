@@ -1,0 +1,8 @@
+([]string) (len=6) {
+  (string) (len=44) "AliasedDescription        \tset a description",
+  (string) (len=28) "AliasedArgument           \t-",
+  (string) (len=28) "AliasedDescriptionArgument\t-",
+  (string) (len=87) "AliasedCtxChained         \tset a description, this can use any go code to set the value",
+  (string) (len=28) "AliasedArgumentChained    \t-",
+  (string) ""
+}

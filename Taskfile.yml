@@ -1,0 +1,38 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  format:
+    desc: Recursively format all Go files
+    cmds:
+      - go fmt ./...
+
+  compile:
+    desc: Builds GoGo with version information and readies for release
+    cmds:
+      - go run cmd/gogo/main.go CompileGo cmd/gogo . gogo darwin arm64
+
+  install:
+    desc: Installs gogo. This currently only works on arm64/macs, but will be updated soon.
+    cmds:
+      - |
+        target=$(go env GOBIN)
+        go run cmd/gogo/main.go CompileGo --binaryName=gogo --inputFolderPath=./cmd/gogo --outputFolderPath=/tmp --tags=gogo --strArch="arm64" --strOs="darwin" -- --keep-artifacts=true --disable-cache=true
+        echo "Copying gogo to ${target}"
+        cp /tmp/gogo-darwin-arm64 ${target}/gogo
+
+  test:
+    desc: Runs all tests
+    cmds:
+      - go test ./...
+
+  test:update-snapshots:
+    desc: Runs all tests and updates the snapshots. Use this sparingly, and confirm the results!
+    env:
+      UPDATE_SNAPSHOTS: true
+    cmds:
+      - go test ./...

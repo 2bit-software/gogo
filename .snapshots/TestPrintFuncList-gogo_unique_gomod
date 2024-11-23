@@ -1,0 +1,8 @@
+([]string) (len=6) {
+  (string) (len=42) "BasicDescription        \tset a description",
+  (string) (len=26) "BasicArgument           \t-",
+  (string) (len=26) "BasicDescriptionArgument\t-",
+  (string) (len=85) "BasicCtxChained         \tset a description, this can use any go code to set the value",
+  (string) (len=26) "BasicArgumentChained    \t-",
+  (string) ""
+}
