@@ -38,6 +38,6 @@ gogo run Hello
 - [Getting Started](./getting-started.md)
 - [Advanced Usage](./advanced-usage.md)
 - [Comparison to Mage](./mage-comparison.md)
-- [Configuration](./configuration.md)
-- [CI/CD Integration](./cicd.md)
+- [Configuration](./configuration.md) (TODO)
+- [CI/CD Integration](./cicd.md) (TODO)
 - [Misc notes](./notes.md)
