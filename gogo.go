@@ -436,7 +436,7 @@ func convertToGoCmds(funcs []function) ([]renderData, error) {
 	for i, funk := range funcs {
 		rd.SubCommands[i] = convertToGoCmd(funk)
 		if rd.SubCommands[i].UseGoGoContext {
-			rd.GoGoContext = true
+			rd.UseGoGoContext = true
 		}
 	}
 	return []renderData{rd}, nil

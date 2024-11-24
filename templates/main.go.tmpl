@@ -65,15 +65,13 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	{{- if .GoGoContext}}
-    stdContext "context"
-    {{- end}}
 
-    {{ if .GoGoContext}}
-    "github.com/2bit-software/gogo"
-    {{- end}}
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	{{- if .UseGoGoContext}}
+	"github.com/2bit-software/gogo"
+	{{- end}}
 )
 
 func main() {
@@ -161,7 +159,3 @@ func detectArgumentRequirements(args []string) bool {
 	}
 	return true
 }
-
-{{- if .GoGoContext}}
-{{- template "gogoContext" .}}
-{{- end}}

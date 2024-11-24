@@ -21,9 +21,9 @@ import (
 )
 
 type renderData struct {
-	GoGoContext bool // if any of the commands use the gogo context, then include the context in the main file
-	RootCmd     GoCmd
-	SubCommands []GoCmd
+	UseGoGoContext bool // if any of the commands use the gogo context, then include the context in the main file
+	RootCmd        GoCmd
+	SubCommands    []GoCmd
 }
 
 type GoCmd struct {
@@ -171,10 +171,13 @@ func buildSource(inputDir, filePath string) error {
 	if err != nil {
 		return err
 	}
+
+	cmd := rd[0]
+
 	// TODO: this is wrong. We're passing a filePath, but it's possible we need to make multiple binaries.
 	//  To support this we need to render the file, build the binary, and then delete the rendered file and repeat.
 	// render from templates
-	rendered, err := renderFromTemplates(rd[0], defaultFuncMap())
+	rendered, err := renderFromTemplates(cmd, defaultFuncMap())
 	if err != nil {
 		return err
 	}
@@ -203,7 +206,6 @@ func renderFromTemplates(rd renderData, funcMap map[string]any) (string, error) 
 		"templates/main.go.tmpl",
 		"templates/subCmd.go.tmpl",
 		"templates/run.go.tmpl",
-		"templates/context.go.tmpl",
 	)
 	if err != nil {
 		return "", err

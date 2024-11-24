@@ -74,7 +74,7 @@
     {{ end}}
 
     {{- if $sub.UseGoGoContext }}
-    ctx := &gogoContext{stdContext.Background()}
+    ctx := gogo.NewContext()
     {{ end}}
     {{- if $sub.ErrorReturn }}
      err := {{- end }} {{- $sub.Name}}({{- if $sub.UseGoGoContext }}ctx, {{- end}}{{- range $index, $flag := $sub.GoFlags}} {{- if ne $index 0}}, {{end}} arg{{ Capitalize $flag.Name }} {{- end}})
