@@ -1,0 +1,15 @@
+---
+
+extends: default
+
+ignore: |
+  modules/public_api/docs/*
+  modules/public_api/pkg/uberfreight/uberfreight-api.yaml
+  modules/public_api/pkg/unionpacific/UnionPacific-CreateWaybillExternalDocumentation.yml
+  modules/public_api/proto/client*
+
+rules:
+  line-length: disable
+  truthy: disable
+  comments-indentation: disable
+  comments: disable

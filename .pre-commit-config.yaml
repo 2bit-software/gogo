@@ -1,0 +1,23 @@
+---
+fail_fast: true
+default_install_hook_types: ["pre-commit", "pre-push"]
+default_stages: [pre-commit]
+repos:
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.3
+    hooks:
+      - id: actionlint
+        args: ["-ignore", '".+" action is too old to run on GitHub Actions.']
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: [-c=./configs/yamllint.yaml]
+
+  - repo: local
+    hooks:
+      - id: go-unit-tests
+        name: Run Go unit tests
+        entry: task test
+        language: system
+        pass_filenames: false
