@@ -1,4 +1,4 @@
-# GoGo 🏃‍♂️
+# GoGo 🏃
 
 ## Why GoGo?
 - 🚀 Run Go functions as CLI commands

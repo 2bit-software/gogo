@@ -10,6 +10,6 @@
   </p>
 
   <p>
-    <a href="./docs/index.md">Getting Started</a>
+    <a href="./docs/index.md#why-gogo">Getting Started</a>
   </p>
 </div>
