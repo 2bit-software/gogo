@@ -1,4 +1,8 @@
 <div align="center">
+<header>This software is very much still in progress! Don't use it until at least tag 0.1.0!</header>
+</div>
+<br />
+<div align="center">
   <a href="https://github.com/2bit-software">
     <img src="docs/gogo-gopher.png" width="200px" height="200px" />
   </a>
