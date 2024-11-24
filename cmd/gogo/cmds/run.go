@@ -97,10 +97,8 @@ to quickly create a Cobra application.`,
 			return err
 		}
 
-		log := gogo.GetLogger(opts.Verbose)
-
 		// run the command
-		err = gogo.Run(log, opts, args)
+		err = gogo.Run(opts, args)
 		if err != nil && len(args) == 0 {
 			// if we have an error and no arguments, print the help
 			_ = cmd.Help()

@@ -10,7 +10,6 @@ package gogo
 import (
 	"embed"
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"path"
@@ -41,16 +40,17 @@ var (
 // Run this is a simplified version of the Run function in cmd/gogo/main.go
 // For now it only searches for the local gogo files, and does not try to
 // determine if the function exists in the global cache.
-func Run(log *log.Logger, opts RunOpts, args []string) error {
-	log.Printf("Running with %+v\n", opts)
+func Run(opts RunOpts, args []string) error {
+	debug := opts.GetLogger()
+	debug.Printf("Running with %+v\n", opts)
 	// detect if we're requesting to build the local cache
 	if opts.BuildLocalCache {
-		return BuildLocal(log, opts)
+		return BuildLocal(opts)
 	}
 	if opts.BuildGlobalCache {
 		opts.SourceDir = opts.GlobalSourceDir
 		opts.OutputDir = opts.GlobalBinDir
-		return Build(log, opts.BuildOpts)
+		return Build(debug, opts.BuildOpts)
 	}
 
 	// determine the outputFilePath if not provided
@@ -61,7 +61,7 @@ func Run(log *log.Logger, opts RunOpts, args []string) error {
 		return fmt.Errorf("no function provided")
 	}
 
-	log.Printf("Running function: %s\n", args[0])
+	debug.Printf("Running function: %s\n", args[0])
 	funcToRun := args[0]
 	// search for gogo files to run in local namespaces
 	cwd, err := os.Getwd()
@@ -85,7 +85,7 @@ func Run(log *log.Logger, opts RunOpts, args []string) error {
 
 	opts.SourceDir = gogoFolder
 
-	err = getBuiltBinary(log, opts.BuildOpts)
+	err = getBuiltBinary(debug, opts.BuildOpts)
 	if err != nil {
 		return err
 	}
@@ -95,7 +95,7 @@ func Run(log *log.Logger, opts RunOpts, args []string) error {
 			args[i] = `""`
 		}
 	}
-	log.Printf("Running built binary: %s with args %v\n", opts.BinaryFilepath, args)
+	debug.Printf("Running built binary: %s with args %v\n", opts.BinaryFilepath, args)
 	// run the binary with the desire target func and arguments, unless it exists in the cache
 	out, err := sh.Cmd(opts.BinaryFilepath).SetArgs(args...).StdOut()
 	if err != nil {
@@ -112,8 +112,9 @@ func Run(log *log.Logger, opts RunOpts, args []string) error {
 }
 
 // BuildLocal searches for the local gogo files, and builds the binary
-func BuildLocal(log *log.Logger, opts RunOpts) error {
-	log.Println("Building local cache...")
+func BuildLocal(opts RunOpts) error {
+	debug := opts.GetLogger()
+	debug.Println("Building local cache...")
 	var err error
 	opts.BinaryFilepath, err = getBinaryFilename(opts)
 	if err != nil {
@@ -129,10 +130,10 @@ func BuildLocal(log *log.Logger, opts RunOpts) error {
 	}
 	gogoFolder := path.Dir(gogoFiles[0])
 	opts.SourceDir = gogoFolder
-	return Build(log, opts.BuildOpts)
+	return Build(debug, opts.BuildOpts)
 }
 
-func BuildGlobal(log *log.Logger, opts RunOpts) error {
+func BuildGlobal(opts RunOpts) error {
 	return nil
 }
 
@@ -168,13 +169,6 @@ func BuildFuncList(opts RunOpts) ([]function, error) {
 	// merge them
 	files := append(localFiles, globalFuncs...)
 	return parseAll(files)
-}
-
-func GetLogger(verbose bool) *log.Logger {
-	if verbose {
-		return log.New(os.Stdout, "DEBUG", log.LstdFlags)
-	}
-	return log.New(io.Discard, "DISCARD", log.LstdFlags)
 }
 
 func getBinaryFilename(opts RunOpts) (string, error) {

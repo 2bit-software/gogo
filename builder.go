@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"go/format"
 	"hash/fnv"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -55,6 +56,19 @@ type RunOpts struct {
 	BuildLocalCache  bool   `json:"GOGO_BUILD_LOCAL"`       // When true, builds the local cache and exits
 	BuildGlobalCache bool   `json:"GOGO_BUILD_GLOBAL"`      // When true, builds the global cache and exits
 	ScreenWidth      int    // the width of the screen, if we know
+	logger           *log.Logger
+}
+
+func (ro RunOpts) GetLogger() *log.Logger {
+	if ro.logger == nil {
+		l := log.New(io.Discard, "DISCARD", log.LstdFlags)
+		if ro.Verbose {
+			l = log.New(os.Stdout, "DEBUG", log.LstdFlags)
+		}
+		ro.logger = l
+		return l
+	}
+	return ro.logger
 }
 
 type BuildOpts struct {
