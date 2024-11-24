@@ -35,9 +35,9 @@ gogo run Hello
 ```
 
 ## Documentation
-- [Getting Started](./docs/getting-started.md)
-- [Advanced Usage](./docs/advanced-usage.md)
-- [Comparison to Mage](./docs/mage-comparison.md)
-- [Configuration](./docs/configuration.md)
-- [CI/CD Integration](./docs/cicd.md)
-- [Misc notes](./docs/notes.md)
+- [Getting Started](./getting-started.md)
+- [Advanced Usage](./advanced-usage.md)
+- [Comparison to Mage](./mage-comparison.md)
+- [Configuration](./configuration.md)
+- [CI/CD Integration](./cicd.md)
+- [Misc notes](./notes.md)
