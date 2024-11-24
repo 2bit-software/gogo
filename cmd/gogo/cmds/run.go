@@ -88,6 +88,7 @@ to quickly create a Cobra application.`,
 		hiddenArgs := cmd.Context().Value(gogo.HiddenArgsKey{})
 		if hiddenArgs != nil {
 			args = hiddenArgs.([]string)
+			args = hiddenArgs.([]string)
 		}
 
 		// build our program arguments

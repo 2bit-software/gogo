@@ -84,18 +84,9 @@ func Run(opts RunOpts, args []string) error {
 	}
 	gogoFolder := path.Dir(gogoFile)
 
-	// generate filename for this binary
-	if opts.BinaryFilepath == "" {
-		// get the name of the current directory
-		dirName := path.Base(opts.OriginalWorkingDir)
-		// hash the directory name
-		hashedDirName, err := hashString(dirName)
-		if err != nil {
-			return fmt.Errorf("failed to hash directory name: %w", err)
-		}
-		filename := fmt.Sprintf("%v-%v", dirName, hashedDirName)
-		debug.Printf("Building binary in: %v with filename:%v\n", opts.OutputDir, filename)
-		opts.BinaryFilepath = filepath.Join(opts.OutputDir, filename)
+	opts.BinaryFilepath, err = getBinaryFilename(opts)
+	if err != nil {
+		return err
 	}
 
 	opts.SourceDir = gogoFolder
@@ -126,9 +117,34 @@ func Run(opts RunOpts, args []string) error {
 	return nil
 }
 
+func getBinaryFilename(opts RunOpts) (string, error) {
+	if opts.BinaryFilepath != "" {
+		return opts.BinaryFilepath, nil
+	}
+	// generate filename for this binary
+	// get the name of the current directory
+	dirName := path.Base(opts.OriginalWorkingDir)
+	// hash the directory name
+	hashedDirName, err := hashString(dirName)
+	if err != nil {
+		return "", fmt.Errorf("failed to hash directory name: %w", err)
+	}
+	filename := fmt.Sprintf("%v-%v", dirName, hashedDirName)
+	debug.Printf("Building binary in: %v with filename:%v\n", opts.OutputDir, filename)
+	return filepath.Join(opts.OutputDir, filename), nil
+}
+
 // BuildLocal searches for the local gogo files, and builds the binary
 func BuildLocal(opts RunOpts) error {
+	if opts.Verbose {
+		debug.SetOutput(os.Stdout)
+	}
 	debug.Println("Building local cache...")
+	var err error
+	opts.BinaryFilepath, err = getBinaryFilename(opts)
+	if err != nil {
+		return err
+	}
 	cwd, err := os.Getwd()
 	if err != nil {
 		return err
@@ -140,6 +156,10 @@ func BuildLocal(opts RunOpts) error {
 	gogoFolder := path.Dir(gogoFiles[0])
 	opts.SourceDir = gogoFolder
 	return Build(opts.BuildOpts)
+}
+
+func BuildGlobal(opts RunOpts) error {
+	return nil
 }
 
 // ShowFuncList lists all the available functions in the local and global namespaces

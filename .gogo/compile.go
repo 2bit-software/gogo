@@ -251,7 +251,7 @@ func CompileGo(inputFolderPath, outputFolderPath, tags, binaryName, versionPath,
 }
 
 func PrintShaCtx(ctx gogo.Context) {
-	ctx.SetLongDescription("Prints the SHA of the current/latest commit using only the first 6 characters, this test uses the gogo context").Example("gogo PrintShaCtx")
+	ctx.SetShortDescription("Prints the SHA of the current/latest commit using only the first 6 characters, this test uses the gogo context").Example("gogo PrintShaCtx")
 	PrintShortSha()
 }
 

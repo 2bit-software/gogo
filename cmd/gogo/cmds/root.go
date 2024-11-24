@@ -23,10 +23,6 @@ var shellCompletionTarget string
 var completionInfo string
 
 func init() {
-	if err := prepareCommand(rootCmd); err != nil {
-		fmt.Printf("error setting flags: %v\n", err)
-	}
-
 	// set context of cmd so we can use it to pass data to subcommands
 	rootCmd.SetContext(context.Background())
 
@@ -72,7 +68,18 @@ var rootCmd = &cobra.Command{
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		version := viper.GetBool("version")
+		// Bind flags to viper and check for errors
+		if err := viper.BindPFlag("VERBOSE", cmd.PersistentFlags().Lookup("verbose")); err != nil {
+			fmt.Printf("error setting flags: %v\n", err)
+		}
+		if err := viper.BindPFlag("KEEP_ARTIFACTS", cmd.Flags().Lookup("keep-artifacts")); err != nil {
+			fmt.Printf("error setting flags: %v\n", err)
+		}
+		if err := viper.BindPFlag("DISABLE_CACHE", cmd.Flags().Lookup("disable-cache")); err != nil {
+			fmt.Printf("error setting flags: %v\n", err)
+		}
+
+		version := cmd.Flags().Changed("version")
 		if version {
 			cmd.Printf("%+v\n", Version())
 			return nil
@@ -104,40 +111,11 @@ func prepareCommand(cmd *cobra.Command) error {
 	cmd.FParseErrWhitelist.UnknownFlags = true
 
 	// set flags
+	cmd.PersistentFlags().BoolP("verbose", "v", false, "Verbose output.")
 	cmd.Flags().Bool("version", false, "Print the version.")
-	cmd.Flags().BoolP("build-global", "b", false, "Build the global cache.")
-	cmd.Flags().BoolP("build-local", "l", false, "Build the local cache and exit.")
-	cmd.Flags().BoolP("optimize", "o", false, "Optimize the resulting binaries for this run.")
-	cmd.Flags().BoolP("verbose", "v", false, "Verbose output.")
 	cmd.Flags().BoolP("keep-artifacts", "k", false, "Keep the .go files and built binaries.")
-	cmd.Flags().BoolP("individual-binaries", "i", false, "Every function gets its own binary, without any subcommands.")
 	cmd.Flags().BoolP("disable-cache", "d", false, "Disable cache, forces everything to rebuild.")
 	cmd.Flags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gogo.yaml).")
-	cmd.Flags().StringVar(&shellCompletionTarget, "shell-completions", "", "Generate shell completions for the given shell, [bash, zsh, fish, powershell].")
-	cmd.Flags().StringVar(&completionInfo, "autocomplete", "", "Internal flag used by shell completion to determine where to redirect completion requests.")
-
-	// Bind flags to viper and check for errors
-	if err := viper.BindPFlag("VERBOSE", cmd.Flags().Lookup("verbose")); err != nil {
-		return err
-	}
-	if err := viper.BindPFlag("KEEP_ARTIFACTS", cmd.Flags().Lookup("keep-artifacts")); err != nil {
-		return err
-	}
-	if err := viper.BindPFlag("INDIVIDUAL_BINARIES", cmd.Flags().Lookup("individual-binaries")); err != nil {
-		return err
-	}
-	if err := viper.BindPFlag("DISABLE_CACHE", cmd.Flags().Lookup("disable-cache")); err != nil {
-		return err
-	}
-	if err := viper.BindPFlag("OPTIMIZE", cmd.Flags().Lookup("optimize")); err != nil {
-		return err
-	}
-	if err := viper.BindPFlag("BUILD_LOCAL", cmd.Flags().Lookup("build-local")); err != nil {
-		return err
-	}
-	if err := viper.BindPFlag("VERSION", cmd.Flags().Lookup("version")); err != nil {
-		return err
-	}
 	return nil
 }
 
