@@ -24,6 +24,7 @@ func AdvancedFunction(ctx gogo.Context, name string, include bool, value int) er
 		Description("this is the include bool").
 		Default(true).
 		Argument(value).
+		AllowedValues(8, 9, 10).
 		RestrictedValues(1, 2, 3).
 		Description("this is the value").
 		Default(3)

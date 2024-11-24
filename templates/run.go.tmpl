@@ -9,21 +9,61 @@
             }
         }
     {{- end}}
-    {{- range $index, $flag := $sub.GoFlags}}
-        {{- if eq $flag.Type "string"}}
-            arg{{ Capitalize $flag.Name }} := viper.GetString("{{ $flag.Name }}")
-        {{- else if eq $flag.Type "int"}}
-            arg{{ Capitalize $flag.Name }} := viper.GetInt("{{ $flag.Name }}")
-        {{- else if eq $flag.Type "bool"}}
-            arg{{ Capitalize $flag.Name }} := viper.GetBool("{{ $flag.Name }}")
-        {{- else if eq $flag.Type "float64"}}
-            arg{{ Capitalize $flag.Name }} := viper.GetFloat64("{{ $flag.Name }}")
-        {{- else}}
-            // UNKNOWN TYPE: {{ $flag.Type }} for flag {{ $flag.Name }}
+{{- range $index, $flag := $sub.GoFlags}}
+    {{- if eq $flag.Type "string"}}
+        arg{{ Capitalize $flag.Name }} := viper.GetString("{{ $flag.Name }}")
+        {{- if $flag.AllowedValues }}
+            if !slices.Contains([]string{ {{- range $i, $v := $flag.AllowedValues }}{{if $i}}, {{end}}"{{$v}}"{{- end}} }, arg{{ Capitalize $flag.Name }}) {
+            return fmt.Errorf("flag '{{ $flag.Name }}' must be one of: {{range $i, $v := $flag.AllowedValues}}{{if $i}}, {{end}}{{$v}}{{end}}")
+            }
         {{- end}}
+        {{- if $flag.RestrictedValues }}
+            if slices.Contains([]string{ {{- range $i, $v := $flag.RestrictedValues }}{{if $i}}, {{end}}"{{$v}}"{{- end}} }, arg{{ Capitalize $flag.Name }}) {
+            return fmt.Errorf("flag '{{ $flag.Name }}' cannot be set to: {{range $i, $v := $flag.RestrictedValues}}{{if $i}}, {{end}}{{$v}}{{end}}")
+            }
+        {{- end}}
+    {{- else if eq $flag.Type "int"}}
+        arg{{ Capitalize $flag.Name }} := viper.GetInt("{{ $flag.Name }}")
+        {{- if $flag.AllowedValues }}
+            if !slices.Contains([]int{ {{- range $i, $v := $flag.AllowedValues }}{{if $i}}, {{end}}{{$v}}{{- end}} }, arg{{ Capitalize $flag.Name }}) {
+            return fmt.Errorf("flag '{{ $flag.Name }}' must be one of: {{range $i, $v := $flag.AllowedValues}}{{if $i}}, {{end}}{{$v}}{{end}}")
+            }
+        {{- end}}
+        {{- if $flag.RestrictedValues }}
+            if slices.Contains([]int{ {{- range $i, $v := $flag.RestrictedValues }}{{if $i}}, {{end}}{{$v}}{{- end}} }, arg{{ Capitalize $flag.Name }}) {
+            return fmt.Errorf("flag '{{ $flag.Name }}' cannot be set to: {{range $i, $v := $flag.RestrictedValues}}{{if $i}}, {{end}}{{$v}}{{end}}")
+            }
+        {{- end}}
+    {{- else if eq $flag.Type "bool"}}
+        arg{{ Capitalize $flag.Name }} := viper.GetBool("{{ $flag.Name }}")
+        {{- if $flag.AllowedValues }}
+            if !slices.Contains([]bool{ {{- range $i, $v := $flag.AllowedValues }}{{if $i}}, {{end}}{{$v}}{{- end}} }, arg{{ Capitalize $flag.Name }}) {
+            return fmt.Errorf("flag '{{ $flag.Name }}' must be one of: {{range $i, $v := $flag.AllowedValues}}{{if $i}}, {{end}}{{$v}}{{end}}")
+            }
+        {{- end}}
+        {{- if $flag.RestrictedValues }}
+            if slices.Contains([]bool{ {{- range $i, $v := $flag.RestrictedValues }}{{if $i}}, {{end}}{{$v}}{{- end}} }, arg{{ Capitalize $flag.Name }}) {
+            return fmt.Errorf("flag '{{ $flag.Name }}' cannot be set to: {{range $i, $v := $flag.RestrictedValues}}{{if $i}}, {{end}}{{$v}}{{end}}")
+            }
+        {{- end}}
+    {{- else if eq $flag.Type "float64"}}
+        arg{{ Capitalize $flag.Name }} := viper.GetFloat64("{{ $flag.Name }}")
+        {{- if $flag.AllowedValues }}
+            if !slices.Contains([]float64{ {{- range $i, $v := $flag.AllowedValues }}{{if $i}}, {{end}}{{$v}}{{- end}} }, arg{{ Capitalize $flag.Name }}) {
+            return fmt.Errorf("flag '{{ $flag.Name }}' must be one of: {{range $i, $v := $flag.AllowedValues}}{{if $i}}, {{end}}%.2f{{end}}", {{- range $i, $v := $flag.AllowedValues }}{{if $i}}, {{end}}{{$v}}{{- end}})
+            }
+        {{- end}}
+        {{- if $flag.RestrictedValues }}
+            if slices.Contains([]float64{ {{- range $i, $v := $flag.RestrictedValues }}{{if $i}}, {{end}}{{$v}}{{- end}} }, arg{{ Capitalize $flag.Name }}) {
+            return fmt.Errorf("flag '{{ $flag.Name }}' cannot be set to: {{range $i, $v := $flag.RestrictedValues}}{{if $i}}, {{end}}%.2f{{end}}", {{- range $i, $v := $flag.RestrictedValues }}{{if $i}}, {{end}}{{$v}}{{- end}})
+            }
+        {{- end}}
+    {{- else}}
+        // UNKNOWN TYPE: {{ $flag.Type }} for flag {{ $flag.Name }}
     {{- end}}
-    {{- /* Now check if we have all the arguments we need */}}
+{{- end}}
     {{- if $sub.GoFlags }}
+    {{- /* Now check if we have all the arguments we need */}}
 
     ok := detectArgumentRequirements({{ BuildStringArgList $sub.GoFlags }})
     if !ok {

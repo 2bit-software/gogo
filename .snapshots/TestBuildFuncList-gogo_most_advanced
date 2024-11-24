@@ -35,7 +35,11 @@
         Description: (string) (len=17) "this is the value",
         Help: (string) "",
         Default: (string) (len=1) "3",
-        AllowedValues: ([]interface {}) <nil>,
+        AllowedValues: ([]interface {}) (len=3) {
+          (string) (len=1) "8",
+          (string) (len=1) "9",
+          (string) (len=2) "10"
+        },
         RestrictedValues: ([]interface {}) (len=3) {
           (string) (len=1) "1",
           (string) (len=1) "2",
