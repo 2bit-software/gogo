@@ -13,9 +13,8 @@ import (
 
 type Context interface {
 	stdContext.Context
-	SetDescription(string) Context     // This becomes the short description of the command.
-	SetLongDescription(string) Context // The becomes the long description of the command. This is normally inferred from the comment of the function.
-	Example(string) Context            // What would this go to?
+	SetShortDescription(string) Context // This becomes the short description of the command.
+	Example(string) Context             // What would this go to?
 	Argument(any) Argument
 }
 

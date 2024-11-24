@@ -15,9 +15,8 @@ import (
 
 func AdvancedFunction(ctx gogo.Context, name string, include bool, value int) error {
 	ctx.
-		SetDescription("set a description").
+		SetShortDescription("set a description").
 		Example("example").
-		SetLongDescription("this is the long description").
 		Argument(name).
 		Description("this is the name").
 		Default("default-value").

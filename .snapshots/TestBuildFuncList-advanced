@@ -1,7 +1,7 @@
 ([]gogo.function) (len=1) {
   (gogo.function) {
     Name: (string) (len=16) "AdvancedFunction",
-    Comment: (string) (len=28) "this is the long description",
+    Comment: (string) "",
     Description: (string) (len=17) "set a description",
     Example: (string) (len=7) "example",
     Arguments: ([]gogo.argument) (len=3) {

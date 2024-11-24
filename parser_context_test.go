@@ -117,7 +117,7 @@ func TestParse(t *testing.T) {
 			src: `package gogo
 				import "github.com/2bit-software/gogo"
 				func NewFunc(ctx gogo.Context) {
-ctx.SetDescription("This is a description")
+ctx.SetShortDescription("This is a description")
 }`,
 			expected: function{
 				Name:                "NewFunc",
@@ -131,9 +131,9 @@ ctx.SetDescription("This is a description")
 			name: "with gogo context all function options",
 			src: `package gogo
 				import "github.com/2bit-software/gogo"
+// This is a long description
 				func NewLongFunc(ctx gogo.Context) {
-ctx.SetDescription("This is a description").
-SetLongDescription("This is a long description").
+ctx.SetShortDescription("This is a description").
 Example("This is an example")
 }`,
 			expected: function{
@@ -151,7 +151,7 @@ Example("This is an example")
 			src: `package gogo
 				import "github.com/2bit-software/gogo"
 				func NewFunc(ctx gogo.Context, arg1 string) {
-ctx.SetDescription("This is a description")
+ctx.SetShortDescription("This is a description")
 }`,
 			expected: function{
 				Name:                "NewFunc",
@@ -171,7 +171,7 @@ ctx.SetDescription("This is a description")
 			src: `package gogo
 				import "github.com/2bit-software/gogo"	
 				func NewFunc(ctx gogo.Context, var1 string) {
-					ctx.SetDescription("This is a description").
+					ctx.SetShortDescription("This is a description").
 					Argument(var1).
 					Help("This is an argument help message")
 }`,
@@ -194,7 +194,7 @@ ctx.SetDescription("This is a description")
 			src: `package gogo
 				import "github.com/2bit-software/gogo"
 				func NewFuncAdvanced(ctx gogo.Context, var1 string, var2 int) {
-					ctx.SetDescription("This is a description").
+					ctx.SetShortDescription("This is a description").
 					Argument(var1).
 					Help("This is an argument help message").
 					Default("default value").
@@ -228,7 +228,7 @@ ctx.SetDescription("This is a description")
 			src: `package gogo
 				import g2 "github.com/2bit-software/gogo"
 				func NewFuncAlias(ctx g2.Context) {
-					ctx.SetDescription("This is a description")
+					ctx.SetShortDescription("This is a description")
 				}`,
 			expected: function{
 				Name:                "NewFuncAlias",
@@ -286,7 +286,7 @@ func TestParseMany(t *testing.T) {
 			src: `package gogo
 				import "github.com/2bit-software/gogo"
 				func NewFunc1(ctx gogo.Context, func1Arg string) {
-					ctx.SetDescription("This is a description")
+					ctx.SetShortDescription("This is a description")
 				}
 				func NewFunc2(func2Arg bool) {}`,
 			expected: []function{
@@ -318,10 +318,10 @@ func TestParseMany(t *testing.T) {
 			src: `package gogo
 				import "github.com/2bit-software/gogo"
 				func NewFunc1(ctx gogo.Context, func1Arg string) {
-					ctx.SetDescription("This is a description")
+					ctx.SetShortDescription("This is a description")
 				}
 				func NewFunc2(ctx gogo.Context, func2Arg bool) {
-					ctx.SetDescription("This is another description")
+					ctx.SetShortDescription("This is another description")
 				}`,
 			expected: []function{
 				{

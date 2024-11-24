@@ -15,9 +15,8 @@ import (
 
 func MoreFunction(ctx gogo.Context, input string) {
 	ctx.
-		SetDescription("a description").
+		SetShortDescription("a description").
 		Example("example 2").
-		SetLongDescription("this is the longest description").
 		Argument(input).
 		Description("this is the input!").
 		Default("default-value-2")

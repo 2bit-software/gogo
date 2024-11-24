@@ -6,11 +6,7 @@ type gogoContext struct {
 
 type cmdArg struct {}
 
-func (c gogoContext) SetDescription(short string) gogo.Context {
-	return c
-}
-
-func (c gogoContext) SetLongDescription(long string) gogo.Context {
+func (c gogoContext) SetShortDescription(short string) gogo.Context {
 	return c
 }
 

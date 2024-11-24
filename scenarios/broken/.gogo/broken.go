@@ -8,7 +8,7 @@ package _gogo
 import "fmt"
 
 func BasicDescription(ctx templates.Context) error {
-	ctx.SetDescription("set a description")
+	ctx.SetShortDescription("set a description")
 	return nil
 }
 
@@ -23,7 +23,7 @@ func BasicDescriptionArgument(ctx templates.Context, var1 string, var2 bool) err
 }
 
 func BasicCtxChained(ctx templates.Context, var1 string, var2 bool) error {
-	ctx.SetDescription("set a description, this can use any go code to set the value")
+	ctx.SetShortDescription("set a description, this can use any go code to set the value")
 
 	fmt.Println(var1, var2)
 

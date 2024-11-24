@@ -11,11 +11,7 @@ type subCmdContext struct {
 type subCmdArgument struct {
 }
 
-func (c subCmdContext) SetDescription(short string) Context {
-	return c
-}
-
-func (c subCmdContext) SetLongDescription(long string) Context {
+func (c subCmdContext) SetShortDescription(short string) Context {
 	return c
 }
 

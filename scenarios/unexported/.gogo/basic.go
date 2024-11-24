@@ -15,7 +15,7 @@ import (
 
 // BasicDescription is the only exported function in this file, all others should be skipped
 func BasicDescription(ctx gogo.Context) error {
-	ctx.SetDescription("set a description")
+	ctx.SetShortDescription("set a description")
 	return nil
 }
 
@@ -30,7 +30,7 @@ func basicDescriptionArgument(ctx gogo.Context, var1 string, var2 bool) error {
 }
 
 func basicCtxChained(ctx gogo.Context, var1 string, var2 bool) error {
-	ctx.SetDescription("set a description, this can use any go code to set the value")
+	ctx.SetShortDescription("set a description, this can use any go code to set the value")
 
 	fmt.Println(var1, var2)
 

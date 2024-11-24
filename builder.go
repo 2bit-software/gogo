@@ -28,8 +28,8 @@ type renderData struct {
 
 type GoCmd struct {
 	Name           string // Name of the command
-	Short          string // Short Description of the command
-	Long           string // Long Description of the command
+	Short          string // Short Description of the command. Comes from the comment, unless overridden.
+	Long           string // Long Description of the command. This comes from the comment, if it exists.
 	Example        string // An example of using this command
 	GoFlags        []GoFlag
 	ErrorReturn    bool // If true, the command returns an error
