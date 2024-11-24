@@ -31,11 +31,8 @@ const MAIN_FILENAME = "main.gogo.go"
 var (
 	//go:embed templates/*
 	templates   embed.FS
-	debug       = log.New(io.Discard, "DEBUG: ", log.Ltime|log.Lmicroseconds)
 	gogoFolders = []string{".gogo", "gogofiles", "magefiles"}
 	gogoTags    = []string{"gogo", "mage"}
-	// TODO: it would be cool to remove this limit, and somehow determine screen/terminal width before printing, and use that
-	screenCharLimit = 170
 )
 
 // TODO: I think this run function needs a cache of parsed files, passed throughout
@@ -44,19 +41,16 @@ var (
 // Run this is a simplified version of the Run function in cmd/gogo/main.go
 // For now it only searches for the local gogo files, and does not try to
 // determine if the function exists in the global cache.
-func Run(opts RunOpts, args []string) error {
-	if opts.Verbose {
-		debug.SetOutput(os.Stdout)
-	}
-	debug.Printf("Running with %+v\n", opts)
+func Run(log *log.Logger, opts RunOpts, args []string) error {
+	log.Printf("Running with %+v\n", opts)
 	// detect if we're requesting to build the local cache
 	if opts.BuildLocalCache {
-		return BuildLocal(opts)
+		return BuildLocal(log, opts)
 	}
 	if opts.BuildGlobalCache {
 		opts.SourceDir = opts.GlobalSourceDir
 		opts.OutputDir = opts.GlobalBinDir
-		return Build(opts.BuildOpts)
+		return Build(log, opts.BuildOpts)
 	}
 
 	// determine the outputFilePath if not provided
@@ -67,7 +61,7 @@ func Run(opts RunOpts, args []string) error {
 		return fmt.Errorf("no function provided")
 	}
 
-	debug.Printf("Running function: %s\n", args[0])
+	log.Printf("Running function: %s\n", args[0])
 	funcToRun := args[0]
 	// search for gogo files to run in local namespaces
 	cwd, err := os.Getwd()
@@ -91,7 +85,7 @@ func Run(opts RunOpts, args []string) error {
 
 	opts.SourceDir = gogoFolder
 
-	err = getBuiltBinary(opts.BuildOpts)
+	err = getBuiltBinary(log, opts.BuildOpts)
 	if err != nil {
 		return err
 	}
@@ -101,7 +95,7 @@ func Run(opts RunOpts, args []string) error {
 			args[i] = `""`
 		}
 	}
-	debug.Printf("Running built binary: %s with args %v\n", opts.BinaryFilepath, args)
+	log.Printf("Running built binary: %s with args %v\n", opts.BinaryFilepath, args)
 	// run the binary with the desire target func and arguments, unless it exists in the cache
 	out, err := sh.Cmd(opts.BinaryFilepath).SetArgs(args...).StdOut()
 	if err != nil {
@@ -117,29 +111,9 @@ func Run(opts RunOpts, args []string) error {
 	return nil
 }
 
-func getBinaryFilename(opts RunOpts) (string, error) {
-	if opts.BinaryFilepath != "" {
-		return opts.BinaryFilepath, nil
-	}
-	// generate filename for this binary
-	// get the name of the current directory
-	dirName := path.Base(opts.OriginalWorkingDir)
-	// hash the directory name
-	hashedDirName, err := hashString(dirName)
-	if err != nil {
-		return "", fmt.Errorf("failed to hash directory name: %w", err)
-	}
-	filename := fmt.Sprintf("%v-%v", dirName, hashedDirName)
-	debug.Printf("Building binary in: %v with filename:%v\n", opts.OutputDir, filename)
-	return filepath.Join(opts.OutputDir, filename), nil
-}
-
 // BuildLocal searches for the local gogo files, and builds the binary
-func BuildLocal(opts RunOpts) error {
-	if opts.Verbose {
-		debug.SetOutput(os.Stdout)
-	}
-	debug.Println("Building local cache...")
+func BuildLocal(log *log.Logger, opts RunOpts) error {
+	log.Println("Building local cache...")
 	var err error
 	opts.BinaryFilepath, err = getBinaryFilename(opts)
 	if err != nil {
@@ -155,10 +129,10 @@ func BuildLocal(opts RunOpts) error {
 	}
 	gogoFolder := path.Dir(gogoFiles[0])
 	opts.SourceDir = gogoFolder
-	return Build(opts.BuildOpts)
+	return Build(log, opts.BuildOpts)
 }
 
-func BuildGlobal(opts RunOpts) error {
+func BuildGlobal(log *log.Logger, opts RunOpts) error {
 	return nil
 }
 
@@ -194,6 +168,30 @@ func BuildFuncList(opts RunOpts) ([]function, error) {
 	// merge them
 	files := append(localFiles, globalFuncs...)
 	return parseAll(files)
+}
+
+func GetLogger(verbose bool) *log.Logger {
+	if verbose {
+		return log.New(os.Stdout, "DEBUG", log.LstdFlags)
+	}
+	return log.New(io.Discard, "DISCARD", log.LstdFlags)
+}
+
+func getBinaryFilename(opts RunOpts) (string, error) {
+	if opts.BinaryFilepath != "" {
+		return opts.BinaryFilepath, nil
+	}
+	// generate filename for this binary
+	// get the name of the current directory
+	dirName := path.Base(opts.OriginalWorkingDir)
+	// hash the directory name
+	hashedDirName, err := hashString(dirName)
+	if err != nil {
+		return "", fmt.Errorf("failed to hash directory name: %w", err)
+	}
+	filename := fmt.Sprintf("%v-%v", dirName, hashedDirName)
+	log.Printf("Building binary in: %v with filename:%v\n", opts.OutputDir, filename)
+	return filepath.Join(opts.OutputDir, filename), nil
 }
 
 // printFuncList formats the output and prints it to the console
@@ -378,13 +376,13 @@ func findGoFiles(dir string) ([]string, error) {
 // The timestamp comparison is based on the go.mod, go.sum, and source .go files vs the timestamp of the binary
 // If the binary is out of date or does not exist it gets built.
 // We basically just enter the directory and use 'go build' to build the binary.
-func getBuiltBinary(buildOpts BuildOpts) error {
-	debug.Printf("Checking for cached binary: %s\n", buildOpts.BinaryFilepath)
+func getBuiltBinary(log *log.Logger, buildOpts BuildOpts) error {
+	log.Printf("Checking for cached binary: %s\n", buildOpts.BinaryFilepath)
 	rebuild := decideToRebuild(buildOpts)
 	if !rebuild {
 		return nil
 	}
-	err := Build(buildOpts)
+	err := Build(log, buildOpts)
 	if err != nil {
 		return err
 	}
@@ -396,23 +394,23 @@ func decideToRebuild(buildOpts BuildOpts) bool {
 	sourceFiles, err := fs.GlobMany([]string{buildOpts.SourceDir}, []string{"*.go", "go.mod", "go.sum"})
 	// if there's an error with the comparison, just build it
 	if err != nil {
-		debug.Printf("Error finding files to glob: %v\n", err)
+		log.Printf("Error finding files to glob: %v\n", err)
 		return true
 	}
-	debug.Printf("Found the following source files: %v\n", sourceFiles)
+	log.Printf("Found the following source files: %v\n", sourceFiles)
 	modified, err := fs.CompareTimes(sourceFiles, buildOpts.BinaryFilepath)
 	if err != nil {
-		debug.Printf("Error comparing timestamps: %v\n", err)
+		log.Printf("Error comparing timestamps: %v\n", err)
 		return true
 	}
-	debug.Printf("Changes detected: %v\n", modified)
+	log.Printf("Changes detected: %v\n", modified)
 	// if the file is not modified, and we're not forcing a rebuild, return the path to the binary
 	if !modified && !buildOpts.DisableCache {
-		debug.Printf("Re-using binary `%s` from cache\n", buildOpts.BinaryFilepath)
+		log.Printf("Re-using binary `%s` from cache\n", buildOpts.BinaryFilepath)
 		return false
 	}
 	if buildOpts.DisableCache {
-		debug.Printf("Forcing rebuild of binary `%s`\n", buildOpts.BinaryFilepath)
+		log.Printf("Forcing rebuild of binary `%s`\n", buildOpts.BinaryFilepath)
 		return true
 	}
 	return false

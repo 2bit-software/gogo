@@ -33,13 +33,15 @@ You can configure this using the flags, and the .gogoconfig file.`,
 			return err
 		}
 
+		log := gogo.GetLogger(opts.Verbose)
+
 		if opts.BuildGlobalCache {
-			err = gogo.BuildGlobal(opts)
+			err = gogo.BuildGlobal(log, opts)
 			return err
 		}
 
 		// run the command
-		err = gogo.BuildLocal(opts)
+		err = gogo.BuildLocal(log, opts)
 		return err
 	},
 }

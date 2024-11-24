@@ -122,9 +122,9 @@ func defaultFuncMap() template.FuncMap {
 // configuration options, and builds the resulting binary.
 // The buildDir is the directory in which we are building the source FROM.
 // The output of the binary can be specified in the buildOpts.OutputFilepath
-func Build(buildOpts BuildOpts) error {
+func Build(log *log.Logger, buildOpts BuildOpts) error {
 	mainFilePath := filepath.Join(buildOpts.SourceDir, MAIN_FILENAME)
-	debug.Printf("Building main go file: %v\n", mainFilePath)
+	log.Printf("Building main go file: %v\n", mainFilePath)
 	err := buildSource(buildOpts.SourceDir, mainFilePath)
 
 	// delete the main.gogo.go file when we're done
@@ -132,7 +132,7 @@ func Build(buildOpts BuildOpts) error {
 		if buildOpts.KeepArtifacts {
 			return
 		}
-		debug.Printf("Removing main go file from %v\n", mainFilePath)
+		log.Printf("Removing main go file from %v\n", mainFilePath)
 		defErr := os.Remove(mainFilePath)
 		if defErr != nil {
 			log.Println(defErr)
