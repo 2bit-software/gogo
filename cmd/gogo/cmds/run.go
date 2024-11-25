@@ -20,15 +20,15 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(funcCmd)
+	rootCmd.AddCommand(runCmd)
 
-	funcCmd.FParseErrWhitelist.UnknownFlags = true
-	funcCmd.Flags().BoolP("keep-artifacts", "k", false, "Keep the .go files and built binaries.")
-	funcCmd.Flags().BoolP("disable-cache", "d", false, "Disable cache, forces everything to rebuild.")
+	runCmd.FParseErrWhitelist.UnknownFlags = true
+	runCmd.Flags().BoolP("keep-artifacts", "k", false, "Keep the .go files and built binaries.")
+	runCmd.Flags().BoolP("disable-cache", "d", false, "Disable cache, forces everything to rebuild.")
 }
 
-// funcCmd represents the run command
-var funcCmd = &cobra.Command{
+// runCmd represents the run command
+var runCmd = &cobra.Command{
 	Use:   "func",
 	Short: "Run the go function.",
 	Long:  `Run the go function.`,
