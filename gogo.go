@@ -184,7 +184,7 @@ func getBinaryFilename(opts RunOpts) (string, error) {
 		return "", fmt.Errorf("failed to hash directory name: %w", err)
 	}
 	filename := fmt.Sprintf("%v-%v", dirName, hashedDirName)
-	log.Printf("Building binary in: %v with filename:%v\n", opts.OutputDir, filename)
+	opts.GetLogger().Printf("Building binary in: %v with filename:%v\n", opts.OutputDir, filename)
 	return filepath.Join(opts.OutputDir, filename), nil
 }
 
@@ -372,7 +372,7 @@ func findGoFiles(dir string) ([]string, error) {
 // We basically just enter the directory and use 'go build' to build the binary.
 func getBuiltBinary(log *log.Logger, buildOpts BuildOpts) error {
 	log.Printf("Checking for cached binary: %s\n", buildOpts.BinaryFilepath)
-	rebuild := decideToRebuild(buildOpts)
+	rebuild := decideToRebuild(log, buildOpts)
 	if !rebuild {
 		return nil
 	}
@@ -384,27 +384,27 @@ func getBuiltBinary(log *log.Logger, buildOpts BuildOpts) error {
 }
 
 // decideToRebuild determines if we should rebuild the binary based on the source files and the binary file
-func decideToRebuild(buildOpts BuildOpts) bool {
+func decideToRebuild(debug *log.Logger, buildOpts BuildOpts) bool {
 	sourceFiles, err := fs.GlobMany([]string{buildOpts.SourceDir}, []string{"*.go", "go.mod", "go.sum"})
 	// if there's an error with the comparison, just build it
 	if err != nil {
-		log.Printf("Error finding files to glob: %v\n", err)
+		debug.Printf("Error finding files to glob: %v\n", err)
 		return true
 	}
-	log.Printf("Found the following source files: %v\n", sourceFiles)
+	debug.Printf("Found the following source files: %v\n", sourceFiles)
 	modified, err := fs.CompareTimes(sourceFiles, buildOpts.BinaryFilepath)
 	if err != nil {
-		log.Printf("Error comparing timestamps: %v\n", err)
+		debug.Printf("Error comparing timestamps: %v\n", err)
 		return true
 	}
-	log.Printf("Changes detected: %v\n", modified)
+	debug.Printf("Changes detected: %v\n", modified)
 	// if the file is not modified, and we're not forcing a rebuild, return the path to the binary
 	if !modified && !buildOpts.DisableCache {
-		log.Printf("Re-using binary `%s` from cache\n", buildOpts.BinaryFilepath)
+		debug.Printf("Re-using binary `%s` from cache\n", buildOpts.BinaryFilepath)
 		return false
 	}
 	if buildOpts.DisableCache {
-		log.Printf("Forcing rebuild of binary `%s`\n", buildOpts.BinaryFilepath)
+		debug.Printf("Forcing rebuild of binary `%s`\n", buildOpts.BinaryFilepath)
 		return true
 	}
 	return false

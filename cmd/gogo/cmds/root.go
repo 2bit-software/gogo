@@ -104,12 +104,6 @@ var rootCmd = &cobra.Command{
 }
 
 func prepareCommand(cmd *cobra.Command) error {
-	// silence usage on error
-	cmd.SilenceUsage = true
-
-	// Whitelist unknown flags, so we can pass them to the subcommands
-	cmd.FParseErrWhitelist.UnknownFlags = true
-
 	// set flags
 	cmd.PersistentFlags().BoolP("verbose", "v", false, "Verbose output.")
 	cmd.Flags().Bool("version", false, "Print the version.")

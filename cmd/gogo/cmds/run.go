@@ -20,16 +20,11 @@ import (
 // runCmd represents the run command
 var runCmd = &cobra.Command{
 	Use:   "run",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Run the go function.",
+	Long:  `Run the go function.`,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		// Get the original args from os.Args
-		originalArgs := os.Args[1:] // Skip the program name
+		originalArgs := os.Args[2:] // Skip the program name
 
 		// Parse hidden flags and get remaining args
 		gogoArgs, subCmdArgs := gogo.ParseHiddenFlags(originalArgs)
@@ -40,7 +35,7 @@ to quickly create a Cobra application.`,
 		}
 
 		// in this case we have flags we actually want parsed by gogo, and don't want
-		// to manually re-parse them, so we clone the rootCmd without the persistenRunE, and
+		// to manually re-parse them, so we clone the rootCmd without the PreRunE, and
 		// run it with the remaining args
 		// Create a new root command that will handle the remaining args
 		// TODO: we may need to special case this for auto-completion commands!
@@ -88,7 +83,6 @@ to quickly create a Cobra application.`,
 		hiddenArgs := cmd.Context().Value(gogo.HiddenArgsKey{})
 		if hiddenArgs != nil {
 			args = hiddenArgs.([]string)
-			args = hiddenArgs.([]string)
 		}
 
 		// build our program arguments
@@ -113,4 +107,10 @@ to quickly create a Cobra application.`,
 
 func init() {
 	rootCmd.AddCommand(runCmd)
+
+	// silence usage on error
+	runCmd.SilenceUsage = true
+
+	// Whitelist unknown flags, so we can pass them to the subcommands
+	runCmd.FParseErrWhitelist.UnknownFlags = true
 }
