@@ -12,10 +12,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/2bit-software/gogo"
-	"github.com/2bit-software/gogo/pkg/sh"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/2bit-software/gogo"
+	"github.com/2bit-software/gogo/pkg/sh"
 )
 
 var cfgFile string
