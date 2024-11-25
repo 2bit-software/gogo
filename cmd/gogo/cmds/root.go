@@ -19,16 +19,28 @@ import (
 )
 
 var cfgFile string
-var shellCompletionTarget string
-var completionInfo string
 
 func init() {
 	// set context of cmd so we can use it to pass data to subcommands
 	rootCmd.SetContext(context.Background())
 
+	// set flags
+	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "Verbose output.")
+	rootCmd.Flags().Bool("version", false, "Print the version.")
+	rootCmd.Flags().BoolP("keep-artifacts", "k", false, "Keep the .go files and built binaries.")
+	rootCmd.Flags().BoolP("disable-cache", "d", false, "Disable cache, forces everything to rebuild.")
+	rootCmd.Flags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gogo.yaml).")
+
+	if err := viper.BindPFlag("VERBOSE", rootCmd.PersistentFlags().Lookup("verbose")); err != nil {
+		fmt.Printf("error setting flags: %v\n", err)
+	}
+
 	viper.SetEnvPrefix("GOGO")
 	// make sure it sources environment variables as well
 	viper.AutomaticEnv()
+
+	// Whitelist unknown flags, so we can pass them to the subcommands
+	rootCmd.FParseErrWhitelist.UnknownFlags = true
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -58,9 +70,6 @@ var rootCmd = &cobra.Command{
 		fmt.Println(validTargets)
 		return []string{}, cobra.ShellCompDirectiveNoFileComp
 	},
-	CompletionOptions: cobra.CompletionOptions{
-		DisableDefaultCmd: true, // disable default completion for the root command
-	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		// the only unique behavior this provides is if someone types "gogo" without any arguments,
 		// and there are either global or local functions, then we list out the functions, instead of normal gogo help
@@ -69,14 +78,11 @@ var rootCmd = &cobra.Command{
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// Bind flags to viper and check for errors
-		if err := viper.BindPFlag("VERBOSE", cmd.PersistentFlags().Lookup("verbose")); err != nil {
-			fmt.Printf("error setting flags: %v\n", err)
-		}
 		if err := viper.BindPFlag("KEEP_ARTIFACTS", cmd.Flags().Lookup("keep-artifacts")); err != nil {
-			fmt.Printf("error setting flags: %v\n", err)
+			return err
 		}
 		if err := viper.BindPFlag("DISABLE_CACHE", cmd.Flags().Lookup("disable-cache")); err != nil {
-			fmt.Printf("error setting flags: %v\n", err)
+			return err
 		}
 
 		version := cmd.Flags().Changed("version")
@@ -101,16 +107,6 @@ var rootCmd = &cobra.Command{
 		}
 		return nil
 	},
-}
-
-func prepareCommand(cmd *cobra.Command) error {
-	// set flags
-	cmd.PersistentFlags().BoolP("verbose", "v", false, "Verbose output.")
-	cmd.Flags().Bool("version", false, "Print the version.")
-	cmd.Flags().BoolP("keep-artifacts", "k", false, "Keep the .go files and built binaries.")
-	cmd.Flags().BoolP("disable-cache", "d", false, "Disable cache, forces everything to rebuild.")
-	cmd.Flags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gogo.yaml).")
-	return nil
 }
 
 // buildOptions binds the command flags to viper and reads the values from viper

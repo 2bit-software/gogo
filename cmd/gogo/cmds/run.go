@@ -15,13 +15,28 @@ import (
 
 	"github.com/2bit-software/gogo"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
-// runCmd represents the run command
-var runCmd = &cobra.Command{
-	Use:   "run",
+// funcCmd represents the run command
+var funcCmd = &cobra.Command{
+	Use:   "func",
 	Short: "Run the go function.",
 	Long:  `Run the go function.`,
+	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		// if no args are provided, it returns the complete list of available functions/commands
+		// this does NOT expect handling any auto-complete past the first argument, since that *should*
+		// be auto-completed by the built binary/function itself. The auto-completion script
+		// should detect when the auto-completion is for an argument past the first, request the necessary information
+		// from this binary using --autocomplete=<funcName>, and then request auto-completion information from the built
+		// binary/function itself.
+		if len(args) > 0 {
+			return nil, cobra.ShellCompDirectiveNoFileComp
+		}
+		validTargets, _ := gogo.BuildFuncList(gogo.RunOpts{})
+		fmt.Println(validTargets)
+		return []string{}, cobra.ShellCompDirectiveNoFileComp
+	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		// Get the original args from os.Args
 		originalArgs := os.Args[2:] // Skip the program name
@@ -48,9 +63,13 @@ var runCmd = &cobra.Command{
 			ValidArgsFunction: cmd.ValidArgsFunction,
 			CompletionOptions: cmd.CompletionOptions,
 		}
+		newCmd.Flags().BoolP("keep-artifacts", "k", false, "Keep the .go files and built binaries.")
+		newCmd.Flags().BoolP("disable-cache", "d", false, "Disable cache, forces everything to rebuild.")
 
-		err := prepareCommand(newCmd)
-		if err != nil {
+		if err := viper.BindPFlag("KEEP_ARTIFACTS", newCmd.Flags().Lookup("keep-artifacts")); err != nil {
+			return err
+		}
+		if err := viper.BindPFlag("DISABLE_CACHE", newCmd.Flags().Lookup("disable-cache")); err != nil {
 			return err
 		}
 
@@ -106,11 +125,9 @@ var runCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(runCmd)
+	rootCmd.AddCommand(funcCmd)
 
-	// silence usage on error
-	runCmd.SilenceUsage = true
-
-	// Whitelist unknown flags, so we can pass them to the subcommands
-	runCmd.FParseErrWhitelist.UnknownFlags = true
+	funcCmd.FParseErrWhitelist.UnknownFlags = true
+	funcCmd.Flags().BoolP("keep-artifacts", "k", false, "Keep the .go files and built binaries.")
+	funcCmd.Flags().BoolP("disable-cache", "d", false, "Disable cache, forces everything to rebuild.")
 }
