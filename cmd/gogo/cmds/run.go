@@ -18,6 +18,14 @@ import (
 	"github.com/spf13/viper"
 )
 
+func init() {
+	rootCmd.AddCommand(funcCmd)
+
+	funcCmd.FParseErrWhitelist.UnknownFlags = true
+	funcCmd.Flags().BoolP("keep-artifacts", "k", false, "Keep the .go files and built binaries.")
+	funcCmd.Flags().BoolP("disable-cache", "d", false, "Disable cache, forces everything to rebuild.")
+}
+
 // funcCmd represents the run command
 var funcCmd = &cobra.Command{
 	Use:   "func",
@@ -122,12 +130,4 @@ var funcCmd = &cobra.Command{
 		}
 		return err
 	},
-}
-
-func init() {
-	rootCmd.AddCommand(funcCmd)
-
-	funcCmd.FParseErrWhitelist.UnknownFlags = true
-	funcCmd.Flags().BoolP("keep-artifacts", "k", false, "Keep the .go files and built binaries.")
-	funcCmd.Flags().BoolP("disable-cache", "d", false, "Disable cache, forces everything to rebuild.")
 }

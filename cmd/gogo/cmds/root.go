@@ -20,6 +20,15 @@ import (
 
 var cfgFile string
 
+// Execute adds all child commands to the root command and sets flags appropriately.
+// This is called by main.main(). It only needs to happen once to the rootCmd.
+func Execute() {
+	err := rootCmd.Execute()
+	if err != nil {
+		os.Exit(1)
+	}
+}
+
 func init() {
 	// set context of cmd so we can use it to pass data to subcommands
 	rootCmd.SetContext(context.Background())
@@ -43,15 +52,6 @@ func init() {
 	rootCmd.FParseErrWhitelist.UnknownFlags = true
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	err := rootCmd.Execute()
-	if err != nil {
-		os.Exit(1)
-	}
-}
-
 var rootCmd = &cobra.Command{
 	Use:   "gogo",
 	Short: "A decent JIT-like Go task runner",
@@ -69,12 +69,6 @@ var rootCmd = &cobra.Command{
 		validTargets, _ := gogo.BuildFuncList(gogo.RunOpts{})
 		fmt.Println(validTargets)
 		return []string{}, cobra.ShellCompDirectiveNoFileComp
-	},
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		// the only unique behavior this provides is if someone types "gogo" without any arguments,
-		// and there are either global or local functions, then we list out the functions, instead of normal gogo help
-		// If no functions are found, we just run the help command
-		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// Bind flags to viper and check for errors
@@ -97,12 +91,15 @@ var rootCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
+
 			count, err := gogo.ShowFuncList(opts)
 			if err != nil {
 				return err
 			}
 			if count == 0 {
 				_ = cmd.Help()
+			} else {
+				fmt.Println("Type 'gogo func <function>' to run a function, or `gogo --help` for more information.")
 			}
 		}
 		return nil
