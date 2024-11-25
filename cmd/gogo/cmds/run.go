@@ -32,18 +32,32 @@ var funcCmd = &cobra.Command{
 	Short: "Run the go function.",
 	Long:  `Run the go function.`,
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		// if no args are provided, it returns the complete list of available functions/commands
-		// this does NOT expect handling any auto-complete past the first argument, since that *should*
-		// be auto-completed by the built binary/function itself. The auto-completion script
-		// should detect when the auto-completion is for an argument past the first, request the necessary information
-		// from this binary using --autocomplete=<funcName>, and then request auto-completion information from the built
-		// binary/function itself.
-		if len(args) > 0 {
+		funcList, err := gogo.BuildFuncList(gogo.RunOpts{
+			Verbose:         false,
+			GlobalSourceDir: "",
+			GlobalBinDir:    "",
+		})
+		if err != nil {
 			return nil, cobra.ShellCompDirectiveNoFileComp
 		}
-		validTargets, _ := gogo.BuildFuncList(gogo.RunOpts{})
-		fmt.Println(validTargets)
-		return []string{}, cobra.ShellCompDirectiveNoFileComp
+
+		var completions []string
+		toCompleteLower := strings.ToLower(toComplete)
+		for _, f := range funcList {
+			if strings.HasPrefix(strings.ToLower(f.Name), toCompleteLower) {
+				completions = append(completions, f.Name)
+			}
+		}
+
+		// Log the args, toComplete, and completions to /tmp/gogo.log
+		//logFile, err := os.OpenFile("/tmp/gogo.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		//if err == nil {
+		//	defer logFile.Close()
+		//	logData := fmt.Sprintf("Args: %v\nToComplete: %s\nCompletions: %v\n", args, toComplete, completions)
+		//	logFile.WriteString(logData)
+		//}
+
+		return completions, cobra.ShellCompDirectiveDefault
 	},
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		// Get the original args from os.Args

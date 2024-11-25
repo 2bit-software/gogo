@@ -56,20 +56,6 @@ var rootCmd = &cobra.Command{
 	Use:   "gogo",
 	Short: "A decent JIT-like Go task runner",
 	Long:  `Provides a way to generate CLI libraries from a collection of functions, and optionally run them.`,
-	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		// if no args are provided, it returns the complete list of available functions/commands
-		// this does NOT expect handling any auto-complete past the first argument, since that *should*
-		// be auto-completed by the built binary/function itself. The auto-completion script
-		// should detect when the auto-completion is for an argument past the first, request the necessary information
-		// from this binary using --autocomplete=<funcName>, and then request auto-completion information from the built
-		// binary/function itself.
-		if len(args) > 0 {
-			return nil, cobra.ShellCompDirectiveNoFileComp
-		}
-		validTargets, _ := gogo.BuildFuncList(gogo.RunOpts{})
-		fmt.Println(validTargets)
-		return []string{}, cobra.ShellCompDirectiveNoFileComp
-	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// Bind flags to viper and check for errors
 		if err := viper.BindPFlag("KEEP_ARTIFACTS", cmd.Flags().Lookup("keep-artifacts")); err != nil {
