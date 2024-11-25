@@ -22,7 +22,7 @@ tasks:
     cmds:
       - |
         target=$(go env GOBIN)
-        go run cmd/gogo/main.go func CompileGo --binaryName=gogo --inputFolderPath=./cmd/gogo --outputFolderPath=/tmp --tags=gogo --strArch="arm64" --strOs="darwin" --versionPath="github.com/2bit-software/gogo/cmd/gogo/cmds" -- --keep-artifacts=true --disable-cache=true
+        go run cmd/gogo/main.go run CompileGo --binaryName=gogo --inputFolderPath=./cmd/gogo --outputFolderPath=/tmp --tags=gogo --strArch="arm64" --strOs="darwin" --versionPath="github.com/2bit-software/gogo/cmd/gogo/cmds" -- --keep-artifacts=true --disable-cache=true
         echo "Copying gogo to ${target}"
         cp /tmp/gogo-darwin-arm64 ${target}/gogo
 

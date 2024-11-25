@@ -29,7 +29,7 @@ func init() {
 
 // runCmd represents the run command
 var runCmd = &cobra.Command{
-	Use:   "func",
+	Use:   "run",
 	Short: "Run the go function.",
 	Long:  `Run the go function.`,
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
