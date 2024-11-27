@@ -16,7 +16,6 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/2bit-software/gogo"
-	"github.com/2bit-software/gogo/pkg/sh"
 )
 
 var cfgFile string
@@ -74,7 +73,7 @@ var rootCmd = &cobra.Command{
 		// try listing the functions
 		if len(args) == 0 {
 			// build our program arguments
-			opts, err := buildOptions()
+			opts, err := BuildOptions()
 			if err != nil {
 				return err
 			}
@@ -91,36 +90,4 @@ var rootCmd = &cobra.Command{
 		}
 		return nil
 	},
-}
-
-// buildOptions binds the command flags to viper and reads the values from viper
-func buildOptions() (gogo.RunOpts, error) {
-	// Read the values from viper
-	runOpts := gogo.RunOpts{
-		Verbose:          viper.GetBool("VERBOSE"),
-		GlobalSourceDir:  viper.GetString("GLOBAL_DIR"),
-		BuildLocalCache:  viper.GetBool("BUILD_LOCAL"),
-		BuildGlobalCache: viper.GetBool("BUILD_GLOBAL"),
-		BuildOpts: gogo.BuildOpts{
-			KeepArtifacts:      viper.GetBool("KEEP_ARTIFACTS"),
-			IndividualBinaries: viper.GetBool("INDIVIDUAL_BINARIES"),
-			DisableCache:       viper.GetBool("DISABLE_CACHE"),
-			Optimize:           viper.GetBool("OPTIMIZE"),
-			SourceDir:          viper.GetString("BUILD_DIR"),
-		},
-	}
-
-	width := sh.DetermineWidth(runOpts.Verbose)
-	if width > 0 {
-		runOpts.ScreenWidth = width
-	}
-
-	cwd, err := os.Getwd()
-	if err != nil {
-		return runOpts, err
-	}
-
-	runOpts.OriginalWorkingDir = cwd
-
-	return runOpts, nil
 }

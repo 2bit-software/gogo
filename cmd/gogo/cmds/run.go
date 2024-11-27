@@ -128,7 +128,7 @@ var runCmd = &cobra.Command{
 		}
 
 		// build our program arguments
-		opts, err := buildOptions()
+		opts, err := BuildOptions()
 		if err != nil {
 			return err
 		}

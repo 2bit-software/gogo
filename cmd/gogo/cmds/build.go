@@ -28,7 +28,7 @@ This command bypasses all caches.
 You can configure this using the flags, and the .gogoconfig file.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// build our program arguments
-		opts, err := buildOptions()
+		opts, err := BuildOptions()
 		if err != nil {
 			return err
 		}

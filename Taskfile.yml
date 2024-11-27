@@ -26,6 +26,15 @@ tasks:
         echo "Copying gogo to ${target}"
         cp /tmp/gogo-darwin-arm64 ${target}/gogo
 
+  install:wizard:
+    desc: Install Wizard, the mage drop-in replacement.
+    cmds:
+      - |
+        target=$(go env GOBIN)
+        go run cmd/gogo/main.go run CompileGo --binaryName=wizard --inputFolderPath=./cmd/wizard --outputFolderPath=/tmp --tags=gogo --strArch="arm64" --strOs="darwin" --versionPath="github.com/2bit-software/gogo/cmd/gogo/cmds" -- --keep-artifacts=true --disable-cache=true
+        echo "Copying wizard to ${target}"
+        cp /tmp/wizard-darwin-arm64 ${target}/wizard
+
   test:
     desc: Runs all tests
     cmds:
