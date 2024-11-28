@@ -14,7 +14,8 @@ func BuildOptions() (gogo.RunOpts, error) {
 	// Read the values from viper
 	runOpts := gogo.RunOpts{
 		Verbose:          viper.GetBool("VERBOSE"),
-		GlobalSourceDir:  viper.GetString("GLOBAL_DIR"),
+		GlobalSourceDir:  viper.GetString("GLOBAL_SOURCE_DIR"),
+		GlobalBinDir:     viper.GetString("GLOBAL_BIN_DIR"),
 		BuildLocalCache:  viper.GetBool("BUILD_LOCAL"),
 		BuildGlobalCache: viper.GetBool("BUILD_GLOBAL"),
 		BuildOpts: gogo.BuildOpts{

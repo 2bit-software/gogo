@@ -38,9 +38,13 @@ func init() {
 	rootCmd.Flags().Bool("version", false, "Print the version.")
 	rootCmd.Flags().BoolP("keep-artifacts", "k", false, "Keep the .go files and built binaries.")
 	rootCmd.Flags().BoolP("disable-cache", "d", false, "Disable cache, forces everything to rebuild.")
-	rootCmd.Flags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gogo.yaml).")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gogo.yaml).")
 
 	if err := viper.BindPFlag("VERBOSE", rootCmd.PersistentFlags().Lookup("verbose")); err != nil {
+		fmt.Printf("error setting flags: %v\n", err)
+	}
+
+	if err := viper.BindPFlag("CONFIG", rootCmd.PersistentFlags().Lookup("config")); err != nil {
 		fmt.Printf("error setting flags: %v\n", err)
 	}
 
@@ -50,6 +54,25 @@ func init() {
 
 	// Whitelist unknown flags, so we can pass them to the subcommands
 	rootCmd.FParseErrWhitelist.UnknownFlags = true
+
+	// Set the configuration file name and type
+	viper.SetConfigName("gogo")
+	viper.SetConfigType("toml")
+
+	// Add the search paths
+	viper.AddConfigPath(".")                // current directory
+	viper.AddConfigPath("$HOME")            // home directory
+	viper.AddConfigPath("$XDG_CONFIG_HOME") // XDG config home
+
+	// If a config file is specified with --config, use it
+	if cfgFile != "" {
+		viper.SetConfigFile(cfgFile)
+	}
+
+	// Read the configuration file
+	if err := viper.ReadInConfig(); err != nil {
+		fmt.Printf("error reading config file: %v\n", err)
+	}
 }
 
 var rootCmd = &cobra.Command{

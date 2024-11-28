@@ -1,0 +1,16 @@
+# An example of a configuration file for the gogo compiler
+
+# Set default verbosity
+VERBOSE = false
+# The source directory for the global cache
+GLOBAL_SOURCE_DIR = "$HOME/.gogo"
+# The output directory for the global cache
+GLOBAL_BIN_DIR = "$HOME/.local/bin"
+# Keep intermediary artifacts like generated go code
+KEEP_ARTIFACTS = false
+# Individual binaries per function, instead of a single binary
+INDIVIDUAL_BINARIES = false
+# For each run, by default, disable the cache
+DISABLE_CACHE = false
+# Strip out debug information from the final binary
+OPTIMIZE = false
