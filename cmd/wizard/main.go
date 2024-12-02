@@ -59,8 +59,7 @@ capabilities.`,
 		}
 		// if there's an error, add an extra newline before starting to print
 		if err != nil {
-			fmt.Println("-")
-			fmt.Print(err)
+			_, _ = fmt.Fprintf(os.Stdout, "-\n%v", err)
 		}
 		return nil
 	},
