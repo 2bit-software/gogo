@@ -9,6 +9,7 @@ package cmds
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 
@@ -66,12 +67,22 @@ func init() {
 
 	// If a config file is specified with --config, use it
 	if cfgFile != "" {
+		// now detect if the config file exists before reading it
+		if _, err := os.Stat(cfgFile); os.IsNotExist(err) {
+			// we explicitly asked to use a config file that doesn't exist, so error out
+			_, _ = fmt.Fprintf(os.Stderr, "config file %s does not exist\n", cfgFile)
+			return
+		}
 		viper.SetConfigFile(cfgFile)
 	}
 
 	// Read the configuration file
 	if err := viper.ReadInConfig(); err != nil {
-		fmt.Printf("error reading config file: %v\n", err)
+		var configFileNotFoundError viper.ConfigFileNotFoundError
+		if errors.As(err, &configFileNotFoundError) {
+			return
+		}
+		_, _ = fmt.Fprintf(os.Stderr, "error reading config file: %v\n", err)
 	}
 }
 
