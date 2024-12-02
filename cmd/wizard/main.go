@@ -60,7 +60,8 @@ capabilities.`,
 		// if there's an error, add an extra newline before starting to print
 		if err != nil {
 			fmt.Println("-")
+			fmt.Print(err)
 		}
-		return err
+		return nil
 	},
 }
