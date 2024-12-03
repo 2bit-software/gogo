@@ -9,7 +9,6 @@ package cmds
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"strings"
 
@@ -138,10 +137,6 @@ var runCmd = &cobra.Command{
 		if err != nil && len(args) == 0 {
 			// if we have an error and no arguments, print the help
 			_ = cmd.Help()
-		}
-		// if there's an error, add an extra newline before starting to print
-		if err != nil {
-			fmt.Println("-")
 		}
 		return err
 	},

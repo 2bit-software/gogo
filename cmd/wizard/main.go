@@ -38,17 +38,18 @@ var runCmd = &cobra.Command{
 	Short: "A mage-compatible GoGo wizard",
 	Long: `An entrypoint you can symlink from mage to which will use GoGo instead. It does not support most of the shell enhancements that GoGo provides, but it does support all of the function
 capabilities.`,
-	RunE: func(cmd *cobra.Command, args []string) error {
+	Run: func(cmd *cobra.Command, args []string) {
 		// build our program arguments
 		opts, err := cmds.BuildOptions()
 		if err != nil {
-			return err
+			_, _ = fmt.Fprintf(os.Stdout, "%v", err)
+			os.Exit(1)
 		}
 
 		// if this is a version request
 		if viper.GetBool("VERSION") {
 			cmd.Printf("%+v\n", cmds.Version())
-			return nil
+			return
 		}
 
 		// run the command
@@ -59,8 +60,9 @@ capabilities.`,
 		}
 		// if there's an error, add an extra newline before starting to print
 		if err != nil {
-			_, _ = fmt.Fprintf(os.Stdout, "-\n%v", err)
+			_, _ = fmt.Fprintf(os.Stdout, "%v", err)
+			os.Exit(1)
 		}
-		return nil
+		return
 	},
 }
