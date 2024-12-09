@@ -119,7 +119,7 @@ var rootCmd = &cobra.Command{
 			if count == 0 {
 				_ = cmd.Help()
 			} else {
-				fmt.Println("Type 'gogo func <function>' to run a function, or `gogo --help` for more information.")
+				fmt.Println("Type 'gogo run <function>' to run a function, or `gogo --help` for more information.")
 			}
 		}
 		return nil

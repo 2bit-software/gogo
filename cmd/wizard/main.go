@@ -52,11 +52,21 @@ capabilities.`,
 			return
 		}
 
+		// if no arguments, print the function list
+
 		// run the command
 		err = gogo.Run(opts, args)
 		if err != nil && len(args) == 0 {
-			// if we have an error and no arguments, print the help
-			_ = cmd.Help()
+			count, err := gogo.ShowFuncList(opts)
+			if err != nil {
+				_, _ = fmt.Fprintf(os.Stdout, "%v", err)
+				return
+			}
+			if count == 0 {
+				_ = cmd.Help()
+			} else {
+				fmt.Println("Type 'wizard <function>' to run a function, or `wizard --help` for more information.")
+			}
 		}
 		// if there's an error, add an extra newline before starting to print
 		if err != nil {
