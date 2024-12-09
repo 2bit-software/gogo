@@ -67,6 +67,7 @@ capabilities.`,
 			} else {
 				fmt.Println("Type 'wizard <function>' to run a function, or `wizard --help` for more information.")
 			}
+			return
 		}
 		// if there's an error, add an extra newline before starting to print
 		if err != nil {
