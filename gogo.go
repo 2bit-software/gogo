@@ -144,6 +144,10 @@ func ShowFuncList(opts RunOpts) (int, error) {
 	if err != nil {
 		return 0, err
 	}
+	// sort the functions
+	slices.SortFunc(funcList, func(e, e2 function) int {
+		return strings.Compare(e.Name, e2.Name)
+	})
 	printFuncList(generateFuncListOutput(funcList, opts.ScreenWidth))
 	return len(funcList), nil
 }
@@ -405,6 +409,10 @@ func decideToRebuild(debug *log.Logger, buildOpts BuildOpts) bool {
 	}
 	if buildOpts.DisableCache {
 		debug.Printf("Forcing rebuild of binary `%s`\n", buildOpts.BinaryFilepath)
+		return true
+	}
+	if modified {
+		debug.Printf("Rebuilding binary `%s`\n", buildOpts.BinaryFilepath)
 		return true
 	}
 	return false

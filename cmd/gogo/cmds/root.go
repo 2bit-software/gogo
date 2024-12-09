@@ -35,10 +35,10 @@ func init() {
 	rootCmd.SetContext(context.Background())
 
 	// set flags
-	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "Verbose output.")
 	rootCmd.Flags().Bool("version", false, "Print the version.")
 	rootCmd.Flags().BoolP("keep-artifacts", "k", false, "Keep the .go files and built binaries.")
 	rootCmd.Flags().BoolP("disable-cache", "d", false, "Disable cache, forces everything to rebuild.")
+	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "Verbose output.")
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gogo.yaml).")
 
 	if err := viper.BindPFlag("VERBOSE", rootCmd.PersistentFlags().Lookup("verbose")); err != nil {
