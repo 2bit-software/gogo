@@ -66,30 +66,28 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	{{- if .UseGoGoContext}}
+
 	"github.com/2bit-software/gogo"
-	{{- end}}
-	"github.com/urfave/cli/v2"
 )
 
 func main() {
-	cli.VersionFlag = &cli.BoolFlag{
+	gogo.VersionFlag = &gogo.BoolFlag{
 		Name:    "version",
 		Aliases: []string{""},
 		Usage:   "print only the version",
 	}
-	app := &cli.App{
+	app := &gogo.App{
 		Name:    filepath.Base(os.Args[0]),
 		Usage:   "{{.RootCmd.Short}}",
 		Version: "1.0.0",
-		Flags: []cli.Flag{
-			&cli.StringFlag{
+		Flags: []gogo.Flag{
+			&gogo.StringFlag{
 				Name:    "config",
 				Aliases: []string{"c"},
 				Usage:   "config file (default is ./config.yaml)",
 				EnvVars: []string{"CONFIG"},
 			},
-			&cli.BoolFlag{
+			&gogo.BoolFlag{
 				Name:    "verbose",
 				Aliases: []string{"v"},
 				Usage:   "enable verbose mode",
@@ -97,7 +95,7 @@ func main() {
 			},
 			{{- if .RootCmd.GoFlags}}
 			{{- range .RootCmd.GoFlags}}
-			&cli.{{ Capitalize .Type}}Flag{
+			&gogo.{{ Capitalize .Type}}Flag{
 				Name:    "{{.Name}}",
 				{{- if ne .Short 0}}
 				Aliases: []string{"{{ ByteToString .Short}}"},
@@ -111,7 +109,7 @@ func main() {
 			{{- end}}
 			{{- end}}
 		},
-		Before: func(c *cli.Context) error {
+		Before: func(c *gogo.CliContext) error {
 			// Configuration file handling similar to initConfig()
 			configFile := c.String("config")
 
@@ -127,9 +125,9 @@ func main() {
 
 			return nil
 		},
-		Commands: []*cli.Command{},
+		Commands: []*gogo.Command{},
 		{{- if ne .RootCmd.Name ""}}
-		Action: func(c *cli.Context) error {
+		Action: func(c *gogo.CliContext) error {
 			{{- template "runCmdUrfave" .RootCmd }}
 		},
 		{{- end}}
@@ -156,7 +154,7 @@ func main() {
 {{- end }}
 
 // detectArgumentRequirements validates that all required arguments are provided
-func detectArgumentRequirements(args []string, c *cli.Context) bool {
+func detectArgumentRequirements(args []string, c *gogo.CliContext) bool {
 	// if there are no required args, just accept the input
 	if len(args) == 0 {
 		return true

@@ -1,10 +1,10 @@
-{{- define "subCmdUrfave" }}&cli.Command{
+{{- define "subCmdUrfave" }}&gogo.Command{
 	Name:        "{{ .Name }}",
 	Usage:       "{{ .Short }}",
 	Description: "{{ StripNewlines .Long }}",
-	Flags: []cli.Flag{
+	Flags: []gogo.Flag{
 		{{- range $flag := .GoFlags }}
-		&cli.{{ Capitalize $flag.Type }}Flag{
+		&gogo.{{ Capitalize $flag.Type }}Flag{
 			Name:     "{{ $flag.Name }}",
 			{{- if ne $flag.Short 0 }}
 			Aliases:  []string{"{{ ByteToString $flag.Short }}"},
@@ -17,7 +17,7 @@
 		},
 		{{- end }}
 	},
-	Action: func(c *cli.Context) error {
+	Action: func(c *gogo.CliContext) error {
 		{{- template "runCmdUrfave" . }}
 	},
 }
