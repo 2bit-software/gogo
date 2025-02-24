@@ -32,8 +32,13 @@ func TestMainRootOnlyTemplate(t *testing.T) {
 		SubCommands: nil,
 	}
 
+	templateNames := []string{
+		"templates/main.urfave.go.tmpl",
+		"templates/subCmd.urfave.go.tmpl",
+	}
+
 	// Render the template with the mock data
-	rendered, err := renderFromTemplates(data, defaultFuncMap())
+	rendered, err := renderFromTemplates(data, defaultFuncMap(), templateNames)
 	require.NoError(t, err, "Failed to execute template: %v", err)
 	assert.Contains(t, rendered, "package main", "Expected package main")
 	assert.Contains(t, rendered, "PrintHello", "Expected PrintHello function")
@@ -65,8 +70,13 @@ func TestSubCommandsTemplate(t *testing.T) {
 		},
 	}
 
+	templateNames := []string{
+		"templates/main.urfave.go.tmpl",
+		"templates/subCmd.urfave.go.tmpl",
+	}
+
 	// Render the template with the mock data
-	rendered, err := renderFromTemplates(data, defaultFuncMap())
+	rendered, err := renderFromTemplates(data, defaultFuncMap(), templateNames)
 	require.NoError(t, err, "Failed to execute template: %v", err)
 	assert.Contains(t, rendered, "package main", "Expected package main")
 	assert.Contains(t, rendered, "PrintHello", "Expected PrintHello function")

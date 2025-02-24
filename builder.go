@@ -14,6 +14,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"text/template"
@@ -129,7 +130,41 @@ func defaultFuncMap() template.FuncMap {
 			out += "}"
 			return out
 		},
+		"Contains": func(s string, list []string) bool {
+			for _, v := range list {
+				if v == s {
+					return true
+				}
+			}
+			return false
+		},
 	}
+}
+
+// Generate the main output file
+func GenerateMainFile(opts RunOpts) error {
+	debug := opts.GetLogger()
+	debug.Println("Building local cache...")
+	var err error
+	opts.BinaryFilepath, err = getBinaryFilename(opts)
+	if err != nil {
+		return err
+	}
+	cwd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+	gogoFiles, err := findLocalFiles(cwd, gogoFolders)
+	if err != nil {
+		return err
+	}
+	gogoFolder := path.Dir(gogoFiles[0])
+	opts.SourceDir = gogoFolder
+
+	mainFilePath := filepath.Join(opts.SourceDir, MAIN_FILENAME)
+	log.Printf("Building main go file: %v\n", mainFilePath)
+	err = buildSource(false, opts.SourceDir, mainFilePath)
+	return err
 }
 
 // Build reads all the gogo files in the directory, applies their
@@ -139,7 +174,7 @@ func defaultFuncMap() template.FuncMap {
 func Build(log *log.Logger, buildOpts BuildOpts) error {
 	mainFilePath := filepath.Join(buildOpts.SourceDir, MAIN_FILENAME)
 	log.Printf("Building main go file: %v\n", mainFilePath)
-	err := buildSource(buildOpts.SourceDir, mainFilePath)
+	err := buildSource(true, buildOpts.SourceDir, mainFilePath)
 
 	// delete the main.gogo.go file when we're done
 	defer func(def error) {
@@ -174,7 +209,7 @@ func hashString(name string) (string, error) {
 
 // buildSource reads all the gogo files in the directory, applies their
 // configuration options, and builds the resulting main file.
-func buildSource(inputDir, filePath string) error {
+func buildSource(formatOutput bool, inputDir, filePath string) error {
 	// first we need to parse all functions in the directory that match our build requirements
 	funcs, err := parseDirectory(inputDir)
 	if err != nil {
@@ -188,10 +223,20 @@ func buildSource(inputDir, filePath string) error {
 
 	cmd := rd[0]
 
+	//templateNames := []string{
+	//	"templates/main.go.tmpl",
+	//	"templates/subCmd.go.tmpl",
+	//	"templates/run.go.tmpl",
+	//}
+	templateNames := []string{
+		"templates/main.urfave.go.tmpl",
+		"templates/subCmd.urfave.go.tmpl",
+	}
+
 	// TODO: this is wrong. We're passing a filePath, but it's possible we need to make multiple binaries.
 	//  To support this we need to render the file, build the binary, and then delete the rendered file and repeat.
 	// render from templates
-	rendered, err := renderFromTemplates(cmd, defaultFuncMap())
+	rendered, err := renderFromTemplates(cmd, defaultFuncMap(), templateNames)
 	if err != nil {
 		return err
 	}
@@ -200,10 +245,14 @@ func buildSource(inputDir, filePath string) error {
 	if err != nil {
 		return err
 	}
-	// format it
-	formatted, err := format.Source([]byte(rendered))
-	if err != nil {
-		return err
+	formatted := []byte(rendered)
+	if formatOutput {
+		fmt.Println("Formatting input")
+		// format it
+		formatted, err = format.Source([]byte(rendered))
+		if err != nil {
+			return err
+		}
 	}
 	// write to file
 	err = os.WriteFile(filePath, formatted, 0644)
@@ -213,13 +262,11 @@ func buildSource(inputDir, filePath string) error {
 	return nil
 }
 
-func renderFromTemplates(rd renderData, funcMap map[string]any) (string, error) {
-	tmpl := template.New("main.go.tmpl")
+func renderFromTemplates(rd renderData, funcMap map[string]any, templateNames []string) (string, error) {
+	tmpl := template.New("main.urfave.go.tmpl")
 	tmpl = tmpl.Funcs(funcMap)
 	tmpl, err := tmpl.ParseFS(templates,
-		"templates/main.go.tmpl",
-		"templates/subCmd.go.tmpl",
-		"templates/run.go.tmpl",
+		templateNames...,
 	)
 	if err != nil {
 		return "", err

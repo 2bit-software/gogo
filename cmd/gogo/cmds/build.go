@@ -37,6 +37,17 @@ You can configure this using the flags, and the .gogoconfig file.`,
 			err = gogo.BuildGlobal(opts)
 			return err
 		}
+		// todo: this is bad, but will get cleaned up when rewriting the cli
+		genGoFilesOnly, err := cmd.Flags().GetBool("gen-only")
+		if err != nil {
+			return err
+		}
+
+		if genGoFilesOnly {
+			fmt.Println("Generating go files only.")
+			err = gogo.GenerateMainFile(opts)
+			return err
+		}
 
 		// run the command
 		err = gogo.BuildLocal(opts)
@@ -46,6 +57,7 @@ You can configure this using the flags, and the .gogoconfig file.`,
 
 func init() {
 	rootCmd.AddCommand(buildCmd)
+	buildCmd.Flags().Bool("gen-only", false, "Generate the go files only.")
 	buildCmd.Flags().BoolP("global", "g", false, "Build the global function cache.")
 	buildCmd.Flags().BoolP("optimize", "o", false, "Optimize the builds.")
 	buildCmd.Flags().BoolP("individual-binaries", "i", false, "Each function outputs an individual binary.")
