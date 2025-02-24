@@ -17,6 +17,11 @@ tasks:
     cmds:
       - go run cmd/gogo/main.go CompileGo cmd/gogo . gogo darwin arm64
 
+  compile:gadgets:
+    desc: Builds the .gogo folder main.gogo.go file.
+    cmds:
+      - go run cmd/gogo/main.go build --gen-only
+
   install:
     desc: Installs gogo. This currently only works on arm64/macs, but will be updated soon.
     cmds:
