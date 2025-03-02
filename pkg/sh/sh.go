@@ -115,6 +115,13 @@ func (e *Executor) RunWithWriters(stdOut, errOut io.Writer) error {
 	return e.Run()
 }
 
+// RunAndStream runs the command and streams the output to os.stdOut and os.StdErr
+func (e *Executor) RunAndStream() error {
+	e.stdOut = os.Stdout
+	e.stdErr = os.Stderr
+	return e.Run()
+}
+
 // Run runs the command
 func (e *Executor) Run() error {
 	// check if there are any arguments, if not and there are spaces in the command, perform

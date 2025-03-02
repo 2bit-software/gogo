@@ -279,7 +279,6 @@ func buildSource(formatOutput bool, inputDir, filePath string) error {
 	}
 	formatted := []byte(rendered)
 	if formatOutput {
-		fmt.Println("Formatting input")
 		// format it
 		formatted, err = format.Source([]byte(rendered))
 		if err != nil {

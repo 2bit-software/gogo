@@ -158,3 +158,10 @@ func CompileGo(inputFolderPath, outputFolderPath, tags, binaryName, versionPath,
 func Hello(input string, count int) {
 	fmt.Printf("Hello, %v. Can you count to %v?", input, count)
 }
+
+func LongRunning() {
+	for i := 0; i < 10; i++ {
+		fmt.Printf("Counting: %d\n", i)
+		time.Sleep(1 * time.Second)
+	}
+}

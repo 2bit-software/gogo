@@ -97,15 +97,14 @@ func Run(opts RunOpts, args []string) error {
 	}
 	debug.Printf("Running built binary: %s with args %v\n", opts.BinaryFilepath, args)
 	// run the binary with the desire target func and arguments, unless it exists in the cache
-	out, err := sh.Cmd(opts.BinaryFilepath).SetArgs(args...).StdOut()
+	err = sh.Cmd(opts.BinaryFilepath).SetArgs(args...).RunAndStream()
 	if err != nil {
 		errString := err.Error()
 		if errString == "exit status 1" {
 			errString = ""
 		}
-		return fmt.Errorf("%v\n%v", out, errString)
+		return fmt.Errorf("%v", errString)
 	}
-	fmt.Println(out)
 
 	// if found, we should check the global cache bin, rebuild if necessary, and run the binary
 	return nil
