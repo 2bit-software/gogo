@@ -199,7 +199,7 @@ func GenerateMainFile(opts RunOpts) error {
 
 	mainFilePath := filepath.Join(opts.SourceDir, MAIN_FILENAME)
 	log.Printf("Building main go file: %v\n", mainFilePath)
-	err = buildSource(false, opts.SourceDir, mainFilePath)
+	err = buildSource(true, opts.SourceDir, mainFilePath)
 	return err
 }
 
