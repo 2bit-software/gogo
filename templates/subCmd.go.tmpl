@@ -1,8 +1,10 @@
 {{- define "subCmdUrfave" }}&gogo.Command{
 	Name:        "{{ .Name }}",
 	Usage:       "{{ .Short }}",
+	HelpName:    "{{ .Name }}",
 	Description: "{{ StripNewlines .Long }}",
 	SkipFlagParsing: true,
+	HideHelpCommand: true,
 	Flags: []gogo.Flag{
 		{{- range $flag := .GoFlags }}
 		&gogo.{{ Capitalize $flag.Type }}Flag{

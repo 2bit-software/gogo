@@ -28,3 +28,7 @@ var VersionFlag Flag = &BoolFlag{
 	Usage:              "print the version",
 	DisableDefaultText: true,
 }
+
+func ShowHelp(ctx *CliContext, command string) error {
+	return cli.ShowCommandHelp(ctx, command)
+}

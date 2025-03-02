@@ -5,8 +5,16 @@
 	{{- range $index, $flag := $sub.GoFlags}}
         {{ Capitalize $flag.Name }} {{ $flag.Type }} `{{ if ne $flag.Short 0 }}short:"{{- printf "%c" $flag.Short }}" {{ end}}long:"{{ $flag.Name }}" {{ if ne $flag.Help "" }}description:"{{ $flag.Help }}"{{- end }} order:"{{ $index }}"`	{{- end}}
 	}
+	args := c.Args().Slice()
+    // detect help first
+    if len(args) > 0 && (args[0] == "--help" || args[0] == "-h") {
+        err := gogo.ShowHelp(c, "{{ $sub.Name }}")
+        return err
+    }
+
+    // then parse options
 	var opts Options
-	positional, err := gogo.ParseArgs(&opts, c.Args().Slice())
+	positional, err := gogo.ParseArgs(&opts, args)
 	if err != nil {
 		return fmt.Errorf("error parsing arguments: %w", err)
 	}
