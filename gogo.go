@@ -97,7 +97,11 @@ func Run(opts RunOpts, args []string) error {
 	}
 	debug.Printf("Running built binary: %s with args %v\n", opts.BinaryFilepath, args)
 	// run the binary with the desire target func and arguments, unless it exists in the cache
-	err = sh.Cmd(opts.BinaryFilepath).SetArgs(args...).RunAndStream()
+	ex := sh.Cmd(opts.BinaryFilepath).SetArgs(args...)
+	if opts.Verbose {
+		ex = ex.SetPrintFinalCommand(true)
+	}
+	err = ex.RunAndStream()
 	if err != nil {
 		errString := err.Error()
 		if errString == "exit status 1" {

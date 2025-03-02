@@ -21,14 +21,15 @@ import (
 )
 
 type Executor struct {
-	ctx    context.Context
-	cmd    string
-	args   []string
-	dir    string
-	env    []string
-	stdOut io.Writer
-	stdErr io.Writer
-	stdIn  io.Reader
+	ctx               context.Context
+	cmd               string
+	args              []string
+	dir               string
+	env               []string
+	printFinalCommand bool // if enabled, before passing the command on, print the command out to stdout
+	stdOut            io.Writer
+	stdErr            io.Writer
+	stdIn             io.Reader
 }
 
 func Cmd(input ...string) *Executor {
@@ -65,6 +66,12 @@ func EnvMapToEnv(env map[string]string) []string {
 // Dir sets the working directory for the command
 func (e *Executor) Dir(dir string) *Executor {
 	e.dir = dir
+	return e
+}
+
+// SetPrintFinalCommand sets the printFinalCommand flag
+func (e *Executor) SetPrintFinalCommand(printFinalCommand bool) *Executor {
+	e.printFinalCommand = printFinalCommand
 	return e
 }
 
@@ -135,6 +142,9 @@ func (e *Executor) Run() error {
 			e.cmd = parts[0]
 			e.args = parts[1:]
 		}
+	}
+	if e.printFinalCommand {
+		fmt.Printf("Running command: %s %s\n", e.cmd, strings.Join(e.args, " "))
 	}
 
 	c := exec.CommandContext(e.ctx, e.cmd, e.args...)
