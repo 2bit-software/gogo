@@ -9,6 +9,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/2bit-software/gogo/pkg/scripts"
 	"os"
 
 	"github.com/urfave/cli/v2"
@@ -31,7 +32,7 @@ func createApp() *cli.App {
 	return &cli.App{
 		Name:    "wizard",
 		Usage:   "A mage-compatible GoGo wizard",
-		Version: cmds.Version().Version,
+		Version: gogo.Version().Version,
 		Description: `An entrypoint you can symlink from mage to which will use GoGo instead. 
 It does not support most of the shell enhancements that GoGo provides, but it does 
 support all of the function capabilities.`,
@@ -65,7 +66,7 @@ func executeGoGoCommand(ctx *cli.Context) error {
 	}
 
 	// Execute the GoGo command
-	err = gogo.Run(opts, args)
+	err = scripts.Run(opts, args)
 
 	// Return any error from execution
 	if err != nil {
@@ -76,8 +77,8 @@ func executeGoGoCommand(ctx *cli.Context) error {
 }
 
 // handleFunctionListDisplay shows the available functions or help
-func handleFunctionListDisplay(ctx *cli.Context, opts gogo.RunOpts) error {
-	count, err := gogo.ShowFuncList(opts)
+func handleFunctionListDisplay(ctx *cli.Context, opts scripts.RunOpts) error {
+	count, err := scripts.ShowFuncList(opts)
 	if err != nil {
 		return fmt.Errorf("failed to show function list: %w", err)
 	}

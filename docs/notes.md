@@ -121,3 +121,6 @@ Same as subdir, but the subdir has it's own go.mod file
 ## Testing Snapshots Library
 https://github.com/bradleyjkemp/cupaloy
 
+## Project Layout
+* Inside the applications that get built, I want them to source 
+

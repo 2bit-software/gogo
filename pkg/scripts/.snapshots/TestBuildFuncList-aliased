@@ -1,0 +1,200 @@
+([]scripts.function) (len=5) {
+  (scripts.function) {
+    Name: (string) (len=18) "AliasedDescription",
+    Comment: (string) "",
+    Description: (string) "",
+    Example: (string) "",
+    Arguments: ([]scripts.argument) (len=1) {
+      (scripts.argument) {
+        Name: (string) (len=3) "ctx",
+        Type: (string) (len=13) "gogo2.Context",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      }
+    },
+    UseGoGoCtx: (bool) false,
+    GoGoCtxVariableName: (string) "",
+    ErrorReturn: (bool) true
+  },
+  (scripts.function) {
+    Name: (string) (len=15) "AliasedArgument",
+    Comment: (string) "",
+    Description: (string) "",
+    Example: (string) "",
+    Arguments: ([]scripts.argument) (len=3) {
+      (scripts.argument) {
+        Name: (string) (len=3) "ctx",
+        Type: (string) (len=13) "gogo2.Context",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      },
+      (scripts.argument) {
+        Name: (string) (len=4) "var1",
+        Type: (string) (len=6) "string",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      },
+      (scripts.argument) {
+        Name: (string) (len=4) "var2",
+        Type: (string) (len=4) "bool",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      }
+    },
+    UseGoGoCtx: (bool) false,
+    GoGoCtxVariableName: (string) "",
+    ErrorReturn: (bool) true
+  },
+  (scripts.function) {
+    Name: (string) (len=26) "AliasedDescriptionArgument",
+    Comment: (string) "",
+    Description: (string) "",
+    Example: (string) "",
+    Arguments: ([]scripts.argument) (len=3) {
+      (scripts.argument) {
+        Name: (string) (len=3) "ctx",
+        Type: (string) (len=13) "gogo2.Context",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      },
+      (scripts.argument) {
+        Name: (string) (len=4) "var1",
+        Type: (string) (len=6) "string",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      },
+      (scripts.argument) {
+        Name: (string) (len=4) "var2",
+        Type: (string) (len=4) "bool",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      }
+    },
+    UseGoGoCtx: (bool) false,
+    GoGoCtxVariableName: (string) "",
+    ErrorReturn: (bool) true
+  },
+  (scripts.function) {
+    Name: (string) (len=17) "AliasedCtxChained",
+    Comment: (string) "",
+    Description: (string) "",
+    Example: (string) "",
+    Arguments: ([]scripts.argument) (len=3) {
+      (scripts.argument) {
+        Name: (string) (len=3) "ctx",
+        Type: (string) (len=13) "gogo2.Context",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      },
+      (scripts.argument) {
+        Name: (string) (len=4) "var1",
+        Type: (string) (len=6) "string",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      },
+      (scripts.argument) {
+        Name: (string) (len=4) "var2",
+        Type: (string) (len=4) "bool",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      }
+    },
+    UseGoGoCtx: (bool) false,
+    GoGoCtxVariableName: (string) "",
+    ErrorReturn: (bool) true
+  },
+  (scripts.function) {
+    Name: (string) (len=22) "AliasedArgumentChained",
+    Comment: (string) "",
+    Description: (string) "",
+    Example: (string) "",
+    Arguments: ([]scripts.argument) (len=3) {
+      (scripts.argument) {
+        Name: (string) (len=3) "ctx",
+        Type: (string) (len=13) "gogo2.Context",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      },
+      (scripts.argument) {
+        Name: (string) (len=4) "var1",
+        Type: (string) (len=6) "string",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      },
+      (scripts.argument) {
+        Name: (string) (len=4) "var2",
+        Type: (string) (len=4) "bool",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      }
+    },
+    UseGoGoCtx: (bool) false,
+    GoGoCtxVariableName: (string) "",
+    ErrorReturn: (bool) true
+  }
+}

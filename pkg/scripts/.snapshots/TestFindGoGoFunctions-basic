@@ -1,0 +1,8 @@
+([]string) (len=6) {
+  (string) (len=16) "BasicDescription",
+  (string) (len=13) "BasicArgument",
+  (string) (len=24) "BasicDescriptionArgument",
+  (string) (len=15) "BasicCtxChained",
+  (string) (len=20) "BasicArgumentChained",
+  (string) (len=12) "BasicSetHelp"
+}

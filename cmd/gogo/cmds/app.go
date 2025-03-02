@@ -9,6 +9,8 @@ package cmds
 
 import (
 	"fmt"
+	"github.com/2bit-software/gogo/pkg/scripts"
+	gogo2 "github.com/2bit-software/gogo/pkg/scripts/gogo"
 
 	"github.com/urfave/cli/v2"
 
@@ -18,7 +20,7 @@ import (
 // rootAction handles the default command behavior
 func rootAction(ctx *cli.Context) error {
 	if ctx.Bool("version") {
-		fmt.Printf("%+v\n", Version())
+		fmt.Printf("%+v\n", gogo.Version())
 		return nil
 	}
 
@@ -28,7 +30,7 @@ func rootAction(ctx *cli.Context) error {
 		return fmt.Errorf("failed to build options: %w", err)
 	}
 
-	count, err := gogo.ShowFuncList(opts)
+	count, err := scripts.ShowFuncList(opts)
 	if err != nil {
 		return fmt.Errorf("failed to show function list: %w", err)
 	}
@@ -48,12 +50,12 @@ func rootAction(ctx *cli.Context) error {
 // NewApp creates a new CLI application with all commands and flags configured
 func NewApp() *cli.App {
 	// Set the version flag and response
-	gogo.VersionFlag = &cli.BoolFlag{
+	gogo2.VersionFlag = &cli.BoolFlag{
 		Name:    "version",
 		Usage:   "Print the version",
 		EnvVars: []string{"GOGO_VERSION"},
 		Action: func(context *cli.Context, b bool) error {
-			fmt.Printf("%+v\n", Version())
+			fmt.Printf("%+v\n", gogo.Version())
 			return nil
 		},
 	}

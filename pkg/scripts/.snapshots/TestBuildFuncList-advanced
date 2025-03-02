@@ -1,0 +1,57 @@
+([]scripts.function) (len=1) {
+  (scripts.function) {
+    Name: (string) (len=16) "AdvancedFunction",
+    Comment: (string) "",
+    Description: (string) "",
+    Example: (string) "",
+    Arguments: ([]scripts.argument) (len=4) {
+      (scripts.argument) {
+        Name: (string) (len=3) "ctx",
+        Type: (string) (len=12) "gogo.Context",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      },
+      (scripts.argument) {
+        Name: (string) (len=4) "name",
+        Type: (string) (len=6) "string",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      },
+      (scripts.argument) {
+        Name: (string) (len=7) "include",
+        Type: (string) (len=4) "bool",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      },
+      (scripts.argument) {
+        Name: (string) (len=5) "value",
+        Type: (string) (len=3) "int",
+        Long: (string) "",
+        Short: (uint8) 0,
+        Description: (string) "",
+        Help: (string) "",
+        Default: (interface {}) <nil>,
+        AllowedValues: ([]interface {}) <nil>,
+        RestrictedValues: ([]interface {}) <nil>
+      }
+    },
+    UseGoGoCtx: (bool) false,
+    GoGoCtxVariableName: (string) "",
+    ErrorReturn: (bool) true
+  }
+}

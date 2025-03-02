@@ -1,4 +1,6 @@
-scenarios/**/.gogo.go
+pkg/scripts/scenarios/**/.gogo.go
 .gogo/main.gogo.go
 .gogo/*_bin
 .gogo/gogo-*
+
+go.work*

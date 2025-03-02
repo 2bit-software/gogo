@@ -9,6 +9,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/2bit-software/gogo/pkg/scripts/gogo"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -16,7 +17,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/2bit-software/gogo"
 	"github.com/2bit-software/gogo/pkg/sh"
 	"github.com/morganhein/gogo/_gogo/pkg"
 )

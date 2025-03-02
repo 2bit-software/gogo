@@ -1,0 +1,29 @@
+{{- define "subCmdUrfave" }}&gogo.Command{
+	Name:        "{{ .Name }}",
+	Usage:       "{{ .Short }}",
+	HelpName:    "{{ .Name }}",
+	Description: "{{ StripNewlines .Long }}",
+	SkipFlagParsing: true,
+	HideHelpCommand: true,
+	Flags: []gogo.Flag{
+		{{- range $flag := .GoFlags }}
+		{{- if ne $flag.Type "gogo.Context" }}
+		&gogo.{{ Capitalize $flag.Type }}Flag{
+			Name:     "{{ $flag.Name }}",
+			{{- if ne $flag.Short 0 }}
+			Aliases:  []string{"{{ ByteToString $flag.Short }}"},
+			{{- end }}
+			Usage:    "{{ $flag.Help }}",
+			{{- if $flag.HasDefault }}
+			Value:    {{ .Default }},
+			{{- end }}
+			EnvVars:  []string{"{{ $.Name | ToUpper }}_{{ $flag.Name | ToUpper }}"},
+		},
+		{{- end }}
+		{{- end }}
+	},
+	Action: func(c *gogo.CliContext) error {
+		{{- template "runCmdUrfave" . }}
+	},
+}
+{{- end }}

@@ -1,9 +1,8 @@
 package cmds
 
 import (
+	"github.com/2bit-software/gogo/pkg/scripts"
 	"github.com/urfave/cli/v2"
-
-	"github.com/2bit-software/gogo"
 )
 
 // scriptAction by default just lists the functions
@@ -14,8 +13,8 @@ func scriptAction(ctx *cli.Context) error {
 		return err
 	}
 	// run the command
-	err = gogo.Run(opts, args)
-	count, err := gogo.ShowFuncList(opts)
+	err = scripts.Run(opts, args)
+	count, err := scripts.ShowFuncList(opts)
 	if err != nil {
 		return err
 	}

@@ -2,7 +2,7 @@ package cmds
 
 import (
 	"fmt"
-	"github.com/2bit-software/gogo"
+	"github.com/2bit-software/gogo/pkg/scripts"
 	"github.com/urfave/cli/v2"
 )
 
@@ -33,7 +33,7 @@ func gadgetAction(ctx *cli.Context) error {
 	}
 
 	// run the command
-	err = gogo.Run(opts, args)
+	err = scripts.Run(opts, args)
 	if err != nil && len(args) == 0 {
 		fmt.Printf("error: %v\n", err)
 		// if we have an error and no arguments, print the help

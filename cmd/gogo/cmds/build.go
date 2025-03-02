@@ -9,10 +9,9 @@ package cmds
 
 import (
 	"fmt"
+	"github.com/2bit-software/gogo/pkg/scripts"
 
 	"github.com/urfave/cli/v2"
-
-	"github.com/2bit-software/gogo"
 )
 
 // buildAction handles the main logic for the build command
@@ -33,25 +32,25 @@ func buildAction(ctx *cli.Context) error {
 }
 
 // buildGlobalCache handles building the global cache
-func buildGlobalCache(opts gogo.RunOpts) error {
-	if err := gogo.BuildGlobal(opts); err != nil {
+func buildGlobalCache(opts scripts.RunOpts) error {
+	if err := scripts.BuildGlobal(opts); err != nil {
 		return fmt.Errorf("failed to build global cache: %w", err)
 	}
 	return nil
 }
 
 // generateFilesOnly handles generating Go files without building
-func generateFilesOnly(opts gogo.RunOpts) error {
+func generateFilesOnly(opts scripts.RunOpts) error {
 	fmt.Println("Generating go files only.")
-	if err := gogo.GenerateMainFile(opts); err != nil {
+	if err := scripts.GenerateMainFile(opts); err != nil {
 		return fmt.Errorf("failed to generate main file: %w", err)
 	}
 	return nil
 }
 
 // buildLocalCache handles building the local cache
-func buildLocalCache(opts gogo.RunOpts) error {
-	if err := gogo.BuildLocal(opts); err != nil {
+func buildLocalCache(opts scripts.RunOpts) error {
+	if err := scripts.BuildLocal(opts); err != nil {
 		return fmt.Errorf("failed to build local cache: %w", err)
 	}
 	return nil

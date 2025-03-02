@@ -9,20 +9,21 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/2bit-software/gogo"
-	"github.com/2bit-software/gogo/pkg/sh"
 	"github.com/urfave/cli/v2"
+
+	"github.com/2bit-software/gogo/pkg/scripts"
+	"github.com/2bit-software/gogo/pkg/sh"
 )
 
 // BuildOptions creates a RunOpts struct from the CLI context and environment
-func BuildOptions(ctx *cli.Context) (gogo.RunOpts, error) {
-	runOpts := gogo.RunOpts{
+func BuildOptions(ctx *cli.Context) (scripts.RunOpts, error) {
+	runOpts := scripts.RunOpts{
 		Verbose:          ctx.Bool("verbose"),
 		GlobalSourceDir:  getEnvOrDefault("GOGO_GLOBAL_SOURCE_DIR", ""),
 		GlobalBinDir:     getEnvOrDefault("GOGO_GLOBAL_BIN_DIR", ""),
 		BuildLocalCache:  ctx.Bool("build-local"),
 		BuildGlobalCache: ctx.Bool("global"),
-		BuildOpts: gogo.BuildOpts{
+		BuildOpts: scripts.BuildOpts{
 			KeepArtifacts:      ctx.Bool("keep-artifacts"),
 			IndividualBinaries: ctx.Bool("individual-binaries"),
 			DisableCache:       ctx.Bool("disable-cache"),
