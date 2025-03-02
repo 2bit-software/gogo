@@ -1,0 +1,75 @@
+{{- define "runCmdUrfave" }}
+{{- $sub := . }}
+{
+	type Options struct {
+	{{- range $index, $flag := $sub.GoFlags}}
+        {{ Capitalize $flag.Name }} {{ $flag.Type }} `{{ if ne $flag.Short 0 }}short:"{{- printf "%c" $flag.Short }}" {{ end}}long:"{{ $flag.Name }}" {{ if ne $flag.Help "" }}description:"{{ $flag.Help }}"{{- end }} order:"{{ $index }}"`	{{- end}}
+	}
+	var opts Options
+	positional, err := gogo.ParseArgs(&opts, c.Args().Slice())
+	if err != nil {
+		return fmt.Errorf("error parsing arguments: %w", err)
+	}
+	if len(positional) > 0 {
+		if err = gogo.HydrateFromPositional(&opts, positional); err != nil {
+			return fmt.Errorf("error processing positional arguments: %w", err)
+		}
+	}
+
+	{{- if $sub.GoFlags }}
+	// Validate required params and constraints
+	{{- range $index, $flag := $sub.GoFlags}}
+	{{- if $flag.AllowedValues }}
+	{{- if eq $flag.Type "string"}}
+	if !slices.Contains([]string{ {{- range $i, $v := $flag.AllowedValues }}{{if $i}}, {{end}}"{{$v}}"{{- end}} }, opts.{{ Capitalize $flag.Name }}) {
+		return fmt.Errorf("flag '{{ $flag.Name }}' must be one of: {{range $i, $v := $flag.AllowedValues}}{{if $i}}, {{end}}{{$v}}{{end}}")
+	}
+	{{- else if eq $flag.Type "int"}}
+	if !slices.Contains([]int{ {{- range $i, $v := $flag.AllowedValues }}{{if $i}}, {{end}}{{$v}}{{- end}} }, opts.{{ Capitalize $flag.Name }}) {
+		return fmt.Errorf("flag '{{ $flag.Name }}' must be one of: {{range $i, $v := $flag.AllowedValues}}{{if $i}}, {{end}}{{$v}}{{end}}")
+	}
+	{{- else if eq $flag.Type "bool"}}
+	if !slices.Contains([]bool{ {{- range $i, $v := $flag.AllowedValues }}{{if $i}}, {{end}}{{$v}}{{- end}} }, opts.{{ Capitalize $flag.Name }}) {
+		return fmt.Errorf("flag '{{ $flag.Name }}' must be one of: {{range $i, $v := $flag.AllowedValues}}{{if $i}}, {{end}}{{$v}}{{end}}")
+	}
+	{{- else if eq $flag.Type "float64"}}
+	if !slices.Contains([]float64{ {{- range $i, $v := $flag.AllowedValues }}{{if $i}}, {{end}}{{$v}}{{- end}} }, opts.{{ Capitalize $flag.Name }}) {
+		return fmt.Errorf("flag '{{ $flag.Name }}' must be one of: {{range $i, $v := $flag.AllowedValues}}{{if $i}}, {{end}}%.2f{{end}}", {{- range $i, $v := $flag.AllowedValues }}{{if $i}}, {{end}}{{$v}}{{- end}})
+	}
+	{{- end}}
+	{{- end}}
+
+	{{- if $flag.RestrictedValues }}
+	{{- if eq $flag.Type "string"}}
+	if slices.Contains([]string{ {{- range $i, $v := $flag.RestrictedValues }}{{if $i}}, {{end}}"{{$v}}"{{- end}} }, opts.{{ Capitalize $flag.Name }}) {
+		return fmt.Errorf("flag '{{ $flag.Name }}' cannot be set to: {{range $i, $v := $flag.RestrictedValues}}{{if $i}}, {{end}}{{$v}}{{end}}")
+	}
+	{{- else if eq $flag.Type "int"}}
+	if slices.Contains([]int{ {{- range $i, $v := $flag.RestrictedValues }}{{if $i}}, {{end}}{{$v}}{{- end}} }, opts.{{ Capitalize $flag.Name }}) {
+		return fmt.Errorf("flag '{{ $flag.Name }}' cannot be set to: {{range $i, $v := $flag.RestrictedValues}}{{if $i}}, {{end}}{{$v}}{{end}}")
+	}
+	{{- else if eq $flag.Type "bool"}}
+	if slices.Contains([]bool{ {{- range $i, $v := $flag.RestrictedValues }}{{if $i}}, {{end}}{{$v}}{{- end}} }, opts.{{ Capitalize $flag.Name }}) {
+		return fmt.Errorf("flag '{{ $flag.Name }}' cannot be set to: {{range $i, $v := $flag.RestrictedValues}}{{if $i}}, {{end}}{{$v}}{{end}}")
+	}
+	{{- else if eq $flag.Type "float64"}}
+	if slices.Contains([]float64{ {{- range $i, $v := $flag.RestrictedValues }}{{if $i}}, {{end}}{{$v}}{{- end}} }, opts.{{ Capitalize $flag.Name }}) {
+		return fmt.Errorf("flag '{{ $flag.Name }}' cannot be set to: {{range $i, $v := $flag.RestrictedValues}}{{if $i}}, {{end}}%.2f{{end}}", {{- range $i, $v := $flag.RestrictedValues }}{{if $i}}, {{end}}{{$v}}{{- end}})
+	}
+	{{- end}}
+	{{- end}}
+	{{- end}}
+	{{- end }}
+
+	{{- if $sub.UseGoGoContext }}
+	ctx := gogo.NewContext()
+	{{ end}}
+	{{ if $sub.ErrorReturn }}err = {{ end }}{{$sub.Name}}({{- if $sub.UseGoGoContext }}ctx, {{- end}}{{- range $index, $flag := $sub.GoFlags}} {{- if ne $index 0}}, {{end}}opts.{{ Capitalize $flag.Name }}{{- end}})
+	{{- if $sub.ErrorReturn }}
+	if err != nil {
+		return fmt.Errorf("error: %w", err)
+	}
+	{{- end}}
+	return nil
+}
+{{- end}}

@@ -138,6 +138,42 @@ func defaultFuncMap() template.FuncMap {
 			}
 			return false
 		},
+		"Lower": strings.ToLower,
+		"Substr": func(s string, start int, length ...int) string {
+			runes := []rune(s)
+
+			// Handle start out of bounds
+			if start >= len(runes) {
+				return ""
+			}
+
+			// If start is negative, count from the end
+			if start < 0 {
+				start = len(runes) + start
+				if start < 0 {
+					start = 0
+				}
+			}
+
+			// No length provided, return until end
+			if len(length) == 0 {
+				return string(runes[start:])
+			}
+
+			end := start + length[0]
+
+			// Handle end out of bounds
+			if end > len(runes) {
+				end = len(runes)
+			}
+
+			// Handle negative or zero length
+			if length[0] <= 0 || end <= start {
+				return ""
+			}
+
+			return string(runes[start:end])
+		},
 	}
 }
 
@@ -223,14 +259,10 @@ func buildSource(formatOutput bool, inputDir, filePath string) error {
 
 	cmd := rd[0]
 
-	//templateNames := []string{
-	//	"templates/main.go.tmpl",
-	//	"templates/subCmd.go.tmpl",
-	//	"templates/run.go.tmpl",
-	//}
 	templateNames := []string{
 		"templates/main.urfave.go.tmpl",
 		"templates/subCmd.urfave.go.tmpl",
+		"templates/run.urfave.go.tmpl",
 	}
 
 	// TODO: this is wrong. We're passing a filePath, but it's possible we need to make multiple binaries.
