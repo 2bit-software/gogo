@@ -24,19 +24,27 @@ tasks:
 
   install:
     desc: Installs gogo. This currently only works on arm64/macs, but will be updated soon.
+    env:
+      GOGO_KEEP_ARTIFACTS: true
+      GOGO_VERBOSE: true
+      GOGO_DISABLE_CACHE: true
     cmds:
       - |
         target=$(go env GOBIN)
-        go run cmd/gogo/main.go run CompileGo --binaryName=gogo --inputFolderPath=./cmd/gogo --outputFolderPath=/tmp --tags=gogo --strArch="arm64" --strOs="darwin" --versionPath="github.com/2bit-software/gogo/cmd/gogo/cmds" -- --keep-artifacts=true --disable-cache=true
+        go run cmd/gogo/main.go gadget CompileGo --binaryName=gogo --inputFolderPath=./cmd/gogo --outputFolderPath=/tmp --tags=gogo --strArch="arm64" --strOs="darwin" --versionPath="github.com/2bit-software/gogo/cmd/gogo/cmds"
         echo "Copying gogo to ${target}"
         cp /tmp/gogo-darwin-arm64 ${target}/gogo
 
   install:wizard:
     desc: Install Wizard, the mage drop-in replacement.
+    env:
+      GOGO_KEEP_ARTIFACTS: true
+      GOGO_VERBOSE: true
+      GOGO_DISABLE_CACHE: true
     cmds:
       - |
         target=$(go env GOBIN)
-        go run cmd/gogo/main.go run CompileGo --binaryName=wizard --inputFolderPath=./cmd/wizard --outputFolderPath=/tmp --tags=gogo --strArch="arm64" --strOs="darwin" --versionPath="github.com/2bit-software/gogo/cmd/gogo/cmds" -- --keep-artifacts=true --disable-cache=true
+        go run cmd/gogo/main.go gadget CompileGo --binaryName=wizard --inputFolderPath=./cmd/wizard --outputFolderPath=/tmp --tags=gogo --strArch="arm64" --strOs="darwin" --versionPath="github.com/2bit-software/gogo/cmd/gogo/cmds"
         echo "Copying wizard to ${target}"
         cp /tmp/wizard-darwin-arm64 ${target}/wizard
 
