@@ -102,9 +102,9 @@ func TestRenderTemplates(t *testing.T) {
 	}
 
 	templateNames := []string{
-		"templates/main.urfave.go.tmpl",
-		"templates/subCmd.urfave.go.tmpl",
-		"templates/run.urfave.go.tmpl",
+		"templates/main.go.tmpl",
+		"templates/subCmd.go.tmpl",
+		"templates/function.go.tmpl",
 	}
 
 	for _, tt := range tests {

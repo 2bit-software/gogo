@@ -260,9 +260,9 @@ func buildSource(formatOutput bool, inputDir, filePath string) error {
 	cmd := rd[0]
 
 	templateNames := []string{
-		"templates/main.urfave.go.tmpl",
-		"templates/subCmd.urfave.go.tmpl",
-		"templates/run.urfave.go.tmpl",
+		"templates/main.go.tmpl",
+		"templates/subCmd.go.tmpl",
+		"templates/function.go.tmpl",
 	}
 
 	// TODO: this is wrong. We're passing a filePath, but it's possible we need to make multiple binaries.
@@ -294,7 +294,7 @@ func buildSource(formatOutput bool, inputDir, filePath string) error {
 }
 
 func renderFromTemplates(rd renderData, funcMap map[string]any, templateNames []string) (string, error) {
-	tmpl := template.New("main.urfave.go.tmpl")
+	tmpl := template.New("main.go.tmpl")
 	tmpl = tmpl.Funcs(funcMap)
 	tmpl, err := tmpl.ParseFS(templates,
 		templateNames...,
