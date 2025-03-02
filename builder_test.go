@@ -73,6 +73,7 @@ func TestSubCommandsTemplate(t *testing.T) {
 	templateNames := []string{
 		"templates/main.urfave.go.tmpl",
 		"templates/subCmd.urfave.go.tmpl",
+		"templates/run.urfave.go.tmpl",
 	}
 
 	// Render the template with the mock data
