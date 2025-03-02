@@ -2,6 +2,7 @@
 	Name:        "{{ .Name }}",
 	Usage:       "{{ .Short }}",
 	Description: "{{ StripNewlines .Long }}",
+	SkipFlagParsing: true,
 	Flags: []gogo.Flag{
 		{{- range $flag := .GoFlags }}
 		&gogo.{{ Capitalize $flag.Type }}Flag{
