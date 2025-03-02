@@ -72,6 +72,7 @@ import (
 func main() {
 	app := &gogo.App{
 		Name:    filepath.Base(os.Args[0]),
+		HelpName: "gogo gadget",
 		Usage:   "{{.RootCmd.Short}}",
 		HideVersion: true,
 		Flags: []gogo.Flag{

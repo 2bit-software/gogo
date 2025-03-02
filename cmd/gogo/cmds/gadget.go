@@ -20,16 +20,15 @@ func GadgetCommand() *cli.Command {
 
 func gadgetAction(ctx *cli.Context) error {
 	args := ctx.Args().Slice()
-	// check if --help is in the arguments, and ignore everything else if so
-	for _, arg := range args {
-		if arg == "--help" {
-			err := cli.ShowCommandHelp(ctx, "gadget")
-			return err
-		}
-	}
 	// build our program arguments
 	opts, err := BuildOptions(ctx)
 	if err != nil {
+		return err
+	}
+
+	// first check if the first arg is --help, which means we just want help from the gadget command
+	if len(args) >= 1 && args[0] == "--help" {
+		err = cli.ShowCommandHelp(ctx, "gadget")
 		return err
 	}
 
