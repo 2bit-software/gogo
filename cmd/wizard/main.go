@@ -9,7 +9,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/2bit-software/gogo/pkg/scripts"
+	"github.com/2bit-software/gogo/pkg/funcs"
 	"os"
 
 	"github.com/urfave/cli/v2"

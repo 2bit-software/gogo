@@ -1,4 +1,4 @@
-pkg/scripts/scenarios/**/.gogo.go
+pkg/funcs/scenarios/**/.gogo.go
 .gogo/main.gogo.go
 .gogo/*_bin
 .gogo/gogo-*

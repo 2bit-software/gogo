@@ -9,9 +9,10 @@ package cmds
 
 import (
 	"fmt"
-	"github.com/2bit-software/gogo/pkg/scripts"
 
 	"github.com/urfave/cli/v2"
+
+	"github.com/2bit-software/gogo/pkg/funcs"
 )
 
 // buildAction handles the main logic for the build command

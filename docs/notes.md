@@ -124,3 +124,11 @@ https://github.com/bradleyjkemp/cupaloy
 ## Project Layout
 * Inside the applications that get built, I want them to source 
 
+## GoGo Gadget
+I want people to see "gogo gadget <thing>" in configuration. 
+Either that or I want "gogo" to call "gadgets". This means that gadgets would need to be go functions, and gogo would be the task runner.
+I like "gogo" as the name for the go function runner, b/c it's basically "go"ing "go", with is what it literally does.
+But if "gogo" is the go function runner, then "gadgets" would be tasks, and tasks would then be calling "gogo", which is opposite of what I want.
+
+If I keep gogo as the go function runner, and "gadget" for the task runner, I can have a mode in "gogo" that allows you to do:
+`gogo gadget <thing>` and it'll just call the gadget version of the thing. Just for fun.

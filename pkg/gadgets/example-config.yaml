@@ -1,0 +1,138 @@
+# Task Hooks Configuration Template
+# A combination of Taskfile and pre-commit hooks functionality
+# The goal of this tool is to be a universal task runner,
+# that can be used to run gadgets locally as a user, in CI/CD, or as git hooks.
+# Furthermore, it should do "the right thing" given the context.
+# Furthermore, this is being developed with a focus on simplicity and ease of use.
+# Similar to the design philosophy of Go, we aim to make 80% of the use cases easy to implement.
+# The last 20%, while possible, requires more effort and understanding of the tool, possibly advanced features.
+
+version: '3'
+
+# Global configuration for git hooks
+hooks_config:
+  install_path: .git/hooks     # Where hooks are installed
+  skip_env: SKIP_HOOKS         # Environment variable to skip hooks
+  fail_fast: true              # Stop on first hook failure
+  global: false                # Whether this is a global config
+  verbose: false               # Verbose output during hook execution
+
+# Systems define execution environments and external repositories
+systems:
+  - id: golangci-lint          # System identifier
+    runtime: go                # Runtime type
+    version: ">=1.18"          # Version requirement
+    setup_cmds:                # Commands to set up this system (optional)
+      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+  - id: python
+    runtime: python
+    version: ">=3.9"
+    setup_cmds:
+      - pip install black flake8
+
+  - id: pre-commit-hooks       # External hooks repository
+    type: repository
+    url: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0                # Revision to use
+
+  - id: docker-node            # Docker-based system
+    runtime: docker
+    image: node:18-alpine
+    workdir: /app
+    volumes:
+      - .:/app
+
+  - id: shell
+    runtime: shell
+
+# Task definitions
+tasks:
+  lint:
+    desc: Lint Go files        # Task description
+    vars:
+      FILES: '{{.FILES | default "./..."}}'  # Variables with defaults
+    # New run structure with multiple steps
+    run:
+      - id: golangci-lint
+        system: go
+        cmd: golangci-lint run {{.FILES}}
+      - id: vet
+        system: go
+        cmd: go vet {{.FILES}}
+    sources:
+      - '*.go'
+      - 'go.mod'              # Source files for incremental execution
+    generates: []             # Generated files for incremental execution
+    # Hook configuration
+    hooks:
+      stages:
+        - pre-commit          # Git stages to run this task on
+      files: '*.go'           # Files pattern to match
+      exclude: 'vendor/**'    # Files to exclude (optional)
+      always_run: false       # Run even when no matching files changed
+      fail_msg: "Linting failed! Run 'task lint' to fix."  # Custom failure message
+
+  trailing-whitespace:
+    desc: Fix trailing whitespace
+    vars:
+      FILES: '{{.FILES | default "."}}'
+    run:
+      - id: trailing-whitespace
+        system: pre-commit-hooks
+        cmd: trailing-whitespace
+    hooks:
+      stages:
+        - pre-commit
+      files: '**/*'
+      exclude: 'vendor/**'
+
+  test:
+    desc: Run tests
+    vars:
+      FILES: '{{.FILES | default "./..."}}'
+    run:
+      - id: test
+        system: go
+        cmd: go test {{.FILES}}
+    deps:
+      - lint                  # Task dependencies
+    ignore_error: false       # Whether to continue on error
+    hooks:
+      stages:
+        - pre-push           # Run before push
+      pass_filenames: false  # Don't pass modified files, always run on everything
+
+  format-python:
+    desc: Format Python code
+    vars:
+      FILES: '{{.FILES | default "."}}'
+    run:
+      - id: black
+        system: python
+        cmd: black {{.FILES}}
+      - id: flake8
+        system: python
+        cmd: flake8 {{.FILES}}
+    hooks:
+      stages:
+        - pre-commit
+      files: '*.py'
+      verbose: true          # More detailed output
+
+  build-js:
+    desc: Build JavaScript project
+    run:
+      - id: build
+        system: docker-node
+        cmds:
+          - npm install
+          - npm run build
+    dir: ./frontend          # Directory to run commands in
+    hooks:
+      stages:
+        - pre-push
+      branches:
+        - main
+        - develop           # Only run on these branches
+      pass_filenames: false

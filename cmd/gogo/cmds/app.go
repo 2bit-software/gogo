@@ -9,12 +9,11 @@ package cmds
 
 import (
 	"fmt"
-	"github.com/2bit-software/gogo/pkg/scripts"
-	gogo2 "github.com/2bit-software/gogo/pkg/scripts/gogo"
 
 	"github.com/urfave/cli/v2"
 
 	"github.com/2bit-software/gogo"
+	"github.com/2bit-software/gogo/pkg/funcs"
 )
 
 // rootAction handles the default command behavior
@@ -50,7 +49,7 @@ func rootAction(ctx *cli.Context) error {
 // NewApp creates a new CLI application with all commands and flags configured
 func NewApp() *cli.App {
 	// Set the version flag and response
-	gogo2.VersionFlag = &cli.BoolFlag{
+	cli.VersionFlag = &cli.BoolFlag{
 		Name:    "version",
 		Usage:   "Print the version",
 		EnvVars: []string{"GOGO_VERSION"},

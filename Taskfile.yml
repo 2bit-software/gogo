@@ -7,6 +7,14 @@ vars:
   GREETING: Hello, World!
 
 tasks:
+  build:
+    desc: Build all files.
+    cmds:
+      - go build ./...
+      - |
+        cd pkg/scripts/gogo
+        go build ./...
+
   format:
     desc: Recursively format all Go files
     cmds:

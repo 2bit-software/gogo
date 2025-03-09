@@ -1,8 +1,9 @@
 package cmds
 
 import (
-	"github.com/2bit-software/gogo/pkg/scripts"
 	"github.com/urfave/cli/v2"
+
+	"github.com/2bit-software/gogo/pkg/funcs"
 )
 
 // scriptAction by default just lists the functions
