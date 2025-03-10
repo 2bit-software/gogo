@@ -13,16 +13,29 @@ import (
 	"github.com/2bit-software/gogo/pkg/funcs/gogo"
 )
 
-func BasicDescription(ctx gogo.Context) error {
-	ctx.SetShortDescription("set a description")
+// WARNING: This file contains comments and magic strings that are validated against in tests!
+
+// Description This is the description for the function. Without any other arguments to the ctx,
+// this will show up in the list view and the --help output.
+func Description(ctx gogo.Context) error {
 	return nil
 }
 
+// BasicShortDescription is a function that uses the SetShortDescription method to set the short description.
+func BasicShortDescription(ctx gogo.Context) error {
+	ctx.SetShortDescription("this is a short description set specifically for the BasicShortDescription function")
+	return nil
+}
+
+// BasicArgument is the builder argument that signifies the following methods
+// are chained to the argument. By itself, it does nothing.
 func BasicArgument(ctx gogo.Context, var1 string, var2 bool) error {
 	ctx.Argument(var1)
 	return nil
 }
 
+// BasicDescriptionArgument sets the description of the argument. This will show up in
+// --help of the function.
 func BasicDescriptionArgument(ctx gogo.Context, var1 string, var2 bool) error {
 	ctx.Argument(var1).Description("describe what this argument does")
 	return nil
@@ -46,26 +59,4 @@ func BasicArgumentChained(ctx gogo.Context, var1 string, var2 bool) error {
 	fmt.Println(var1, var2)
 
 	return nil
-}
-
-// is this a thing?
-func BasicSetHelp(ctx gogo.Context, var1 string, var2 bool) error {
-	return nil
-}
-
-// the below are not valid GoGo functions
-
-// not valid because the first parameter is not a gogo.Context
-func NoGoGoCtx() error {
-	return nil
-}
-
-// not valid because the first parameter is not a gogo.Context
-func GoGoCtxInWrongPos(var1 string, ctx gogo.Context, var2 bool) error {
-	return nil
-}
-
-// not valid because we can only return an error
-func WrongReturnType(ctx gogo.Context, var1 string, var2 bool) string {
-	return ""
 }

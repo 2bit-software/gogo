@@ -132,3 +132,7 @@ But if "gogo" is the go function runner, then "gadgets" would be tasks, and task
 
 If I keep gogo as the go function runner, and "gadget" for the task runner, I can have a mode in "gogo" that allows you to do:
 `gogo gadget <thing>` and it'll just call the gadget version of the thing. Just for fun.
+
+## Variable checking that needs to occur
+We need to make sure that no variables are named "help" or "h"
+Also need to check that no ctx().var(<name>).Name() contains no space

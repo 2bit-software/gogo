@@ -1,13 +1,13 @@
 ([]scripts.function) (len=5) {
   (scripts.function) {
-    Name: (string) (len=18) "AliasedDescription",
+    Name: (string) (len=16) "BasicDescription",
     Comment: (string) "",
     Description: (string) "",
     Example: (string) "",
     Arguments: ([]scripts.argument) (len=1) {
       (scripts.argument) {
         Name: (string) (len=3) "ctx",
-        Type: (string) (len=13) "goCtx.Context",
+        Type: (string) (len=12) "gogo.Context",
         Long: (string) "",
         Short: (uint8) 0,
         Description: (string) "",
@@ -22,14 +22,14 @@
     ErrorReturn: (bool) true
   },
   (scripts.function) {
-    Name: (string) (len=15) "AliasedArgument",
+    Name: (string) (len=13) "BasicArgument",
     Comment: (string) "",
     Description: (string) "",
     Example: (string) "",
     Arguments: ([]scripts.argument) (len=3) {
       (scripts.argument) {
         Name: (string) (len=3) "ctx",
-        Type: (string) (len=13) "goCtx.Context",
+        Type: (string) (len=12) "gogo.Context",
         Long: (string) "",
         Short: (uint8) 0,
         Description: (string) "",
@@ -66,14 +66,14 @@
     ErrorReturn: (bool) true
   },
   (scripts.function) {
-    Name: (string) (len=26) "AliasedDescriptionArgument",
+    Name: (string) (len=24) "BasicDescriptionArgument",
     Comment: (string) "",
     Description: (string) "",
     Example: (string) "",
     Arguments: ([]scripts.argument) (len=3) {
       (scripts.argument) {
         Name: (string) (len=3) "ctx",
-        Type: (string) (len=13) "goCtx.Context",
+        Type: (string) (len=12) "gogo.Context",
         Long: (string) "",
         Short: (uint8) 0,
         Description: (string) "",
@@ -110,14 +110,14 @@
     ErrorReturn: (bool) true
   },
   (scripts.function) {
-    Name: (string) (len=17) "AliasedCtxChained",
+    Name: (string) (len=15) "BasicCtxChained",
     Comment: (string) "",
     Description: (string) "",
     Example: (string) "",
     Arguments: ([]scripts.argument) (len=3) {
       (scripts.argument) {
         Name: (string) (len=3) "ctx",
-        Type: (string) (len=13) "goCtx.Context",
+        Type: (string) (len=12) "gogo.Context",
         Long: (string) "",
         Short: (uint8) 0,
         Description: (string) "",
@@ -154,14 +154,14 @@
     ErrorReturn: (bool) true
   },
   (scripts.function) {
-    Name: (string) (len=22) "AliasedArgumentChained",
+    Name: (string) (len=20) "BasicArgumentChained",
     Comment: (string) "",
     Description: (string) "",
     Example: (string) "",
     Arguments: ([]scripts.argument) (len=3) {
       (scripts.argument) {
         Name: (string) (len=3) "ctx",
-        Type: (string) (len=13) "goCtx.Context",
+        Type: (string) (len=12) "gogo.Context",
         Long: (string) "",
         Short: (uint8) 0,
         Description: (string) "",

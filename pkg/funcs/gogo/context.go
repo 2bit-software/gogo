@@ -16,13 +16,13 @@ var _ Argument = gogoArgument{}
 
 type Context interface {
 	stdContext.Context
-	SetShortDescription(short string) Context // This becomes the short description of the command.
+	SetShortDescription(short string) Context // This becomes the short description/usage of the command.
 	Example(string) Context                   // What would this go to?
 	Argument(any) Argument
 }
 
 type Argument interface {
-	Long(string) Argument             // Override the argument name in auto-complete and arguments when calling this function. Defaults to the name of the argument.
+	Name(string) Argument             // Override the argument name in auto-complete and arguments when calling this function. Defaults to the name of the argument.
 	Short(byte) Argument              // The short character for the argument
 	Default(any) Argument             // If set it's assumed the argument is also optional
 	Optional() Argument               // If set the argument is optional
@@ -56,7 +56,7 @@ func (c gogoContext) Argument(arg any) Argument {
 	return &gogoArgument{}
 }
 
-func (a gogoArgument) Long(long string) Argument {
+func (a gogoArgument) Name(long string) Argument {
 	return a
 }
 

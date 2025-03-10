@@ -102,7 +102,7 @@ func processMethodOnArgument(current *call, argName string, args []argument) (*c
 	for current != nil {
 		// begin walking the current call chain
 		switch current.FuncName {
-		case "Long":
+		case "Name":
 			if len(current.Args) == 1 {
 				arg.Long = current.Args[0].(string)
 			}

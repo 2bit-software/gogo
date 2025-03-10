@@ -1,171 +1,76 @@
-// Copyright (C) 2024  Morgan S Hein
-//
-// This program is subject to the terms
-// of the GNU Affero General Public License, version 3.
-// If a copy of the AGPL was not distributed with this file, You
-// can obtain one at https://www.gnu.org/licenses/.
-
 package scripts
 
 import (
-	"go/format"
-	"os"
-	"testing"
-
-	"github.com/bradleyjkemp/cupaloy"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"os"
+	"strings"
+	"testing"
 )
 
-var (
-	SCENARIOS = []string{
-		"basic",
-		"aliased",
-		"advanced",
-		"many_files",
-		"unique_gomod",
-		"gogo_most_advanced",
-	}
-)
+// Test the description of the function. The description is used
+// in listing the summary of the function.
+func TestDescription(t *testing.T) {
+	// revert to the original directory after the test
+	cwd, err := os.Getwd()
+	require.NoError(t, err)
+	defer func() {
+		err = os.Chdir(cwd)
+		require.NoError(t, err)
+	}()
 
-func TestRenderTemplates(t *testing.T) {
-	tests := []struct {
-		name       string
-		renderData renderData
-	}{
-		{
-			name: "empty",
-			renderData: renderData{
-				RootCmd: GoCmd{
-					Name:    "rootFlag",
-					GoFlags: nil,
-				},
-			},
-		},
-		{
-			name: "rootcmd with flags",
-			renderData: renderData{
-				RootCmd: GoCmd{
-					Name: "rootFlag",
-					GoFlags: []GoFlag{
-						{
-							Type:    "string",
-							Name:    "stringFlag",
-							Short:   's',
-							Default: "default",
-							Help:    "help text",
-						},
-					},
-				},
-			},
-		},
-		{
-			name: "subCmd with flags",
-			renderData: renderData{
-				RootCmd: GoCmd{
-					Name:    "rootFlag",
-					GoFlags: nil,
-				},
-				SubCommands: []GoCmd{
-					{
-						Name: "subCmd",
-						GoFlags: []GoFlag{
-							{
-								Type:    "string",
-								Name:    "stringFlag",
-								Short:   's',
-								Default: "default",
-								Help:    "help text",
-							},
-						},
-					},
-				},
-			},
-		},
-		{
-			name: "cmd with error return",
-			renderData: renderData{
-				RootCmd: GoCmd{
-					Name: "rootFlag",
-					GoFlags: []GoFlag{
-						{
-							Type:    "string",
-							Name:    "stringFlag",
-							Short:   's',
-							Default: "default",
-							Help:    "help text",
-						},
-					},
-					ErrorReturn: true,
-				},
-			},
-		},
+	// change to the directory where the test functions are located, buildFuncList requires this
+	err = os.Chdir("scenarios/standard")
+	require.NoError(t, err)
+	opts := RunOpts{
+		Verbose: false,
 	}
-
-	templateNames := []string{
-		"templates/main.go.tmpl",
-		"templates/subCmd.go.tmpl",
-		"templates/function.go.tmpl",
+	wd, err := os.Getwd()
+	require.NoError(t, err)
+	funcList, err := BuildFuncList(opts, wd)
+	require.NoError(t, err)
+	require.NoError(t, err)
+	output := generateFuncListOutput(funcList, 300)
+	// assert that the output contains the expected description
+	description := `Description This is the description for the function. Without any other arguments to the ctx, this will show up in the list view and the --help output.`
+	found := false
+	for _, out := range output {
+		if strings.Contains(out, description) {
+			found = true
+		}
 	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			res, err := renderFromTemplates(tt.renderData, defaultFuncMap(), templateNames)
-			if err != nil {
-				t.Fatal(err)
-			}
-			// format it
-			formatted, err := format.Source([]byte(res))
-			if err != nil {
-				t.Fatalf("error formatting source: %v", err)
-			}
-			cupaloy.SnapshotT(t, formatted)
-		})
-	}
+	assert.True(t, found)
 }
 
-func TestBuildFuncList(t *testing.T) {
-	// save current directory
-	originalDir, err := os.Getwd()
+// Test the ShortDescription of the function.
+func TestShortDescription(t *testing.T) {
+	// revert to the original directory after the test
+	cwd, err := os.Getwd()
 	require.NoError(t, err)
+	defer func() {
+		err = os.Chdir(cwd)
+		require.NoError(t, err)
+	}()
 
-	for _, scenario := range SCENARIOS {
-		t.Run(scenario, func(t *testing.T) {
-			err := os.Chdir("scenarios/" + scenario)
-			require.NoError(t, err)
-			opts := RunOpts{
-				Verbose: true,
-			}
-			funcList, err := BuildFuncList(opts)
-			require.NoError(t, err)
-
-			// return, so that we can snapshot the output in the correct directory
-			err = os.Chdir(originalDir)
-			require.NoError(t, err)
-			cupaloy.SnapshotT(t, funcList)
-		})
-	}
-}
-
-func TestPrintFuncList(t *testing.T) {
-	// save current directory
-	originalDir, err := os.Getwd()
+	// change to the directory where the test functions are located, buildFuncList requires this
+	err = os.Chdir("scenarios/standard")
 	require.NoError(t, err)
-
-	for _, scenario := range SCENARIOS {
-		t.Run(scenario, func(t *testing.T) {
-			err := os.Chdir("scenarios/" + scenario)
-			require.NoError(t, err)
-			opts := RunOpts{
-				Verbose: true,
-			}
-			funcList, err := BuildFuncList(opts)
-			require.NoError(t, err)
-			output := generateFuncListOutput(funcList, 300)
-
-			// return, so that we can snapshot the output in the correct directory
-			err = os.Chdir(originalDir)
-			require.NoError(t, err)
-			cupaloy.SnapshotT(t, output)
-		})
+	opts := RunOpts{
+		Verbose: false,
 	}
+	wd, err := os.Getwd()
+	require.NoError(t, err)
+	funcList, err := BuildFuncList(opts, wd)
+	require.NoError(t, err)
+	require.NoError(t, err)
+	output := generateFuncListOutput(funcList, 300)
+	// assert that the output contains the expected short description
+	description := `this is a short description set specifically for the BasicShortDescription function`
+	found := false
+	for _, out := range output {
+		if strings.Contains(out, description) {
+			found = true
+		}
+	}
+	assert.True(t, found)
 }

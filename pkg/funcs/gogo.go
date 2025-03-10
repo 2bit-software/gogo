@@ -142,8 +142,12 @@ func BuildGlobal(opts RunOpts) error {
 
 // ShowFuncList lists all the available functions in the local and global namespaces
 func ShowFuncList(opts RunOpts) (int, error) {
+	wd, err := os.Getwd()
+	if err != nil {
+		return 0, err
+	}
 	// then we are listing the available functions
-	funcList, err := BuildFuncList(opts)
+	funcList, err := BuildFuncList(opts, wd)
 	if err != nil {
 		return 0, err
 	}
@@ -159,13 +163,8 @@ func ShowFuncList(opts RunOpts) (int, error) {
 // both local and global functions. If there are name collisions, the local one
 // takes precedence, and the global one can be used with a prefix.
 // e.g. `gogo g:funcName` would run the global function `funcName`
-func BuildFuncList(opts RunOpts) ([]function, error) {
-	// search for gogo files to run in local namespaces
-	cwd, err := os.Getwd()
-	if err != nil {
-		return nil, err
-	}
-	localFiles, err := listLocalFiles(cwd, opts)
+func BuildFuncList(opts RunOpts, dir string) ([]function, error) {
+	localFiles, err := listLocalFiles(dir, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -307,6 +306,7 @@ func findLocalFiles(dir string, searchFolders []string) ([]string, error) {
 			foundGitRoot = true
 		}
 	}
+	// TODO: this is not cross-platform compatible, fix that
 	// detect if we're at the root of the filesystem
 	if dir == "/" {
 		return nil, nil

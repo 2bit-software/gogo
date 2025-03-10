@@ -5,8 +5,20 @@ import (
 	"github.com/2bit-software/gogo/pkg/funcs/gogo"
 )
 
-// None of these functions should be parsed as GoGo functions. They can be *used in a function*,
-// but they are not valid GoGo functions themselves.
+// the below are not valid GoGo functions
+
+// not valid because the second parameter is a gogo.Context, not the first
+func GoGoCtxInWrongPos(var1 string, ctx gogo.Context, var2 bool) error {
+	return nil
+}
+
+// not valid because we can only return an error or nothing
+func WrongReturnType(ctx gogo.Context, var1 string, var2 bool) string {
+	return ""
+}
+
+// the following should not be valid because they are not exported functions,
+// regardless of their signature
 
 func basicArgument(ctx gogo.Context, var1 string, var2 bool) error {
 	ctx.Argument(var1)

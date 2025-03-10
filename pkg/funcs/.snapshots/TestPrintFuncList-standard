@@ -1,0 +1,21 @@
+([]string) (len=19) {
+  (string) (len=31) "AdvancedFunction              -",
+  (string) (len=31) "BasicDescription              -",
+  (string) (len=31) "BasicArgument                 -",
+  (string) (len=31) "BasicDescriptionArgument      -",
+  (string) (len=31) "BasicCtxChained               -",
+  (string) (len=31) "BasicArgumentChained          -",
+  (string) (len=46) "BasicSetHelp                  is this a thing?",
+  (string) (len=89) "NoGoGoCtx                     not valid because the first parameter is not a gogo.Context",
+  (string) (len=89) "GoGoCtxInWrongPos             not valid because the first parameter is not a gogo.Context",
+  (string) (len=31) "ShortDescriptionFunc          -",
+  (string) (len=31) "ExampleFunc                   -",
+  (string) (len=31) "ArgumentLongFunc              -",
+  (string) (len=31) "ArgumentShortFunc             -",
+  (string) (len=31) "ArgumentDefaultFunc           -",
+  (string) (len=31) "ArgumentOptionalFunc          -",
+  (string) (len=31) "ArgumentHelpFunc              -",
+  (string) (len=31) "ArgumentAllowedValuesFunc     -",
+  (string) (len=31) "ArgumentRestrictedValuesFunc  -",
+  (string) (len=31) "ArgumentDescriptionFunc       -"
+}
