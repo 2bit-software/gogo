@@ -395,13 +395,11 @@ func getBuiltBinary(log *log.Logger, buildOpts BuildOpts) error {
 
 // decideToRebuild determines if we should rebuild the binary based on the source files and the binary file
 func decideToRebuild(debug *log.Logger, buildOpts BuildOpts) bool {
-	sourceFiles, err := fs.GlobMany([]string{buildOpts.SourceDir}, []string{"*.go", "go.mod", "go.sum"})
-	// if there's an error with the comparison, just build it
-	if err != nil {
-		debug.Printf("Error finding files to glob: %v\n", err)
+	sourceFiles, modified := gatherFilesToCompare(debug, buildOpts.SourceDir)
+	debug.Printf("Found the following source files: %v\n", sourceFiles)
+	if modified {
 		return true
 	}
-	debug.Printf("Found the following source files: %v\n", sourceFiles)
 	modified, err := fs.CompareTimes(sourceFiles, buildOpts.BinaryFilepath)
 	if err != nil {
 		debug.Printf("Error comparing timestamps: %v\n", err)
@@ -422,6 +420,48 @@ func decideToRebuild(debug *log.Logger, buildOpts BuildOpts) bool {
 		return true
 	}
 	return false
+}
+
+func gatherFilesToCompare(debug *log.Logger, dir string) ([]string, bool) {
+	sourceFiles, err := fs.GlobMany([]string{dir}, []string{"*.go", "go.mod", "go.sum"})
+	// if there's an error with the comparison, just build it
+	if err != nil {
+		debug.Printf("Error finding files to glob: %v\n", err)
+		return nil, true
+	}
+
+	// Walk all subdirectories recursively
+	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return fmt.Errorf("error accessing path %s: %w", path, err)
+		}
+
+		// Skip the root directory itself
+		if path == dir {
+			return nil
+		}
+
+		// Only process directories
+		if info.IsDir() {
+			// Glob files in this subdirectory
+			subFiles, err := fs.GlobMany([]string{path}, []string{"*.go", "go.mod", "go.sum"})
+			if err != nil {
+				return fmt.Errorf("error globbing subdirectory %s: %w", path, err)
+			}
+
+			// Add files to the main list
+			sourceFiles = append(sourceFiles, subFiles...)
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		debug.Printf("Error walking directories: %v\n", err)
+		return nil, true
+	}
+
+	return sourceFiles, false
 }
 
 // TODO: This needs option overrides to determine if we should build individual binaries for each function
