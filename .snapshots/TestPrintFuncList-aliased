@@ -1,7 +1,0 @@
-([]string) (len=5) {
-  (string) (len=45) "AliasedDescription          set a description",
-  (string) (len=29) "AliasedArgument             -",
-  (string) (len=29) "AliasedDescriptionArgument  -",
-  (string) (len=88) "AliasedCtxChained           set a description, this can use any go code to set the value",
-  (string) (len=29) "AliasedArgumentChained      -"
-}

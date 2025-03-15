@@ -1,4 +1,0 @@
-([]string) (len=2) {
-  (string) (len=35) "AdvancedFunction  set a description",
-  (string) (len=31) "MoreFunction      a description"
-}
