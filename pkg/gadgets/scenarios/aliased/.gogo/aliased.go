@@ -9,33 +9,31 @@ package _gogo
 import (
 	"fmt"
 
-	"github.com/2bit-software/gogo/pkg/funcs/gogo"
+	goCtx "github.com/2bit-software/gogo/pkg/gogo"
 )
 
-func BasicDescription(ctx gogo.Context) error {
+func AliasedDescription(ctx goCtx.Context) error {
 	ctx.ShortDescription("set a description")
 	return nil
 }
 
-func BasicArgument(ctx gogo.Context, var1 string, var2 bool) error {
+func AliasedArgument(ctx goCtx.Context, var1 string, var2 bool) error {
 	ctx.Argument(var1)
 	return nil
 }
 
-func BasicDescriptionArgument(ctx gogo.Context, var1 string, var2 bool) error {
+func AliasedDescriptionArgument(ctx goCtx.Context, var1 string, var2 bool) error {
 	ctx.Argument(var1).Description("describe what this argument does")
 	return nil
 }
 
-func BasicCtxChained(ctx gogo.Context, var1 string, var2 bool) error {
+func AliasedCtxChained(ctx goCtx.Context, var1 string, var2 bool) error {
 	ctx.ShortDescription("set a description, this can use any go code to set the value")
-
 	fmt.Println(var1, var2)
-
 	return nil
 }
 
-func BasicArgumentChained(ctx gogo.Context, var1 string, var2 bool) error {
+func AliasedArgumentChained(ctx goCtx.Context, var1 string, var2 bool) error {
 	ctx.Argument(var1).
 		Description("describe what this argument does").
 		AllowedValues("1", "2", "3").
@@ -43,6 +41,5 @@ func BasicArgumentChained(ctx gogo.Context, var1 string, var2 bool) error {
 		Default("1")
 
 	fmt.Println(var1, var2)
-
 	return nil
 }

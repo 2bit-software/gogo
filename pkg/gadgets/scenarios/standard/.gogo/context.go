@@ -2,7 +2,7 @@ package _gogo
 
 import (
 	"fmt"
-	"github.com/2bit-software/gogo/pkg/funcs/gogo"
+	"github.com/2bit-software/gogo/pkg/gogo"
 )
 
 func ShortDescriptionFunc(ctx gogo.Context) error {

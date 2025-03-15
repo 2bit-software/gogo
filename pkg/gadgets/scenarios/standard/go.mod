@@ -2,9 +2,10 @@ module github.com/2bit-software/gogo/pkg/funcs/scenarios/standard
 
 go 1.23.4
 
-require github.com/2bit-software/gogo/pkg/funcs/gogo v0.0.0-20250302042302-d7a3aff575e6
 
-replace github.com/2bit-software/gogo/pkg/funcs/gogo => ./../../gogo
+replace github.com/2bit-software/gogo/pkg/gogo => ./../../../gogo
+
+require github.com/2bit-software/gogo/pkg/gogo v0.0.0-20250302042302-d7a3aff575e6
 
 require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect

@@ -10,7 +10,7 @@ package _gogo
 import (
 	"fmt"
 
-	"github.com/2bit-software/gogo/pkg/funcs/gogo"
+	"github.com/2bit-software/gogo/pkg/gogo"
 )
 
 // WARNING: This file contains comments and magic strings that are validated against in tests!

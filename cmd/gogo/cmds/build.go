@@ -12,7 +12,7 @@ import (
 
 	"github.com/urfave/cli/v2"
 
-	"github.com/2bit-software/gogo/pkg/funcs"
+	"github.com/2bit-software/gogo/pkg/gadgets"
 )
 
 // buildAction handles the main logic for the build command

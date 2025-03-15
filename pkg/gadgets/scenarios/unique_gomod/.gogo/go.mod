@@ -2,9 +2,9 @@ module github.com/2bit-software/gogo/pkg/funcs/scenarios/unique_gomod/gogo
 
 go 1.23.4
 
-replace github.com/2bit-software/gogo/pkg/funcs/gogo => ./../../../gogo
+replace github.com/2bit-software/gogo/pkg/gogo => ./../../../../gogo
 
-require github.com/2bit-software/gogo/pkg/funcs/gogo v0.0.0-00010101000000-000000000000
+require github.com/2bit-software/gogo/pkg/gogo v0.0.0-00010101000000-000000000000
 
 require (
 	github.com/DavidGamba/dgtools/fsmodtime v0.3.0 // indirect

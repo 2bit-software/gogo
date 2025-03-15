@@ -10,7 +10,7 @@ package _gogo
 import (
 	"fmt"
 
-	"github.com/2bit-software/gogo/pkg/funcs/gogo"
+	"github.com/2bit-software/gogo/pkg/gogo"
 )
 
 func AdvancedFunction(ctx gogo.Context, name string, include bool, value int) error {

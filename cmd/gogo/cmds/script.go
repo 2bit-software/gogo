@@ -3,7 +3,7 @@ package cmds
 import (
 	"github.com/urfave/cli/v2"
 
-	"github.com/2bit-software/gogo/pkg/funcs"
+	"github.com/2bit-software/gogo/pkg/gadgets"
 )
 
 // scriptAction by default just lists the functions

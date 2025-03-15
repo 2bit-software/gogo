@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/urfave/cli/v2"
 
-	"github.com/2bit-software/gogo/pkg/funcs"
+	"github.com/2bit-software/gogo/pkg/gadgets"
 )
 
 func GadgetCommand() *cli.Command {

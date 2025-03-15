@@ -1,4 +1,4 @@
-module github.com/2bit-software/gogo/pkg/scripts/gogo
+module github.com/2bit-software/gogo/pkg/gogo
 
 go 1.23.4
 

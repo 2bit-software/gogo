@@ -27,12 +27,12 @@ func TestParseImports(t *testing.T) {
 	}{
 		{
 			name:           "basic",
-			filePath:       "./scenarios/standard/.gogo/advanced.go",
+			filePath:       "scenarios/standard/.gogo/advanced.go",
 			expectedImport: "gogo",
 		},
 		{
 			name:           "aliased",
-			filePath:       "./scenarios/aliased/.gogo/aliased.go",
+			filePath:       "scenarios/aliased/.gogo/aliased.go",
 			expectedImport: "goCtx",
 		},
 	}

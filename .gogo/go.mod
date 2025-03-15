@@ -2,7 +2,7 @@ module github.com/morganhein/gogo/_gogo
 
 go 1.23.4
 
-replace github.com/2bit-software/gogo/pkg/funcs/gogo => ./../pkg/funcs/gogo
+replace github.com/2bit-software/gogo/pkg/funcs/gogo => ./../pkg/gadgets/gogo
 
 require (
 	github.com/2bit-software/gogo v0.0.0-20250302042302-d7a3aff575e6
