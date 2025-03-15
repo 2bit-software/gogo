@@ -1,7 +1,5 @@
 github.com/2bit-software/gogo v0.0.0-20250302042302-d7a3aff575e6 h1:Dr9U94NI0PMiBFlueszSdPMGmvTfj+L3srPCkdsRo+E=
 github.com/2bit-software/gogo v0.0.0-20250302042302-d7a3aff575e6/go.mod h1:fz+UewsexJaHtEd4Kt2mAzIoVdJYBbljDQ6mhSjMRQE=
-github.com/2bit-software/gogo/pkg/scripts/gogo v0.0.0-20250302042302-d7a3aff575e6 h1:Vs8fbNUEIlKo+IYg9nrpBvbPdMMTh9CK4Y3FrzSa30k=
-github.com/2bit-software/gogo/pkg/scripts/gogo v0.0.0-20250302042302-d7a3aff575e6/go.mod h1:S0NT6Di/rCQsWa9fIxZNnMDC/tyCyjZg4eMTgeZjAhw=
 github.com/cpuguy83/go-md2man/v2 v2.0.5 h1:ZtcqGrnekaHpVLArFSe4HK5DoKx1T0rq2DwVB0alcyc=
 github.com/cpuguy83/go-md2man/v2 v2.0.5/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
