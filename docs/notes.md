@@ -136,3 +136,5 @@ If I keep gogo as the go function runner, and "gadget" for the task runner, I ca
 ## Variable checking that needs to occur
 We need to make sure that no variables are named "help" or "h"
 Also need to check that no ctx().var(<name>).Name() contains no space
+
+Also need to check that the .gogo folder contains only MAIN namespace functions/go.mod

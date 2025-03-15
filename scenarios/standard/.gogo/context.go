@@ -1,23 +1,63 @@
-// Copyright (C) 2024  Morgan S Hein
-//
-// This program is subject to the terms
-// of the GNU Affero General Public License, version 3.
-// If a copy of the AGPL was not distributed with this file, You
-// can obtain one at https://www.gnu.org/licenses/.
-
-package _gogo
+package main
 
 import (
 	"fmt"
-
 	"github.com/2bit-software/gogo/pkg/gogo"
 )
 
-// WARNING: This file contains comments and magic strings that are validated against in tests!
+func ShortDescriptionFunc(ctx gogo.Context) error {
+	ctx.ShortDescription("this is a short description set specifically for the BasicShortDescription function")
+	return nil
+}
 
-// Description This is the description for the function. Without any other arguments to the ctx,
-// this will show up in the list view and the --help output.
-func Description(ctx gogo.Context) error {
+func ExampleFunc(ctx gogo.Context) error {
+	ctx.Example("example")
+	return nil
+}
+
+func ArgumentNameFunc(ctx gogo.Context, var1 string) error {
+	ctx.Argument(var1).Name("personsName")
+	return nil
+}
+
+func ArgumentShortFunc(ctx gogo.Context, var1 string) error {
+	ctx.Argument(var1).Short('p')
+	return nil
+}
+
+func ArgumentDefaultFunc(ctx gogo.Context, var1 string) error {
+	ctx.Argument(var1).Default("default-value")
+	fmt.Println(var1)
+	return nil
+}
+
+func ArgumentOptionalFunc(ctx gogo.Context, var1 string) error {
+	ctx.Argument(var1).Optional()
+	if var1 == "" {
+		fmt.Println("var1 is empty")
+		return nil
+	}
+	fmt.Println(var1)
+	return nil
+}
+
+func ArgumentHelpFunc(ctx gogo.Context, var1 string) error {
+	ctx.Argument(var1).Help("help text")
+	return nil
+}
+
+func ArgumentAllowedValuesFunc(ctx gogo.Context, var1 int) error {
+	ctx.Argument(var1).AllowedValues(8, 9, 10)
+	return nil
+}
+
+func ArgumentRestrictedValuesFunc(ctx gogo.Context, var1 int) error {
+	ctx.Argument(var1).RestrictedValues(1, 2, 3)
+	return nil
+}
+
+func ArgumentDescriptionFunc(ctx gogo.Context, var1 string) error {
+	ctx.Argument(var1).Description("this is the var 1 description")
 	return nil
 }
 

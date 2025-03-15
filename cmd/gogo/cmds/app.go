@@ -45,7 +45,7 @@ func rootAction(ctx *cli.Context) error {
 			return fmt.Errorf("failed to show app help: %w", err)
 		}
 	} else {
-		fmt.Println("Type 'gogo gadget <function>' to run a function, or `gogo --help` for more information.")
+		fmt.Println("Type 'gogo gadget <function>' to run a function, or `gogo [gadget <function>] --help` for more information.")
 	}
 
 	return nil
@@ -100,7 +100,7 @@ func NewApp() *cli.App {
 		Action: rootAction,
 		Commands: []*cli.Command{
 			GadgetCommand(),
-			ScriptCommand(),
+			BuildCommand(),
 		},
 	}
 

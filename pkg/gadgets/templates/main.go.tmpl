@@ -65,6 +65,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	{{- if .ImportSlices}}
+	"slices"{{- end}}
 
 	"{{.GoGoImportPath}}"
 )

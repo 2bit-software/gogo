@@ -8,4 +8,4 @@
 package unique_gomod
 
 // import a random thing just so this is a valid package
-import _ "github.com/2bit-software/gogo/pkg/funcs/scenarios/unique_gomod/.gogo"
+import _ "fmt"

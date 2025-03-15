@@ -25,6 +25,7 @@ import (
 type renderData struct {
 	GoGoImportPath string // the import path of the package
 	UseGoGoContext bool   // if any of the commands use the gogo context, then include the context in the main file
+	ImportSlices   bool   // whether to include the slices package or not
 	RootCmd        GoCmd
 	SubCommands    []GoCmd
 }
@@ -74,11 +75,10 @@ func (ro RunOpts) GetLogger() *log.Logger {
 }
 
 type BuildOpts struct {
-	KeepArtifacts      bool   `json:"GOGO_KEEP_ARTIFACTS"`      // When true, keeps the artifacts after the build. This includes the go src and the built binary
-	IndividualBinaries bool   `json:"GOGO_INDIVIDUAL_BINARIES"` // When true, each function results in a binary of the same name
-	DisableCache       bool   `json:"GOGO_DISABLE_CACHE"`       // When true, forces a rebuild of the binary
-	Optimize           bool   `json:"GOGO_OPTIMIZE"`            // should the functions be compiled with optimization flags during this run
-	BinaryFilepath     string `json:"GOGO_BINARY_FILEPATH"`     // the output location of the binary. If this is provided, then individual binaries is ignored.
+	KeepArtifacts  bool   `json:"GOGO_KEEP_ARTIFACTS"` // When true, keeps the artifacts after the build. This includes the go src and the built binary
+	DisableCache   bool   `json:"GOGO_DISABLE_CACHE"`  // When true, forces a rebuild of the binary
+	Optimize       bool   `json:"GOGO_OPTIMIZE"`       // should the functions be compiled with optimization flags during this run
+	BinaryFilepath string `json:"GOGO_OUTPUT"`         // the output location of the binary. If this is provided, then we don't calculate the filename or the location
 	// The below properties are calculated by the build process
 	SourceDir          string // the location of the directory where we are currently building the source
 	OutputDir          string // the output location of the binaries
@@ -183,7 +183,7 @@ func GenerateMainFile(opts RunOpts) error {
 	debug := opts.GetLogger()
 	debug.Println("Building local cache...")
 	var err error
-	opts.BinaryFilepath, err = getBinaryFilename(opts)
+	opts.BinaryFilepath, err = getBinaryFilepath(opts)
 	if err != nil {
 		return err
 	}
@@ -300,6 +300,9 @@ func buildSource(formatOutput bool, inputDir, filePath string) error {
 }
 
 func renderFromTemplates(rd renderData, funcMap map[string]any, templateNames []string) (string, error) {
+	// prepare the data
+	rd = prepareData(rd)
+
 	tmpl := template.New("main.go.tmpl")
 	tmpl = tmpl.Funcs(funcMap)
 	tmpl, err := tmpl.ParseFS(templates,
@@ -314,6 +317,37 @@ func renderFromTemplates(rd renderData, funcMap map[string]any, templateNames []
 		return "", err
 	}
 	return outBuf.String(), nil
+}
+
+// prepareData does some further parsing of the render data after
+// extraction. This is business logic that the parser should not know about
+// but the builder needs to determine what to print.
+func prepareData(rd renderData) renderData {
+	// determine if we need to include the slices package
+	if hasArgumentRestrictions(rd.RootCmd) {
+		rd.ImportSlices = true
+		return rd
+	}
+	for _, cmd := range rd.SubCommands {
+		if hasArgumentRestrictions(cmd) {
+			rd.ImportSlices = true
+			return rd
+		}
+	}
+
+	return rd
+}
+
+func hasArgumentRestrictions(cmd GoCmd) bool {
+	for _, flag := range cmd.GoFlags {
+		if len(flag.RestrictedValues) > 0 {
+			return true
+		}
+		if len(flag.AllowedValues) > 0 {
+			return true
+		}
+	}
+	return false
 }
 
 // buildBinary formats, gets dependencies, and builds the binary

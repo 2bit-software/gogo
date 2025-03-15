@@ -143,6 +143,17 @@ func (e *Executor) Run() error {
 			e.args = parts[1:]
 		}
 	}
+	// if we've set some args, but the command has spaces, we need to parse the command and args and combine
+	if len(e.args) > 0 && strings.Contains(e.cmd, " ") {
+		parts, err := shell.Fields(e.cmd, nil)
+		if err != nil {
+			fmt.Printf("error parsing command: %s\n", err)
+		}
+		if err == nil {
+			e.cmd = parts[0]
+			e.args = append(parts[1:], e.args...)
+		}
+	}
 	if e.printFinalCommand {
 		fmt.Printf("Running command: %s %s\n", e.cmd, strings.Join(e.args, " "))
 	}

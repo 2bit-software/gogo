@@ -8,8 +8,10 @@
 package scripts
 
 import (
+	"github.com/2bit-software/gogo/pkg/mod"
 	"go/format"
 	"os"
+	"path"
 	"testing"
 
 	"github.com/bradleyjkemp/cupaloy"
@@ -134,10 +136,21 @@ func TestBuildFuncList(t *testing.T) {
 	// save current directory
 	originalDir, err := os.Getwd()
 	require.NoError(t, err)
+	defer func() {
+		_ = os.Chdir(originalDir)
+	}()
+
+	root, err := mod.FindModuleRoot()
+	require.NoError(t, err)
+
+	snapshotDir := path.Join(root, "pkg", "gadgets", ".snapshots")
+	t.Logf("snapshot dir: %s", snapshotDir)
+	scenarioDir := path.Join(root, "scenarios")
+	t.Logf("scenarioDir: %s", scenarioDir)
 
 	for _, scenario := range SCENARIOS {
 		t.Run(scenario, func(t *testing.T) {
-			err := os.Chdir("scenarios/" + scenario)
+			err := os.Chdir(path.Join(scenarioDir, scenario))
 			require.NoError(t, err)
 			opts := RunOpts{
 				Verbose: true,
@@ -148,7 +161,9 @@ func TestBuildFuncList(t *testing.T) {
 			// return, so that we can snapshot the output in the correct directory
 			err = os.Chdir(originalDir)
 			require.NoError(t, err)
-			cupaloy.SnapshotT(t, funcList)
+			cfg := cupaloy.NewDefaultConfig()
+			cfg = cfg.WithOptions(cupaloy.SnapshotSubdirectory(snapshotDir))
+			cfg.SnapshotT(t, funcList)
 		})
 	}
 }
@@ -157,10 +172,21 @@ func TestPrintFuncList(t *testing.T) {
 	// save current directory
 	originalDir, err := os.Getwd()
 	require.NoError(t, err)
+	defer func() {
+		_ = os.Chdir(originalDir)
+	}()
+
+	root, err := mod.FindModuleRoot()
+	require.NoError(t, err)
+
+	snapshotDir := path.Join(root, "pkg", "gadgets", ".snapshots")
+	t.Logf("snapshot dir: %s", snapshotDir)
+	scenarioDir := path.Join(root, "scenarios")
+	t.Logf("scenarioDir: %s", scenarioDir)
 
 	for _, scenario := range SCENARIOS {
 		t.Run(scenario, func(t *testing.T) {
-			err := os.Chdir("scenarios/" + scenario)
+			err := os.Chdir(path.Join(scenarioDir, scenario))
 			require.NoError(t, err)
 			opts := RunOpts{
 				Verbose: true,
@@ -172,7 +198,10 @@ func TestPrintFuncList(t *testing.T) {
 			// return, so that we can snapshot the output in the correct directory
 			err = os.Chdir(originalDir)
 			require.NoError(t, err)
-			cupaloy.SnapshotT(t, output)
+
+			cfg := cupaloy.NewDefaultConfig()
+			cfg = cfg.WithOptions(cupaloy.SnapshotSubdirectory(snapshotDir))
+			cfg.SnapshotT(t, output)
 		})
 	}
 }

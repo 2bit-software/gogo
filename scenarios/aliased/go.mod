@@ -2,9 +2,9 @@ module github.com/2bit-software/gogo/pkg/funcs/scenarios/aliased
 
 go 1.23.4
 
-replace github.com/2bit-software/gogo/pkg/gogo => ./../../../gogo
+replace github.com/2bit-software/gogo/pkg/gogo => ./../../pkg/gogo
 
-require github.com/2bit-software/gogo/pkg/gogo v0.0.0-00010101000000-000000000000
+require github.com/2bit-software/gogo/pkg/gogo v0.0.0-20250315025540-73c842fb177a
 
 require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect

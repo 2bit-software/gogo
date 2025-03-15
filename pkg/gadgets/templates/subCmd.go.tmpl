@@ -15,7 +15,9 @@
 			{{- end }}
 			Usage:    "{{ $flag.Help }}",
 			{{- if $flag.HasDefault }}
-			Value:    {{ .Default }},
+            Value:    {{- if eq $flag.Type "string" }}"{{ .Default }}"
+            {{- else }}{{ .Default }}
+            {{- end }},
 			{{- end }}
 			EnvVars:  []string{"{{ $.Name | ToUpper }}_{{ $flag.Name | ToUpper }}"},
 		},

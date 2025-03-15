@@ -24,11 +24,11 @@ func BuildOptions(ctx *cli.Context) (scripts.RunOpts, error) {
 		BuildLocalCache:  ctx.Bool("build-local"),
 		BuildGlobalCache: ctx.Bool("global"),
 		BuildOpts: scripts.BuildOpts{
-			KeepArtifacts:      ctx.Bool("keep-artifacts"),
-			IndividualBinaries: ctx.Bool("individual-binaries"),
-			DisableCache:       ctx.Bool("disable-cache"),
-			Optimize:           ctx.Bool("optimize"),
-			SourceDir:          getEnvOrDefault("GOGO_BUILD_DIR", ""),
+			KeepArtifacts:  ctx.Bool("keep-artifacts"),
+			DisableCache:   ctx.Bool("disable-cache"),
+			Optimize:       ctx.Bool("optimize"),
+			SourceDir:      getEnvOrDefault("GOGO_BUILD_DIR", ""),
+			BinaryFilepath: ctx.String("output"),
 		},
 	}
 
@@ -53,66 +53,4 @@ func getEnvOrDefault(key, defaultValue string) string {
 		return value
 	}
 	return defaultValue
-}
-
-// AppFlags returns the global flags used across the application
-func AppFlags() []cli.Flag {
-	return []cli.Flag{
-		&cli.BoolFlag{
-			Name:    "verbose",
-			Aliases: []string{"v"},
-			Usage:   "Verbose output",
-			EnvVars: []string{"GOGO_VERBOSE"},
-		},
-		&cli.StringFlag{
-			Name:    "global-source-dir",
-			Usage:   "Global source directory",
-			EnvVars: []string{"GOGO_GLOBAL_SOURCE_DIR"},
-		},
-		&cli.StringFlag{
-			Name:    "global-bin-dir",
-			Usage:   "Global binary directory",
-			EnvVars: []string{"GOGO_GLOBAL_BIN_DIR"},
-		},
-		&cli.BoolFlag{
-			Name:    "build-local",
-			Usage:   "Build local cache",
-			EnvVars: []string{"GOGO_BUILD_LOCAL"},
-		},
-		&cli.BoolFlag{
-			Name:    "global",
-			Aliases: []string{"g"},
-			Usage:   "Build global cache",
-			EnvVars: []string{"GOGO_BUILD_GLOBAL"},
-		},
-		&cli.BoolFlag{
-			Name:    "keep-artifacts",
-			Aliases: []string{"k"},
-			Usage:   "Keep the .go files and built binaries",
-			EnvVars: []string{"GOGO_KEEP_ARTIFACTS"},
-		},
-		&cli.BoolFlag{
-			Name:    "individual-binaries",
-			Aliases: []string{"i"},
-			Usage:   "Each function outputs an individual binary",
-			EnvVars: []string{"GOGO_INDIVIDUAL_BINARIES"},
-		},
-		&cli.BoolFlag{
-			Name:    "disable-cache",
-			Aliases: []string{"d"},
-			Usage:   "Disable cache, forces everything to rebuild",
-			EnvVars: []string{"GOGO_DISABLE_CACHE"},
-		},
-		&cli.BoolFlag{
-			Name:    "optimize",
-			Aliases: []string{"o"},
-			Usage:   "Optimize the builds",
-			EnvVars: []string{"GOGO_OPTIMIZE"},
-		},
-		&cli.StringFlag{
-			Name:    "build-dir",
-			Usage:   "Source directory for builds",
-			EnvVars: []string{"GOGO_BUILD_DIR"},
-		},
-	}
 }

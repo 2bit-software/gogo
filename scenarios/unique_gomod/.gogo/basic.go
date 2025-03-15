@@ -4,36 +4,40 @@
 // of the GNU Affero General Public License, version 3.
 // If a copy of the AGPL was not distributed with this file, You
 // can obtain one at https://www.gnu.org/licenses/.
-package _gogo
+package main
 
 import (
 	"fmt"
 
-	goCtx "github.com/2bit-software/gogo/pkg/gogo"
+	"github.com/2bit-software/gogo/pkg/gogo"
 )
 
-func AliasedDescription(ctx goCtx.Context) error {
+func BasicDescription(ctx gogo.Context) error {
 	ctx.ShortDescription("set a description")
+	fmt.Println("BasicDescription")
 	return nil
 }
 
-func AliasedArgument(ctx goCtx.Context, var1 string, var2 bool) error {
+func BasicArgument(ctx gogo.Context, var1 string, var2 bool) error {
 	ctx.Argument(var1)
+	fmt.Printf("BasicArgument with var1: %v and var2: %v\n", var1, var2)
 	return nil
 }
 
-func AliasedDescriptionArgument(ctx goCtx.Context, var1 string, var2 bool) error {
+func BasicDescriptionArgument(ctx gogo.Context, var1 string, var2 bool) error {
 	ctx.Argument(var1).Description("describe what this argument does")
 	return nil
 }
 
-func AliasedCtxChained(ctx goCtx.Context, var1 string, var2 bool) error {
+func BasicCtxChained(ctx gogo.Context, var1 string, var2 bool) error {
 	ctx.ShortDescription("set a description, this can use any go code to set the value")
+
 	fmt.Println(var1, var2)
+
 	return nil
 }
 
-func AliasedArgumentChained(ctx goCtx.Context, var1 string, var2 bool) error {
+func BasicArgumentChained(ctx gogo.Context, var1 string, var2 bool) error {
 	ctx.Argument(var1).
 		Description("describe what this argument does").
 		AllowedValues("1", "2", "3").
@@ -41,5 +45,6 @@ func AliasedArgumentChained(ctx goCtx.Context, var1 string, var2 bool) error {
 		Default("1")
 
 	fmt.Println(var1, var2)
+
 	return nil
 }

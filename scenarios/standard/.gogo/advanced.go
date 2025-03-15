@@ -5,7 +5,7 @@
 // If a copy of the AGPL was not distributed with this file, You
 // can obtain one at https://www.gnu.org/licenses/.
 
-package _gogo
+package main
 
 import (
 	"fmt"
@@ -30,9 +30,9 @@ func AdvancedFunction(ctx gogo.Context, name string, include bool, value int) er
 		Description("this is the value").
 		Default(3)
 
-	fmt.Printf("name: %s\n", name)
+	fmt.Printf("name: %s", name)
 	if include {
-		fmt.Printf("value: %d\n", value)
+		fmt.Printf(" value: %d\n", value)
 	}
 
 	return nil

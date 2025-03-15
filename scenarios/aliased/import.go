@@ -6,5 +6,6 @@
 // can obtain one at https://www.gnu.org/licenses/.
 package aliased
 
-// import a random thing just so this is a valid package
-import _ "github.com/2bit-software/gogo/pkg/funcs/scenarios/aliased/.gogo"
+import (
+	_ "fmt"
+)

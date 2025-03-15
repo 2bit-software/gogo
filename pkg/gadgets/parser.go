@@ -123,6 +123,11 @@ func parseSource(src string) ([]function, error) {
 		if !acceptableReturnTypes(funcDecl) {
 			return true
 		}
+
+		if !gogoContextCorrectPosition(gogoAlias, funcDecl) {
+			return true
+		}
+
 		// extract information from the function itself
 		pCtx, err := parsePlainFunc(funcDecl)
 		if err != nil {
@@ -141,6 +146,18 @@ func parseSource(src string) ([]function, error) {
 	})
 
 	return functions, nil
+}
+
+func gogoContextCorrectPosition(alias string, decl *ast.FuncDecl) bool {
+	for i, param := range decl.Type.Params.List {
+		if isGoGoCtx(alias, param) && i == 0 {
+			continue
+		}
+		if isGoGoCtx(alias, param) {
+			return false
+		}
+	}
+	return true
 }
 
 // acceptableReturnTypes checks if the function has an acceptable return type,
@@ -211,17 +228,19 @@ func gatherDetails(pCtx *function, gogoAlias string, funcDecl *ast.FuncDecl) *fu
 	}
 
 	// determine if the first argument is a gogo|<alias>.Context
-	isGoGoCtx := isFirstArgAliasContext(gogoAlias, funcDecl)
-	if isGoGoCtx {
+	hasGoGoCtx := isFirstArgAliasContext(gogoAlias, funcDecl)
+	if hasGoGoCtx {
 		// set the GoGoCtxVariableName
 		pCtx.GoGoCtxVariableName = funcDecl.Type.Params.List[0].Names[0].Name
 	}
 
+	// now we can parse the rest of the arguments
 	for _, param := range funcDecl.Type.Params.List {
 		for i, name := range param.Names {
-			if isGoGoCtx && i == 0 && name.Name == pCtx.GoGoCtxVariableName {
+			if hasGoGoCtx && i == 0 && name.Name == pCtx.GoGoCtxVariableName {
 				continue
 			}
+
 			typ := GetPlainType(param)
 			args = append(args, argument{
 				Name: name.Name,
@@ -231,7 +250,7 @@ func gatherDetails(pCtx *function, gogoAlias string, funcDecl *ast.FuncDecl) *fu
 	}
 	pCtx.Arguments = args
 
-	if !isGoGoCtx {
+	if !hasGoGoCtx {
 		return pCtx
 	}
 
@@ -351,6 +370,10 @@ func isFirstArgAliasContext(alias string, funcDecl *ast.FuncDecl) bool {
 	// Get the first parameter
 	firstParam := funcDecl.Type.Params.List[0]
 
+	return isGoGoCtx(alias, firstParam)
+}
+
+func isGoGoCtx(alias string, firstParam *ast.Field) bool {
 	// The type of the first parameter should be a SelectorExpr with the form: alias.Context.
 	if selExpr, ok := firstParam.Type.(*ast.SelectorExpr); ok {
 		// The X field is the alias (it should be an Ident)
@@ -359,7 +382,6 @@ func isFirstArgAliasContext(alias string, funcDecl *ast.FuncDecl) bool {
 			return ident.Name == alias && selExpr.Sel.Name == "Context"
 		}
 	}
-
 	return false
 }
 

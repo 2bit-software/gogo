@@ -78,7 +78,7 @@ func Run(opts RunOpts, args []string) error {
 	}
 	gogoFolder := path.Dir(gogoFile)
 
-	opts.BinaryFilepath, err = getBinaryFilename(opts)
+	opts.BinaryFilepath, err = getBinaryFilepath(opts)
 	if err != nil {
 		return err
 	}
@@ -119,7 +119,8 @@ func BuildLocal(opts RunOpts) error {
 	debug := opts.GetLogger()
 	debug.Println("Building local cache...")
 	var err error
-	opts.BinaryFilepath, err = getBinaryFilename(opts)
+	opts.BinaryFilepath, err = getBinaryFilepath(opts)
+	debug.Println("Output file path:", opts.BinaryFilepath)
 	if err != nil {
 		return err
 	}
@@ -180,7 +181,7 @@ func BuildFuncList(opts RunOpts, dir string) ([]function, error) {
 	return parseAll(files)
 }
 
-func getBinaryFilename(opts RunOpts) (string, error) {
+func getBinaryFilepath(opts RunOpts) (string, error) {
 	if opts.BinaryFilepath != "" {
 		return opts.BinaryFilepath, nil
 	}

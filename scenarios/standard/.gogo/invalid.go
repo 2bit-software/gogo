@@ -1,4 +1,4 @@
-package _gogo
+package main
 
 import (
 	"fmt"
