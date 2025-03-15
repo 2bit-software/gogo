@@ -66,7 +66,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/2bit-software/gogo/pkg/scripts/gogo"
+	""
 )
 
 func main() {

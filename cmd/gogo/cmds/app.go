@@ -9,6 +9,7 @@ package cmds
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/urfave/cli/v2"
 
@@ -20,6 +21,10 @@ import (
 func rootAction(ctx *cli.Context) error {
 	if ctx.Bool("version") {
 		fmt.Printf("%+v\n", gogo.Version())
+		return nil
+	}
+	if ctx.Bool("build-info") {
+		gogo.PrintVersion(os.Stdout)
 		return nil
 	}
 
@@ -67,6 +72,11 @@ func NewApp() *cli.App {
 				Name:    "version",
 				Usage:   "Print the version",
 				EnvVars: []string{"GOGO_VERSION"},
+			},
+			&cli.BoolFlag{
+				Name:    "build-info",
+				Usage:   "Print all build information for GoGo",
+				EnvVars: []string{"GOGO_BUILD_INFO"},
 			},
 			&cli.BoolFlag{
 				Name:    "keep-artifacts",

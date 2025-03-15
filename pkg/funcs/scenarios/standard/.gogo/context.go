@@ -6,7 +6,7 @@ import (
 )
 
 func ShortDescriptionFunc(ctx gogo.Context) error {
-	ctx.SetShortDescription("set a description")
+	ctx.ShortDescription("set a description")
 	return nil
 }
 

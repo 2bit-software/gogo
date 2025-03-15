@@ -13,7 +13,7 @@ import (
 )
 
 func AliasedDescription(ctx goCtx.Context) error {
-	ctx.SetShortDescription("set a description")
+	ctx.ShortDescription("set a description")
 	return nil
 }
 
@@ -28,7 +28,7 @@ func AliasedDescriptionArgument(ctx goCtx.Context, var1 string, var2 bool) error
 }
 
 func AliasedCtxChained(ctx goCtx.Context, var1 string, var2 bool) error {
-	ctx.SetShortDescription("set a description, this can use any go code to set the value")
+	ctx.ShortDescription("set a description, this can use any go code to set the value")
 	fmt.Println(var1, var2)
 	return nil
 }

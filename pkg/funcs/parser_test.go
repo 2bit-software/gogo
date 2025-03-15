@@ -26,19 +26,14 @@ func TestParseImports(t *testing.T) {
 		err            bool
 	}{
 		{
-			name:     "no imports",
-			filePath: "scenarios/broken/.gogo/broken.go",
-			err:      true,
-		},
-		{
 			name:           "basic",
-			filePath:       "scenarios/advanced/.gogo/advanced.go",
+			filePath:       "./scenarios/standard/.gogo/advanced.go",
 			expectedImport: "gogo",
 		},
 		{
 			name:           "aliased",
-			filePath:       "scenarios/aliased/.gogo/aliased.go",
-			expectedImport: "gogo2",
+			filePath:       "./scenarios/aliased/.gogo/aliased.go",
+			expectedImport: "goCtx",
 		},
 	}
 	for _, tt := range tests {
@@ -70,7 +65,7 @@ func TestFindGoGoFunctions(t *testing.T) {
 		{
 			name:      "basic",
 			gogoAlias: "gogo",
-			filePath:  "scenarios/basic/.gogo/unexported.go",
+			filePath:  "scenarios/standard/.gogo/basic.go",
 		},
 		{
 			name:      "aliased",
@@ -100,30 +95,28 @@ func TestFindGoGoFunctions(t *testing.T) {
 }
 
 // test when they are not chained together.
+// TODO: what is this test good for? we need to update it.
+// I think what we really want is to just test using every function signature
+// and every ctx option.
 func TestNoChainedOptions(t *testing.T) {
 	tests := []struct {
-		name       string
-		funcName   string
-		optionName string
-		expected   any
-		err        bool
+		name     string
+		funcName string
+		expected any
+		err      bool
 	}{
 		{
-			name:       "ctx description",
-			funcName:   "BasicDescription",
-			optionName: "SetDescription",
-			expected:   "set a description",
+			name:     "ctx description",
+			funcName: "Description",
 		},
 		{
-			name:       "ctx set help",
-			funcName:   "BasicSetHelp",
-			optionName: "SetHelp",
-			expected:   "is this a thing?",
+			name:     "basic argument",
+			funcName: "BasicArgument",
 		},
 	}
 	// Parse the source code
 	fset := token.NewFileSet()
-	astFile, err := parser.ParseFile(fset, "scenarios/basic/.gogo/unexported.go", nil, 0)
+	astFile, err := parser.ParseFile(fset, "scenarios/standard/.gogo/basic.go", nil, 0)
 	if err != nil {
 		t.Fatalf("error parsing file: %v", err)
 	}

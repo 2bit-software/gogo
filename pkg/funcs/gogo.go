@@ -164,6 +164,9 @@ func ShowFuncList(opts RunOpts) (int, error) {
 // takes precedence, and the global one can be used with a prefix.
 // e.g. `gogo g:funcName` would run the global function `funcName`
 func BuildFuncList(opts RunOpts, dir string) ([]function, error) {
+	if dir == "" {
+		dir = "."
+	}
 	localFiles, err := listLocalFiles(dir, opts)
 	if err != nil {
 		return nil, err

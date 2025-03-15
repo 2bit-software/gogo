@@ -13,7 +13,7 @@ import (
 )
 
 func BasicDescription(ctx gogo.Context) error {
-	ctx.SetShortDescription("set a description")
+	ctx.ShortDescription("set a description")
 	return nil
 }
 
@@ -28,7 +28,7 @@ func BasicDescriptionArgument(ctx gogo.Context, var1 string, var2 bool) error {
 }
 
 func BasicCtxChained(ctx gogo.Context, var1 string, var2 bool) error {
-	ctx.SetShortDescription("set a description, this can use any go code to set the value")
+	ctx.ShortDescription("set a description, this can use any go code to set the value")
 
 	fmt.Println(var1, var2)
 

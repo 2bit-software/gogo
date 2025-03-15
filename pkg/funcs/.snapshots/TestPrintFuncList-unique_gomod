@@ -1,7 +1,7 @@
 ([]string) (len=5) {
-  (string) (len=27) "BasicDescription          -",
+  (string) (len=43) "BasicDescription          set a description",
   (string) (len=27) "BasicArgument             -",
   (string) (len=27) "BasicDescriptionArgument  -",
-  (string) (len=27) "BasicCtxChained           -",
+  (string) (len=86) "BasicCtxChained           set a description, this can use any go code to set the value",
   (string) (len=27) "BasicArgumentChained      -"
 }

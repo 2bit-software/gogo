@@ -21,9 +21,9 @@ func Description(ctx gogo.Context) error {
 	return nil
 }
 
-// BasicShortDescription is a function that uses the SetShortDescription method to set the short description.
+// BasicShortDescription is a function that uses the ShortDescription method to set the short description.
 func BasicShortDescription(ctx gogo.Context) error {
-	ctx.SetShortDescription("this is a short description set specifically for the BasicShortDescription function")
+	ctx.ShortDescription("this is a short description set specifically for the BasicShortDescription function")
 	return nil
 }
 
@@ -42,7 +42,7 @@ func BasicDescriptionArgument(ctx gogo.Context, var1 string, var2 bool) error {
 }
 
 func BasicCtxChained(ctx gogo.Context, var1 string, var2 bool) error {
-	ctx.SetShortDescription("set a description, this can use any go code to set the value")
+	ctx.ShortDescription("set a description, this can use any go code to set the value")
 
 	fmt.Println(var1, var2)
 

@@ -8,6 +8,7 @@
 package scripts
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -114,11 +115,11 @@ func TestParse(t *testing.T) {
 			// but it should be marked as a gogo context
 			// with appropriate variable name
 			name: "with gogo context",
-			src: `package gogo
-				import "github.com/2bit-software/gogo"
+			src: fmt.Sprintf(`package gogo
+				import "%s"
 				func NewFunc(ctx gogo.Context) {
-ctx.SetShortDescription("This is a description")
-}`,
+ctx.ShortDescription("This is a description")
+}`, GOGOIMPORTPATH),
 			expected: function{
 				Name:                "NewFunc",
 				Description:         "This is a description",
@@ -129,13 +130,13 @@ ctx.SetShortDescription("This is a description")
 		},
 		{
 			name: "with gogo context all function options",
-			src: `package gogo
-				import "github.com/2bit-software/gogo"
+			src: fmt.Sprintf(`package gogo
+				import "%s"
 // This is a long description
 				func NewLongFunc(ctx gogo.Context) {
-ctx.SetShortDescription("This is a description").
+ctx.ShortDescription("This is a description").
 Example("This is an example")
-}`,
+}`, GOGOIMPORTPATH),
 			expected: function{
 				Name:                "NewLongFunc",
 				Description:         "This is a description",
@@ -148,11 +149,11 @@ Example("This is an example")
 		},
 		{
 			name: "with gogo context and argument",
-			src: `package gogo
-				import "github.com/2bit-software/gogo"
+			src: fmt.Sprintf(`package gogo
+				import "%s"
 				func NewFunc(ctx gogo.Context, arg1 string) {
-ctx.SetShortDescription("This is a description")
-}`,
+ctx.ShortDescription("This is a description")
+}`, GOGOIMPORTPATH),
 			expected: function{
 				Name:                "NewFunc",
 				UseGoGoCtx:          true,
@@ -168,13 +169,13 @@ ctx.SetShortDescription("This is a description")
 		},
 		{
 			name: "gogo context argument information",
-			src: `package gogo
-				import "github.com/2bit-software/gogo"	
+			src: fmt.Sprintf(`package gogo
+				import "%s"	
 				func NewFunc(ctx gogo.Context, var1 string) {
-					ctx.SetShortDescription("This is a description").
+					ctx.ShortDescription("This is a description").
 					Argument(var1).
 					Help("This is an argument help message")
-}`,
+}`, GOGOIMPORTPATH),
 			expected: function{
 				Name:                "NewFunc",
 				UseGoGoCtx:          true,
@@ -191,17 +192,17 @@ ctx.SetShortDescription("This is a description")
 		},
 		{
 			name: "gogo context multiple argument information",
-			src: `package gogo
-				import "github.com/2bit-software/gogo"
+			src: fmt.Sprintf(`package gogo
+				import "%s"
 				func NewFuncAdvanced(ctx gogo.Context, var1 string, var2 int) {
-					ctx.SetShortDescription("This is a description").
+					ctx.ShortDescription("This is a description").
 					Argument(var1).
 					Help("This is an argument help message").
 					Default("default value").
 					Argument(var2).
 					Help("This is another argument help message").
 					Short('v')
-				}`,
+				}`, GOGOIMPORTPATH),
 			expected: function{
 				Name:                "NewFuncAdvanced",
 				UseGoGoCtx:          true,
@@ -225,11 +226,11 @@ ctx.SetShortDescription("This is a description")
 		},
 		{
 			name: "gogo context with alias",
-			src: `package gogo
-				import g2 "github.com/2bit-software/gogo"
+			src: fmt.Sprintf(`package gogo
+				import g2 "%s"
 				func NewFuncAlias(ctx g2.Context) {
-					ctx.SetShortDescription("This is a description")
-				}`,
+					ctx.ShortDescription("This is a description")
+				}`, GOGOIMPORTPATH),
 			expected: function{
 				Name:                "NewFuncAlias",
 				UseGoGoCtx:          true,
@@ -283,12 +284,12 @@ func TestParseMany(t *testing.T) {
 		},
 		{
 			name: "multiple functions single context",
-			src: `package gogo
-				import "github.com/2bit-software/gogo"
+			src: fmt.Sprintf(`package gogo
+				import "%s"
 				func NewFunc1(ctx gogo.Context, func1Arg string) {
-					ctx.SetShortDescription("This is a description")
+					ctx.ShortDescription("This is a description")
 				}
-				func NewFunc2(func2Arg bool) {}`,
+				func NewFunc2(func2Arg bool) {}`, GOGOIMPORTPATH),
 			expected: []function{
 				{
 					Name:                "NewFunc1",
@@ -315,14 +316,14 @@ func TestParseMany(t *testing.T) {
 		},
 		{
 			name: "multiple functions multiple context",
-			src: `package gogo
-				import "github.com/2bit-software/gogo"
+			src: fmt.Sprintf(`package gogo
+				import "%s"
 				func NewFunc1(ctx gogo.Context, func1Arg string) {
-					ctx.SetShortDescription("This is a description")
+					ctx.ShortDescription("This is a description")
 				}
 				func NewFunc2(ctx gogo.Context, func2Arg bool) {
-					ctx.SetShortDescription("This is another description")
-				}`,
+					ctx.ShortDescription("This is another description")
+				}`, GOGOIMPORTPATH),
 			expected: []function{
 				{
 					Name:                "NewFunc1",

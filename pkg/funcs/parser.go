@@ -42,7 +42,7 @@ type argument struct {
 	RestrictedValues []any
 }
 
-const GOGOIMPORTPATH = "github.com/2bit-software/gogo/pkg/scripts/gogo"
+const GOGOIMPORTPATH = "github.com/2bit-software/gogo/pkg/funcs/gogo"
 
 // parseDirectory reads in a list of files and extracts the function information, aggregating it into a single list
 // TODO: this might need to return a map of files/functions instead

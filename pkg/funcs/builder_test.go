@@ -16,38 +16,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMainRootOnlyTemplate(t *testing.T) {
-	t.Skip("building the main root only template is not yet fully implemented")
-	// Define mock data for the template
-	data := renderData{
-		RootCmd: GoCmd{
-			Name:  "PrintHello",
-			Short: "A short description",
-			Long:  "A much longer description. Much wow!",
-			GoFlags: []GoFlag{
-				{Type: "string", Name: "config", Short: 'c', Default: `""`, Help: "config file (default is ./config.yaml)"},
-				{Type: "bool", Name: "verbose", Short: 'v', Default: false, Help: "enable verbose mode"},
-			},
-		},
-		SubCommands: nil,
-	}
-
-	templateNames := []string{
-		"templates/main.go.tmpl",
-		"templates/subCmd.go.tmpl",
-	}
-
-	// Render the template with the mock data
-	rendered, err := renderFromTemplates(data, defaultFuncMap(), templateNames)
-	require.NoError(t, err, "Failed to execute template: %v", err)
-	assert.Contains(t, rendered, "package main", "Expected package main")
-	assert.Contains(t, rendered, "PrintHello", "Expected PrintHello function")
-	cupaloy.SnapshotT(t, rendered)
-}
-
 func TestSubCommandsTemplate(t *testing.T) {
 	// Define mock data for the template
 	data := renderData{
+		GoGoImportPath: GOGOIMPORTPATH,
 		RootCmd: GoCmd{
 			Name:  "PrintHello",
 			Short: "A short description",
@@ -75,6 +47,15 @@ func TestSubCommandsTemplate(t *testing.T) {
 		"templates/subCmd.go.tmpl",
 		"templates/function.go.tmpl",
 	}
+
+	//// find mod root
+	//root, err := mod.FindModuleRoot()
+	//require.NoError(t, err, "Failed to find module root: %v", err)
+	//
+	//// for each template name, pass in the full path
+	//for i, name := range templateNames {
+	//	templateNames[i] = path.Join(root, "pkg", "funcs", name)
+	//}
 
 	// Render the template with the mock data
 	rendered, err := renderFromTemplates(data, defaultFuncMap(), templateNames)

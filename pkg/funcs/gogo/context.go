@@ -16,8 +16,8 @@ var _ Argument = gogoArgument{}
 
 type Context interface {
 	stdContext.Context
-	SetShortDescription(short string) Context // This becomes the short description/usage of the command.
-	Example(string) Context                   // What would this go to?
+	ShortDescription(short string) Context // This becomes the short description/usage of the command.
+	Example(string) Context                // What would this go to?
 	Argument(any) Argument
 }
 
@@ -44,7 +44,7 @@ type gogoContext struct {
 type gogoArgument struct {
 }
 
-func (c gogoContext) SetShortDescription(short string) Context {
+func (c gogoContext) ShortDescription(short string) Context {
 	return c
 }
 

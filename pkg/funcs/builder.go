@@ -23,7 +23,8 @@ import (
 )
 
 type renderData struct {
-	UseGoGoContext bool // if any of the commands use the gogo context, then include the context in the main file
+	GoGoImportPath string // the import path of the package
+	UseGoGoContext bool   // if any of the commands use the gogo context, then include the context in the main file
 	RootCmd        GoCmd
 	SubCommands    []GoCmd
 }
@@ -263,6 +264,11 @@ func buildSource(formatOutput bool, inputDir, filePath string) error {
 		"templates/main.go.tmpl",
 		"templates/subCmd.go.tmpl",
 		"templates/function.go.tmpl",
+	}
+
+	// if the import path isn't set, then set it
+	if cmd.GoGoImportPath == "" {
+		cmd.GoGoImportPath = GOGOIMPORTPATH
 	}
 
 	// TODO: this is wrong. We're passing a filePath, but it's possible we need to make multiple binaries.

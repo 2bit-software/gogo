@@ -32,7 +32,7 @@ func createApp() *cli.App {
 	return &cli.App{
 		Name:    "wizard",
 		Usage:   "A mage-compatible GoGo wizard",
-		Version: gogo.Version().Version,
+		Version: gogo.Version(),
 		Description: `An entrypoint you can symlink from mage to which will use GoGo instead. 
 It does not support most of the shell enhancements that GoGo provides, but it does 
 support all of the function capabilities.`,

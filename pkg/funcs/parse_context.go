@@ -68,7 +68,7 @@ func processGoGoChain(ctx *call, pCtx *function) error {
 func processMethodOnContext(current *call, ctx *function) (*call, error) {
 	// Process the method
 	switch current.FuncName {
-	case "SetShortDescription":
+	case "ShortDescription":
 		if len(current.Args) == 1 {
 			ctx.Description = current.Args[0].(string)
 		}

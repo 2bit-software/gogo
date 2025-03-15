@@ -109,6 +109,9 @@ func TestRenderTemplates(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			data := tt.renderData
+			// set the import path
+			data.GoGoImportPath = GOGOIMPORTPATH
 			res, err := renderFromTemplates(tt.renderData, defaultFuncMap(), templateNames)
 			if err != nil {
 				t.Fatal(err)
