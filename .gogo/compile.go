@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/2bit-software/gogo/pkg/funcs/gogo"
+	"github.com/2bit-software/gogo/pkg/gogo"
 	"github.com/morganhein/gogo/_gogo/pkg"
 )
 
