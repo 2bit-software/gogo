@@ -65,7 +65,7 @@ func CompileGo(inputFolderPath, outputFolderPath, tags, binaryName, versionPath,
 	}
 
 	// Create the output filename
-	filename := fmt.Sprintf("%v-%s-%s", binaryName, goos, goarch)
+	filename := fmt.Sprintf("%v", binaryName)
 	fmt.Printf("building %s...\n", filename)
 
 	// get the full path to inputFolderPath
