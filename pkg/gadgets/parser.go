@@ -148,6 +148,8 @@ func parseSource(src string) ([]function, error) {
 	return functions, nil
 }
 
+// gogoContextCorrectPosition checks if the gogo.Context is in the correct position
+// If the function has a gogo.Context, it must be the first argument
 func gogoContextCorrectPosition(alias string, decl *ast.FuncDecl) bool {
 	for i, param := range decl.Type.Params.List {
 		if isGoGoCtx(alias, param) && i == 0 {
@@ -253,6 +255,9 @@ func gatherDetails(pCtx *function, gogoAlias string, funcDecl *ast.FuncDecl) *fu
 	if !hasGoGoCtx {
 		return pCtx
 	}
+
+	// we know we have a GoGo context, so make signal it's imported at the very least
+	pCtx.UseGoGoCtx = true
 
 	// extract information using parseGoGoCtx
 	pCtx, err := parseGoGoCtx(pCtx, funcDecl)
