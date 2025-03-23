@@ -68,6 +68,11 @@ func TestStandardArgParsing(t *testing.T) {
 			expected: "NoArgumentsNoReturns",
 		},
 		{
+			command:  "ContextWithNoUsage",
+			args:     []string{},
+			expected: "ContextWithNoUsage",
+		},
+		{
 			command:  "ErrorReturn",
 			args:     []string{},
 			expected: "ErrorReturn",
@@ -179,6 +184,58 @@ func TestUniqueGoModArgParsing(t *testing.T) {
 			command:  "BasicArgument",
 			args:     []string{"passedArg1", "true"},
 			expected: "BasicArgument with var1: passedArg1 and var2: true",
+		},
+	}
+
+	setupBinaries(t, testFolder)
+
+	for _, test := range tests {
+		t.Run(test.command, func(t *testing.T) {
+			// run the scenario
+			scenarioCmd := sh.Cmd("/tmp/gadgets " + test.command).SetEnv([]string{})
+			scenarioCmd.SetEnv([]string{})
+			if len(test.args) > 0 {
+				scenarioCmd.SetArgs(test.args...)
+			}
+			result, err := scenarioCmd.String()
+			require.NoErrorf(t, err, "failed to run scenario %s: %s", test.command, result)
+			require.Equal(t, test.expected, strings.TrimSpace(result))
+		})
+	}
+}
+
+func TestFlagArgParsing(t *testing.T) {
+	testFolder := "standard"
+
+	tests := []struct {
+		command  string
+		args     []string
+		expected string
+	}{
+		{
+			command:  "SingleArgument",
+			args:     []string{"--arg1=passedArg1"},
+			expected: "SingleArgument with arg1: passedArg1",
+		},
+		{
+			// tests that both arguments passed as flags is enough
+			command:  "TwoDifferentArguments",
+			args:     []string{"--arg1=passedArg1", "--arg2"},
+			expected: "TwoDifferentArguments with arg1: passedArg1, arg2: true",
+		},
+		{
+			// tests that passing only the first argument as a flag is enough when
+			// two flags exist
+			command:  "TwoDifferentArguments",
+			args:     []string{"--arg1=passedArg1"},
+			expected: "TwoDifferentArguments with arg1: passedArg1, arg2: false",
+		},
+		{
+			// tests that passing only the second argument as a flag is enough when
+			// two flags exist
+			command:  "TwoDifferentArguments",
+			args:     []string{"--arg2"},
+			expected: "TwoDifferentArguments with arg1: , arg2: true",
 		},
 	}
 

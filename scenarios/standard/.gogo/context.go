@@ -5,6 +5,10 @@ import (
 	"github.com/2bit-software/gogo/pkg/gogo"
 )
 
+func ContextWithNoUsage(ctx gogo.Context) {
+	fmt.Println("ContextWithNoUsage")
+}
+
 func ShortDescriptionFunc(ctx gogo.Context) error {
 	ctx.ShortDescription("this is a short description set specifically for the BasicShortDescription function")
 	return nil
