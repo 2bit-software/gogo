@@ -10,12 +10,10 @@
 ## Quick Start
 ### Install
 ```bash
-# Homebrew
-brew install gogo # TODO
 # go
 go install github.com/2bit-software/gogo/cmd/gogo@latest
-# shell
-curl -sSL https://get.gogo.dev | bash # (TODO)
+or 
+go install github.com/2bit-software/gogo/cmd/wizard@latest
 ```
 
 ### Usage
