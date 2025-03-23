@@ -23,13 +23,14 @@ go install github.com/2bit-software/gogo/cmd/wizard@latest
 gogo init --local
 
 # Or init the global function cache
+# TODO: global cache not yet finished
 gogo init --global
 
 # Then create a Go function in that folder
 echo 'func Hello() { fmt.Println("Hello, World!") }' > hello.go
 
 # Run it
-gogo run Hello
+gogo gadget Hello
 ```
 
 ## Documentation

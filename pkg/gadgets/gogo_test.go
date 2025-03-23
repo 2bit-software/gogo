@@ -1,4 +1,4 @@
-package scripts
+package gadgets
 
 import (
 	"github.com/stretchr/testify/assert"

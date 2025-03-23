@@ -1,0 +1,22 @@
+package pkg
+
+import (
+    "bytes"
+    "testing"
+)
+
+// TestHello is a test function for Hello.
+func TestHello(t *testing.T) {
+	name := "GoGo User"
+	// make a buffer
+	buf := bytes.NewBuffer(nil)
+	// call the function
+	err := Hello(buf, name)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// check the output
+	if buf.String() != "Hello, GoGo User!\n" {
+        t.Fatalf("unexpected output: %s", buf.String())
+    }
+}

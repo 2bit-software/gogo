@@ -16,14 +16,14 @@ import (
 )
 
 // BuildOptions creates a RunOpts struct from the CLI context and environment
-func BuildOptions(ctx *cli.Context) (scripts.RunOpts, error) {
-	runOpts := scripts.RunOpts{
+func BuildOptions(ctx *cli.Context) (gadgets.RunOpts, error) {
+	runOpts := gadgets.RunOpts{
 		Verbose:          ctx.Bool("verbose"),
 		GlobalSourceDir:  getEnvOrDefault("GOGO_GLOBAL_SOURCE_DIR", ""),
 		GlobalBinDir:     getEnvOrDefault("GOGO_GLOBAL_BIN_DIR", ""),
 		BuildLocalCache:  ctx.Bool("build-local"),
 		BuildGlobalCache: ctx.Bool("global"),
-		BuildOpts: scripts.BuildOpts{
+		BuildOpts: gadgets.BuildOpts{
 			KeepArtifacts:  ctx.Bool("keep-artifacts"),
 			DisableCache:   ctx.Bool("disable-cache"),
 			Optimize:       ctx.Bool("optimize"),

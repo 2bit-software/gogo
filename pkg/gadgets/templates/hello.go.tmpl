@@ -1,0 +1,16 @@
+//go:build gogo
+
+package main
+
+import (
+    "os"
+
+    "{{.GoGoImportPath}}"
+
+    "{{.PkgImportPath}}" // If not on go1.24, this import must exist in at least one file
+)
+
+// Hello is an example function. It returns a greeting message.
+func Hello(ctx gogo.Context, name string) error {
+    return pkg.Hello(os.Stdout, name)
+}

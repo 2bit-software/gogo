@@ -66,7 +66,7 @@ func executeGoGoCommand(ctx *cli.Context) error {
 	}
 
 	// Execute the GoGo command
-	err = scripts.Run(opts, args)
+	err = gadgets.Run(opts, args)
 
 	// Return any error from execution
 	if err != nil {
@@ -77,8 +77,8 @@ func executeGoGoCommand(ctx *cli.Context) error {
 }
 
 // handleFunctionListDisplay shows the available functions or help
-func handleFunctionListDisplay(ctx *cli.Context, opts scripts.RunOpts) error {
-	count, err := scripts.ShowFuncList(opts)
+func handleFunctionListDisplay(ctx *cli.Context, opts gadgets.RunOpts) error {
+	count, err := gadgets.ShowFuncList(opts)
 	if err != nil {
 		return fmt.Errorf("failed to show function list: %w", err)
 	}

@@ -1,0 +1,12 @@
+package pkg
+
+import (
+    "fmt"
+    "io"
+)
+
+// Hello is an example function. It returns a greeting message.
+func Hello(out io.Writer, name string) error {
+    _ , err := fmt.Fprintf(out, "Hello, %s!\n", name)
+    return err
+}

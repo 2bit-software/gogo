@@ -34,7 +34,7 @@ func gadgetAction(ctx *cli.Context) error {
 	}
 
 	// run the command
-	err = scripts.Run(opts, args)
+	err = gadgets.Run(opts, args)
 	if err != nil && len(args) == 0 {
 		fmt.Printf("error: %v\n", err)
 		// if we have an error and no arguments, print the help

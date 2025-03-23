@@ -42,7 +42,7 @@ func FormatCode() error {
 EOF
 
 # Run it from anywhere
-gogo run FormatCode
+gogo gadget FormatCode
 ```
 
 ## Discovering Functions
@@ -72,16 +72,16 @@ gogo list --local
 ### Different Ways to Run
 ```bash
 # Basic execution
-gogo run FunctionName
+gogo gadget FunctionName
 
 # With positional arguments
-gogo run Greet "John" true 42
+gogo gadget Greet "John" true 42
 
 # With flags (recommended)
-gogo run Greet --name "John" --verbose --count 42
+gogo gadget Greet --name "John" --verbose --count 42
 
 # Running global function
-gogo run g:FormatCode
+gogo gadget g:FormatCode
 
 ```
 

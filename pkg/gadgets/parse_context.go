@@ -5,7 +5,7 @@
 // If a copy of the AGPL was not distributed with this file, You
 // can obtain one at https://www.gnu.org/licenses/.
 
-package scripts
+package gadgets
 
 import (
 	"errors"

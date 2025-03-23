@@ -34,7 +34,7 @@ func rootAction(ctx *cli.Context) error {
 		return fmt.Errorf("failed to build options: %w", err)
 	}
 
-	count, err := scripts.ShowFuncList(opts)
+	count, err := gadgets.ShowFuncList(opts)
 	if err != nil {
 		return fmt.Errorf("failed to show function list: %w", err)
 	}
@@ -101,6 +101,7 @@ func NewApp() *cli.App {
 		Commands: []*cli.Command{
 			GadgetCommand(),
 			BuildCommand(),
+			InitCommand(),
 		},
 	}
 
