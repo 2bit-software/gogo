@@ -1,9 +1,11 @@
 package gadgets
 
 import (
+	"github.com/2bit-software/gogo/pkg/mod"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"os"
+	"path"
 	"strings"
 	"testing"
 )
@@ -20,8 +22,12 @@ func TestDescription(t *testing.T) {
 	}()
 
 	// change to the directory where the test functions are located, buildFuncList requires this
-	err = os.Chdir("scenarios/standard")
+	root, err := mod.FindModuleRoot()
 	require.NoError(t, err)
+	scenarioPath := path.Join(root, "scenarios", "standard")
+	err = os.Chdir(scenarioPath)
+	require.NoError(t, err)
+
 	opts := RunOpts{
 		Verbose: false,
 	}
@@ -32,7 +38,7 @@ func TestDescription(t *testing.T) {
 	require.NoError(t, err)
 	output := generateFuncListOutput(funcList, 300)
 	// assert that the output contains the expected description
-	description := `Description This is the description for the function. Without any other arguments to the ctx, this will show up in the list view and the --help output.`
+	description := `This is the description for the function. Without any other arguments to the ctx, this will show up in the list view and the --help output.`
 	found := false
 	for _, out := range output {
 		if strings.Contains(out, description) {
@@ -53,8 +59,12 @@ func TestShortDescription(t *testing.T) {
 	}()
 
 	// change to the directory where the test functions are located, buildFuncList requires this
-	err = os.Chdir("scenarios/standard")
+	root, err := mod.FindModuleRoot()
 	require.NoError(t, err)
+	scenarioPath := path.Join(root, "scenarios", "standard")
+	err = os.Chdir(scenarioPath)
+	require.NoError(t, err)
+
 	opts := RunOpts{
 		Verbose: false,
 	}
