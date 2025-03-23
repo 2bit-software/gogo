@@ -25,7 +25,7 @@ type Argument interface {
 	Name(string) Argument             // Override the argument name in auto-complete and arguments when calling this function. Defaults to the name of the argument.
 	Short(byte) Argument              // The short character for the argument
 	Default(any) Argument             // If set it's assumed the argument is also optional
-	Optional() Argument               // If set the argument is optional
+	Required() Argument               // If set, the required argument is required
 	Help(string) Argument             // Help for that specific argument. This is shown when inspecting the individual flag for information, or possibly when auto-completing in shell on positional/flag arguments.
 	AllowedValues(...any) Argument    // Allowed values are checked in the command, and provide options for auto-complete in the shell. For now it's hard-coded values, but in the future could be regular expressions or even a go function.
 	RestrictedValues(...any) Argument // Same as allowed values, but the values are not allowed. This is not used in the shell?
@@ -72,7 +72,7 @@ func (a gogoArgument) Help(help string) Argument {
 	return a
 }
 
-func (a gogoArgument) Optional() Argument {
+func (a gogoArgument) Required() Argument {
 	return a
 }
 

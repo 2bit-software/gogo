@@ -36,7 +36,7 @@ func ArgumentDefaultFunc(ctx gogo.Context, var1 string) error {
 }
 
 func ArgumentOptionalFunc(ctx gogo.Context, var1 string) error {
-	ctx.Argument(var1).Optional()
+	ctx.Argument(var1).Required()
 	if var1 == "" {
 		fmt.Println("var1 is empty")
 		return nil

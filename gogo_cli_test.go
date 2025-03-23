@@ -204,6 +204,7 @@ func TestUniqueGoModArgParsing(t *testing.T) {
 	}
 }
 
+// Here we're testing pure flag parsing, without any positional arguments
 func TestFlagArgParsing(t *testing.T) {
 	testFolder := "standard"
 
@@ -236,6 +237,69 @@ func TestFlagArgParsing(t *testing.T) {
 			command:  "TwoDifferentArguments",
 			args:     []string{"--arg2"},
 			expected: "TwoDifferentArguments with arg1: , arg2: true",
+		},
+		{
+			// flags in different order
+			command:  "TwoDifferentArguments",
+			args:     []string{"--arg2", "--arg1=passedArg1"},
+			expected: "TwoDifferentArguments with arg1: passedArg1, arg2: true",
+		},
+	}
+
+	setupBinaries(t, testFolder)
+
+	for _, test := range tests {
+		t.Run(test.command, func(t *testing.T) {
+			// run the scenario
+			scenarioCmd := sh.Cmd("/tmp/gadgets " + test.command).SetEnv([]string{})
+			scenarioCmd.SetEnv([]string{})
+			if len(test.args) > 0 {
+				scenarioCmd.SetArgs(test.args...)
+			}
+			result, err := scenarioCmd.String()
+			require.NoErrorf(t, err, "failed to run scenario %s: %s", test.command, result)
+			require.Equal(t, test.expected, strings.TrimSpace(result))
+		})
+	}
+}
+
+func TestFlagAndPositionalArgs(t *testing.T) {
+	testFolder := "standard"
+
+	tests := []struct {
+		command  string
+		args     []string
+		expected string
+	}{
+		{
+			// three arg func with all positional args
+			command:  "ThreeArgFuncWithContext",
+			args:     []string{"passedArg1", "true", "3"},
+			expected: "ThreeArgFuncWithContext with name: passedArg1, include: false, value: 3",
+		},
+		{
+			// three arg func with all flag args
+			command:  "ThreeArgFuncWithContext",
+			args:     []string{"--name=passedArg1", "--include", "--value=3"},
+			expected: "ThreeArgFuncWithContext with name: passedArg1, include: true, value: 3",
+		},
+		{
+			// three arg func with mixed positional and flag args
+			command:  "ThreeArgFuncWithContext",
+			args:     []string{"passedArg1", "--include", "--value=3"},
+			expected: "ThreeArgFuncWithContext with name: passedArg1, include: true, value: 3",
+		},
+		{
+			// three arg func with mixed positional and flag args
+			command:  "ThreeArgFuncWithContext",
+			args:     []string{"passedArg1", "true", "--value=3"},
+			expected: "ThreeArgFuncWithContext with name: passedArg1, include: true, value: 3",
+		},
+		{
+			// three arg func with mixed positional and flag args
+			command:  "ThreeArgFuncWithContext",
+			args:     []string{"--value=3", "passedArg1", "true"},
+			expected: "ThreeArgFuncWithContext with name: passedArg1, include: true, value: 3",
 		},
 	}
 

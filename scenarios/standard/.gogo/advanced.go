@@ -37,3 +37,10 @@ func AdvancedFunction(ctx gogo.Context, name string, include bool, value int) er
 
 	return nil
 }
+
+func ThreeArgFuncWithContext(ctx gogo.Context, name string, include bool, value int) error {
+	ctx.ShortDescription("this function tests a function with three arguments, and only one required element").
+		Argument(name).Required()
+	fmt.Printf("ThreeArgFuncWithContext with name: %s, include: %v, value: %d\n", name, include, value)
+	return nil
+}
