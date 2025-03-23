@@ -94,9 +94,17 @@ func HydrateFromPositional(opts any, positional []string) error {
 
 		fieldVal := val.Field(field.index)
 		fieldType := typ.Field(field.index)
+		value := positional[field.position]
+		// if the field is just two quotes, skip setting it.
+		// this is when a positional argument calling a gadget is filled with two quotes to represent a blank value
+		if value == `""` || value == `\"\"` {
+			// and skip setting the field
+			usedArgs[field.position] = true
+			continue
+		}
 
 		// Set the value based on field type
-		if err := setFieldFromString(fieldVal, positional[field.position], fieldType.Name); err != nil {
+		if err := setFieldFromString(fieldVal, value, fieldType.Name); err != nil {
 			return err
 		}
 

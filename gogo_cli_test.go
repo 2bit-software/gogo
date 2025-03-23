@@ -45,7 +45,7 @@ func setupBinaries(t *testing.T, testFolder string) {
 	require.NoError(t, err)
 
 	// see if we can build the scenario
-	cmd = sh.Cmd("/tmp/gogo build --verbose -o /tmp/gadgets")
+	cmd = sh.Cmd("/tmp/gogo build --verbose -o /tmp/gadgets").AddEnv([]string{"GOGO_DISABLE_CACHE=true"})
 	gadgetBuildResult, err := cmd.String()
 	require.NoErrorf(t, err, "error building scenario: %s", gadgetBuildResult)
 	require.NotEmpty(t, gadgetBuildResult)
@@ -81,6 +81,13 @@ func TestStandardArgParsing(t *testing.T) {
 			command:  "SingleArgument",
 			args:     []string{"passedArg1"},
 			expected: "SingleArgument with arg1: passedArg1",
+		},
+		{
+			// this test shows that if you fill a positional arg with an empty string (two quotes),
+			// then we strip it out.
+			command:  "SingleArgument",
+			args:     []string{`""`},
+			expected: "SingleArgument with arg1:",
 		},
 		{
 			command:  "SingleArgumentAndErrorReturn",

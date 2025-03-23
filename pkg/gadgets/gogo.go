@@ -89,12 +89,6 @@ func Run(opts RunOpts, args []string) error {
 	if err != nil {
 		return err
 	}
-	// if the args contain any empty strings, they are placeholder values, so they need to send on quoted strings
-	for i, arg := range args {
-		if arg == "" {
-			args[i] = `""`
-		}
-	}
 	debug.Printf("Running built binary: %s with args %v\n", opts.BinaryFilepath, args)
 	// run the binary with the desire target func and arguments, unless it exists in the cache
 	ex := sh.Cmd(opts.BinaryFilepath).SetArgs(args...)
