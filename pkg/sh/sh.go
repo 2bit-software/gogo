@@ -93,6 +93,11 @@ func (e *Executor) SetEnv(env []string) *Executor {
 	return e
 }
 
+func (e *Executor) AddEnv(env []string) *Executor {
+	e.env = append(e.env, env...)
+	return e
+}
+
 // StdOut runs the command, and returns the stdout as a string
 func (e *Executor) StdOut() (string, error) {
 	var out bytes.Buffer
@@ -103,9 +108,9 @@ func (e *Executor) StdOut() (string, error) {
 
 // String runs the command, and returns the combined stdout and stderr as a string
 func (e *Executor) String() (string, error) {
-	var out bytes.Buffer
-	e.stdOut = &out
-	e.stdErr = &out
+	out := &bytes.Buffer{}
+	e.stdOut = out
+	e.stdErr = out
 	err := e.Run()
 	return out.String(), err
 }
