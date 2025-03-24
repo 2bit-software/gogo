@@ -8,9 +8,12 @@
 package gadgets
 
 import (
+	"github.com/2bit-software/gogo/pkg/mod"
+	"github.com/stretchr/testify/require"
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"path"
 	"testing"
 
 	"github.com/bradleyjkemp/cupaloy"
@@ -36,11 +39,13 @@ func TestParseImports(t *testing.T) {
 			expectedImport: "goCtx",
 		},
 	}
+	root, err := mod.FindModuleRoot()
+	require.NoError(t, err)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Parse the source code
 			fset := token.NewFileSet()
-			file, err := parser.ParseFile(fset, tt.filePath, nil, 0)
+			file, err := parser.ParseFile(fset, path.Join(root, tt.filePath), nil, 0)
 			if err != nil {
 				t.Fatalf("error parsing file: %v", err)
 			}
@@ -73,11 +78,13 @@ func TestFindGoGoFunctions(t *testing.T) {
 			filePath:  "scenarios/aliased/.gogo/aliased.go",
 		},
 	}
+	root, err := mod.FindModuleRoot()
+	require.NoError(t, err)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Parse the source code
 			fset := token.NewFileSet()
-			file, err := parser.ParseFile(fset, tt.filePath, nil, 0)
+			file, err := parser.ParseFile(fset, path.Join(root, tt.filePath), nil, 0)
 			if err != nil {
 				t.Fatalf("error parsing file: %v", err)
 			}
@@ -114,9 +121,11 @@ func TestNoChainedOptions(t *testing.T) {
 			funcName: "BasicArgument",
 		},
 	}
+	root, err := mod.FindModuleRoot()
+	require.NoError(t, err)
 	// Parse the source code
 	fset := token.NewFileSet()
-	astFile, err := parser.ParseFile(fset, "scenarios/standard/.gogo/basic.go", nil, 0)
+	astFile, err := parser.ParseFile(fset, path.Join(root, "scenarios/standard/.gogo/basic.go"), nil, 0)
 	if err != nil {
 		t.Fatalf("error parsing file: %v", err)
 	}

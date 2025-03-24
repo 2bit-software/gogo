@@ -86,7 +86,8 @@ func ensureGoMod(folder, goModPath string) error {
 
 func ensureDeps(folder string) error {
 	// go get the gogo context
-	getPath := fmt.Sprintf("%s@latest", GOGOIMPORTPATH)
+	// TODO: should this version (@main) correlate to something on the local machine?
+	getPath := fmt.Sprintf("%s@main", GOGOIMPORTPATH)
 	err := sh.Cmd(fmt.Sprintf("go get %s", getPath)).Dir(folder).RunAndStream()
 	if err != nil {
 		return err
