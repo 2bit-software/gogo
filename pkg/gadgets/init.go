@@ -55,9 +55,13 @@ func Init(folder, goModPath string) error {
 
 	// handle example "hello" function
 	err = renderExamples(folder, goModPath+"/pkg", GOGOIMPORTPATH)
+	if err != nil {
+		return err
+	}
 
 	// ensure the dependencies are installed
-	return ensureDeps(folder)
+	err = ensureDeps(folder)
+	return err
 }
 
 // ensureGoMod makes sure a go.mod file exists in the folder, and if not, creates one.

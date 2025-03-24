@@ -24,7 +24,7 @@ func TestInitLocal(t *testing.T) {
 	require.NoError(t, err)
 
 	folder := path.Join(".", ".gogo")
-	err = Init(folder, GOGOIMPORTPATH)
+	err = Init(folder, "github.com/example/software")
 	require.NoError(t, err)
 
 	// assert the .gogo folder exists
