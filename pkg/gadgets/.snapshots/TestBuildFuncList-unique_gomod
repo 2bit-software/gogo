@@ -1,21 +1,21 @@
-([]scripts.function) (len=5) {
-  (scripts.function) {
+([]gadgets.function) (len=5) {
+  (gadgets.function) {
     Name: (string) (len=16) "BasicDescription",
     Comment: (string) "",
     Description: (string) (len=17) "set a description",
     Example: (string) "",
-    Arguments: ([]scripts.argument) <nil>,
+    Arguments: ([]gadgets.argument) <nil>,
     UseGoGoCtx: (bool) true,
     GoGoCtxVariableName: (string) (len=3) "ctx",
     ErrorReturn: (bool) true
   },
-  (scripts.function) {
+  (gadgets.function) {
     Name: (string) (len=13) "BasicArgument",
     Comment: (string) "",
     Description: (string) "",
     Example: (string) "",
-    Arguments: ([]scripts.argument) (len=2) {
-      (scripts.argument) {
+    Arguments: ([]gadgets.argument) (len=2) {
+      (gadgets.argument) {
         Name: (string) (len=4) "var1",
         Type: (string) (len=6) "string",
         Long: (string) "",
@@ -26,7 +26,7 @@
         AllowedValues: ([]interface {}) <nil>,
         RestrictedValues: ([]interface {}) <nil>
       },
-      (scripts.argument) {
+      (gadgets.argument) {
         Name: (string) (len=4) "var2",
         Type: (string) (len=4) "bool",
         Long: (string) "",
@@ -42,13 +42,13 @@
     GoGoCtxVariableName: (string) (len=3) "ctx",
     ErrorReturn: (bool) true
   },
-  (scripts.function) {
+  (gadgets.function) {
     Name: (string) (len=24) "BasicDescriptionArgument",
     Comment: (string) "",
     Description: (string) "",
     Example: (string) "",
-    Arguments: ([]scripts.argument) (len=2) {
-      (scripts.argument) {
+    Arguments: ([]gadgets.argument) (len=2) {
+      (gadgets.argument) {
         Name: (string) (len=4) "var1",
         Type: (string) (len=6) "string",
         Long: (string) "",
@@ -59,7 +59,7 @@
         AllowedValues: ([]interface {}) <nil>,
         RestrictedValues: ([]interface {}) <nil>
       },
-      (scripts.argument) {
+      (gadgets.argument) {
         Name: (string) (len=4) "var2",
         Type: (string) (len=4) "bool",
         Long: (string) "",
@@ -75,13 +75,13 @@
     GoGoCtxVariableName: (string) (len=3) "ctx",
     ErrorReturn: (bool) true
   },
-  (scripts.function) {
+  (gadgets.function) {
     Name: (string) (len=15) "BasicCtxChained",
     Comment: (string) "",
     Description: (string) (len=60) "set a description, this can use any go code to set the value",
     Example: (string) "",
-    Arguments: ([]scripts.argument) (len=2) {
-      (scripts.argument) {
+    Arguments: ([]gadgets.argument) (len=2) {
+      (gadgets.argument) {
         Name: (string) (len=4) "var1",
         Type: (string) (len=6) "string",
         Long: (string) "",
@@ -92,7 +92,7 @@
         AllowedValues: ([]interface {}) <nil>,
         RestrictedValues: ([]interface {}) <nil>
       },
-      (scripts.argument) {
+      (gadgets.argument) {
         Name: (string) (len=4) "var2",
         Type: (string) (len=4) "bool",
         Long: (string) "",
@@ -108,13 +108,13 @@
     GoGoCtxVariableName: (string) (len=3) "ctx",
     ErrorReturn: (bool) true
   },
-  (scripts.function) {
+  (gadgets.function) {
     Name: (string) (len=20) "BasicArgumentChained",
     Comment: (string) "",
     Description: (string) "",
     Example: (string) "",
-    Arguments: ([]scripts.argument) (len=2) {
-      (scripts.argument) {
+    Arguments: ([]gadgets.argument) (len=2) {
+      (gadgets.argument) {
         Name: (string) (len=4) "var1",
         Type: (string) (len=6) "string",
         Long: (string) "",
@@ -133,7 +133,7 @@
           (string) (len=1) "6"
         }
       },
-      (scripts.argument) {
+      (gadgets.argument) {
         Name: (string) (len=4) "var2",
         Type: (string) (len=4) "bool",
         Long: (string) "",
