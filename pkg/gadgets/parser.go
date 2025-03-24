@@ -298,60 +298,6 @@ func fileHasFunc(filePath string, funcName string) bool {
 	return false
 }
 
-// getGoGoFunctions parses the AST and finds all the functions
-// that are valid GoGoFunctions/entrypoints
-func getGoGoFunctions(gogoAlias string, file *ast.File) []*ast.FuncDecl {
-	var validFunctions []*ast.FuncDecl
-
-	for _, decl := range file.Decls {
-		funcDecl, ok := decl.(*ast.FuncDecl)
-		if !ok {
-			continue
-		}
-
-		// Check if the function is exported
-		if !funcDecl.Name.IsExported() {
-			continue
-		}
-
-		// Check if the function has at least one parameter
-		if len(funcDecl.Type.Params.List) == 0 {
-			continue
-		}
-
-		// Check if the first parameter is of type gogo.Context
-		firstParam := funcDecl.Type.Params.List[0]
-		if len(firstParam.Names) != 1 {
-			continue
-		}
-
-		firstParamType, ok := firstParam.Type.(*ast.SelectorExpr)
-		if !ok {
-			continue
-		}
-
-		if firstParamType.X.(*ast.Ident).Name != gogoAlias || firstParamType.Sel.Name != "Context" {
-			continue
-		}
-
-		// Check if the return value is either empty or an error
-		if len(funcDecl.Type.Results.List) > 1 {
-			continue
-		}
-
-		if len(funcDecl.Type.Results.List) == 1 {
-			returnType, ok := funcDecl.Type.Results.List[0].Type.(*ast.Ident)
-			if !ok || returnType.Name != "error" {
-				continue
-			}
-		}
-
-		validFunctions = append(validFunctions, funcDecl)
-	}
-
-	return validFunctions
-}
-
 // getGoGoImportName finds the alias or default name of the GoGo import
 func getGoGoImportName(file *ast.File) (string, bool) {
 	for _, imp := range file.Imports {
@@ -388,16 +334,6 @@ func isGoGoCtx(alias string, firstParam *ast.Field) bool {
 		}
 	}
 	return false
-}
-
-// getFuncByName returns a function declaration by name
-func getFuncByName(funcDecls []*ast.FuncDecl, name string) *ast.FuncDecl {
-	for _, funcDecl := range funcDecls {
-		if funcDecl.Name.Name == name {
-			return funcDecl
-		}
-	}
-	return nil
 }
 
 // GetPlainType takes an *ast.Field and returns a plain-English type description

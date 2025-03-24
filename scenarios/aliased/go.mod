@@ -4,7 +4,7 @@ go 1.23.4
 
 replace github.com/2bit-software/gogo/pkg/gogo => ./../../pkg/gogo
 
-require github.com/2bit-software/gogo/pkg/gogo v0.0.0-20250323233508-d085435bda1f
+require github.com/2bit-software/gogo/pkg/gogo v0.0.0-20250324001002-81f0b0e68f22
 
 require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect

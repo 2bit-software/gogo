@@ -14,9 +14,10 @@ import (
 	"go/parser"
 	"go/token"
 	"path"
+	"slices"
+	"strings"
 	"testing"
 
-	"github.com/bradleyjkemp/cupaloy"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -58,49 +59,6 @@ func TestParseImports(t *testing.T) {
 	}
 }
 
-// This loads a file, and determines which functions are exported.
-func TestFindGoGoFunctions(t *testing.T) {
-	tests := []struct {
-		name      string
-		gogoAlias string
-		filePath  string
-		expected  any
-		err       bool
-	}{
-		{
-			name:      "basic",
-			gogoAlias: "gogo",
-			filePath:  "scenarios/standard/.gogo/basic.go",
-		},
-		{
-			name:      "aliased",
-			gogoAlias: "gogo2",
-			filePath:  "scenarios/aliased/.gogo/aliased.go",
-		},
-	}
-	root, err := mod.FindModuleRoot()
-	require.NoError(t, err)
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			// Parse the source code
-			fset := token.NewFileSet()
-			file, err := parser.ParseFile(fset, path.Join(root, tt.filePath), nil, 0)
-			if err != nil {
-				t.Fatalf("error parsing file: %v", err)
-			}
-			funcs := getGoGoFunctions(tt.gogoAlias, file)
-
-			// Convert the result to a slice of function names
-			funcDeclNames := make([]string, len(funcs))
-			for i, funcDecl := range funcs {
-				funcDeclNames[i] = funcDecl.Name.Name
-			}
-
-			cupaloy.SnapshotT(t, funcDeclNames)
-		})
-	}
-}
-
 // test when they are not chained together.
 // TODO: what is this test good for? we need to update it.
 // I think what we really want is to just test using every function signature
@@ -114,34 +72,27 @@ func TestNoChainedOptions(t *testing.T) {
 	}{
 		{
 			name:     "ctx description",
-			funcName: "Description",
+			funcName: "DescriptionOnly",
 		},
 		{
-			name:     "basic argument",
-			funcName: "BasicArgument",
+			name:     "single argument",
+			funcName: "SingleArgument",
 		},
 	}
 	root, err := mod.FindModuleRoot()
 	require.NoError(t, err)
 	// Parse the source code
-	fset := token.NewFileSet()
-	astFile, err := parser.ParseFile(fset, path.Join(root, "scenarios/standard/.gogo/basic.go"), nil, 0)
-	if err != nil {
-		t.Fatalf("error parsing file: %v", err)
-	}
-	alias, _ := getGoGoImportName(astFile)
-	funcs := getGoGoFunctions(alias, astFile)
-	if funcs == nil {
-		t.Fatal("expectedComment functions to be found")
-	}
+	funcs, err := parse(path.Join(root, "scenarios/standard/.gogo/basic.go"))
+	require.NoError(t, err)
+	require.NotNil(t, funcs)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// for each funcNames, retrieve that function
-			funk := getFuncByName(funcs, tt.funcName)
-			if funk == nil {
-				t.Fatalf("expectedComment function %q to be found", tt.funcName)
-			}
+			isInside := slices.ContainsFunc(funcs, func(f function) bool {
+				return strings.EqualFold(f.Name, tt.funcName)
+			})
+			assert.True(t, isInside)
 		})
 	}
 }
