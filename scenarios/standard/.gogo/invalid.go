@@ -17,6 +17,13 @@ func WrongReturnType(ctx gogo.Context, var1 string, var2 bool) string {
 	return ""
 }
 
+type MyType struct{}
+
+// WrongCompoundType Compound types which should be ignored
+func WrongCompoundType(ctx gogo.Context, var1 MyType) error {
+	return nil
+}
+
 // the following should not be valid because they are not exported functions,
 // regardless of their signature
 

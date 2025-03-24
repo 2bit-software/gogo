@@ -119,6 +119,10 @@ func parseSource(src string) ([]function, error) {
 		if !funcDecl.Name.IsExported() {
 			return true
 		}
+		// check if all the arguments are acceptable
+		if !acceptableArguments(gogoAlias, funcDecl) {
+			return true
+		}
 		// check if the function has an acceptable return type
 		if !acceptableReturnTypes(funcDecl) {
 			return true
@@ -183,6 +187,51 @@ func acceptableReturnTypes(funcDecl *ast.FuncDecl) bool {
 		return false
 	}
 	return hasErrorReturn(funcDecl)
+}
+
+// acceptableArguments checks to make sure that all the arguments are scalar types, except
+// for the gogo.Context, if it exists
+func acceptableArguments(alias string, funcDecl *ast.FuncDecl) bool {
+	if funcDecl == nil {
+		return false
+	}
+	if funcDecl.Type == nil {
+		return false
+	}
+	// no args, so it's fine
+	if funcDecl.Type.Params == nil {
+		return true
+	}
+	for _, param := range funcDecl.Type.Params.List {
+		if isGoGoCtx(alias, param) {
+			continue
+		}
+		if !isScalarType(param) {
+			return false
+		}
+	}
+	return true
+}
+
+// isScalarType checks if the given parameter is a scalar type
+func isScalarType(param *ast.Field) bool {
+	if param == nil || param.Type == nil {
+		return false
+	}
+
+	// Identify the type node
+	ident, ok := param.Type.(*ast.Ident)
+	if !ok {
+		return false
+	}
+
+	// Check if it's one of our defined scalar types
+	switch ident.Name {
+	case "string", "int", "float64", "bool":
+		return true
+	default:
+		return false
+	}
 }
 
 func hasErrorReturn(funcDecl *ast.FuncDecl) bool {

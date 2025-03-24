@@ -92,24 +92,6 @@ func TestParse(t *testing.T) {
 			},
 		},
 		{
-			name: "non-gogo context",
-			src: `package gogo
-				import "context"
-				func NewFunc(ctx context.Context) {
-					ctx.Value("key")
-				}`,
-			expected: function{
-				Name:       "NewFunc",
-				UseGoGoCtx: false,
-				Arguments: []argument{
-					{
-						Name: "ctx",
-						Type: "context.Context",
-					},
-				},
-			},
-		},
-		{
 			// a gogo context is a special type of argument,
 			// so it should not show up in the arguments map
 			// but it should be marked as a gogo context
