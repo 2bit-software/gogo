@@ -57,6 +57,10 @@ func parseDirectory(dir string) ([]function, error) {
 		if item.IsDir() {
 			continue
 		}
+		// if it's a test file, skip it
+		if strings.HasSuffix(item.Name(), "_test.go") {
+			continue
+		}
 		// make sure it's a go file
 		if filepath.Ext(item.Name()) != ".go" {
 			continue
@@ -208,6 +212,12 @@ func acceptableArguments(alias string, funcDecl *ast.FuncDecl) bool {
 		}
 		if !isScalarType(param) {
 			return false
+		}
+		// check if the type is a pointer (we don't allow pointers)
+		if starExpr, ok := param.Type.(*ast.StarExpr); ok {
+			if starExpr != nil {
+				return false
+			}
 		}
 	}
 	return true

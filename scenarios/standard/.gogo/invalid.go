@@ -24,6 +24,12 @@ func WrongCompoundType(ctx gogo.Context, var1 MyType) error {
 	return nil
 }
 
+// InvalidExportedWithPointerArgs should not be valid
+// This should not show up.
+func InvalidExportedWithPointerArgs(ctx gogo.Context, var1 *string, var2 *bool) error {
+	return nil
+}
+
 // the following should not be valid because they are not exported functions,
 // regardless of their signature
 
