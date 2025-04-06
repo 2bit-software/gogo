@@ -96,6 +96,13 @@ func NewApp() *cli.App {
 				Usage:   "Verbose output",
 				EnvVars: []string{"GOGO_VERBOSE"},
 			},
+			// select the exact folder to use for gogo files
+			&cli.StringFlag{
+				Name:    "source",
+				Usage:   "Choose a source folder for gogo files",
+				Aliases: nil,
+				EnvVars: []string{"GOGO_SOURCE_DIR"},
+			},
 		},
 		Action: rootAction,
 		Commands: []*cli.Command{

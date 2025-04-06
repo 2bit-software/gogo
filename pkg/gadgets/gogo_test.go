@@ -4,6 +4,7 @@ import (
 	"github.com/2bit-software/gogo/pkg/mod"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"log"
 	"os"
 	"path"
 	"strings"
@@ -83,4 +84,26 @@ func TestShortDescription(t *testing.T) {
 		}
 	}
 	assert.True(t, found)
+}
+
+func TestBuild(t *testing.T) {
+	l := log.New(os.Stdout, "", log.LstdFlags)
+	root, err := mod.FindModuleRoot()
+	require.NoError(t, err)
+	// make a temp dir
+	tmpDir, err := os.MkdirTemp("", "gogo-test")
+	require.NoError(t, err)
+
+	opts := BuildOpts{
+		KeepArtifacts:  false,
+		DisableCache:   true,
+		Optimize:       false,
+		SourceDir:      path.Join(root, "scenarios", "standard", ".gogo"),
+		OutputDir:      tmpDir,
+		BinaryFilepath: path.Join(tmpDir, "gadgets"),
+	}
+
+	// build the function
+	err = Build(l, opts)
+	require.NoError(t, err)
 }

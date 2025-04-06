@@ -1,6 +1,8 @@
 package gogo
 
 import (
+	"fmt"
+	"github.com/stretchr/testify/assert"
 	"os"
 	"path"
 	"strings"
@@ -12,18 +14,36 @@ import (
 	"github.com/2bit-software/gogo/pkg/sh"
 )
 
-func setupBinaries(t *testing.T, testFolder string) {
+const (
+	GOGO_FILENAME = "gogo"
+)
+
+// returns the path to the gadgets binary
+func setupBinaries(t *testing.T, testFolder string) string {
+	// make a new temporary directory for the test
+	dir, err := os.MkdirTemp("", "gogo_test")
+	require.NoError(t, err)
+
+	gogoFilePath := path.Join(dir, GOGO_FILENAME)
+	cwd, err := os.Getwd()
+	require.NoError(t, err)
+
+	// list the funcs
+	funcs, err := sh.Cmd("go run cmd/gogo/main.go").String()
+	require.NoError(t, err)
+	fmt.Println(funcs)
+
 	// build the gogo binary
 	// delete the /tmp/gogo binary if it exists
-	_ = os.Remove("/tmp/gogo")
-	cmd := sh.Cmd("go run cmd/gogo/main.go gadget CompileGo --binaryName=gogo --inputFolderPath=./cmd/gogo --outputFolderPath=/tmp --tags=gogo --versionPath=\"github.com/2bit-software/gogo/cmd/gogo/cmds\"\n")
+	_ = os.Remove(gogoFilePath)
+	cmd := sh.Cmd(fmt.Sprintf("go run cmd/gogo/main.go gadget CompileGo --binaryName=gogo --inputFolderPath=./cmd/gogo --outputFolderPath=%s --tags=gogo --versionPath=\"github.com/2bit-software/gogo/cmd/gogo/cmds\"\n", dir))
 	buildResult, err := cmd.String()
 	require.NoErrorf(t, err, "failed to build gogo binary: %s", buildResult)
 
 	// make sure the binary exists and runs
-	_, err = os.Stat("/tmp/gogo")
+	_, err = os.Stat(gogoFilePath)
 	require.NoError(t, err)
-	res, err := sh.Cmd("/tmp/gogo --version").String()
+	res, err := sh.Cmd(fmt.Sprintf("%s --version", gogoFilePath)).String()
 	require.NoError(t, err)
 	require.Truef(t, strings.HasPrefix(res, "v"), "expected version string to start with 'v', got %s", res)
 
@@ -31,24 +51,29 @@ func setupBinaries(t *testing.T, testFolder string) {
 	require.NoError(t, err)
 
 	// reset the working directory after the test
-	cwd, err := os.Getwd()
 	require.NoError(t, err)
 	defer func() {
 		_ = os.Chdir(cwd)
 	}()
 
-	scenarioDir := path.Join(root, "scenarios")
-	t.Logf("scenarioDir: %s", path.Join(scenarioDir, testFolder))
+	scenarioDir := path.Join(root, "scenarios", testFolder)
+	t.Logf("scenarioDir: %s", scenarioDir)
 
-	// change to the scenario dir
-	err = os.Chdir(path.Join(scenarioDir, testFolder))
-	require.NoError(t, err)
+	gadgetsPath := path.Join(dir, "gadgets")
 
 	// see if we can build the scenario
-	cmd = sh.Cmd("/tmp/gogo build --verbose -o /tmp/gadgets").AddEnv([]string{"GOGO_DISABLE_CACHE=true"})
+	cmd = sh.Cmd(fmt.Sprintf("%s build --verbose -o %s", gogoFilePath, gadgetsPath)).
+		AddEnv([]string{"GOGO_DISABLE_CACHE=true"}).Dir(scenarioDir)
 	gadgetBuildResult, err := cmd.String()
 	require.NoErrorf(t, err, "error building scenario: %s", gadgetBuildResult)
 	require.NotEmpty(t, gadgetBuildResult)
+	return gadgetsPath
+}
+
+func TestSetupBinaries(t *testing.T) {
+	testFolder := "standard/.gogo"
+	gadgetsBinaryPath := setupBinaries(t, testFolder)
+	assert.FileExists(t, gadgetsBinaryPath)
 }
 
 // TODO: try parsing args using a mix of --flags, positional args, and using defaults
@@ -116,13 +141,12 @@ func TestStandardArgParsing(t *testing.T) {
 		},
 	}
 
-	setupBinaries(t, testFolder)
+	gadgetsBinaryPath := setupBinaries(t, testFolder)
 
 	for _, test := range tests {
 		t.Run(test.command, func(t *testing.T) {
 			// run the scenario
-			scenarioCmd := sh.Cmd("/tmp/gadgets " + test.command).SetEnv([]string{})
-			scenarioCmd.SetEnv([]string{})
+			scenarioCmd := sh.Cmd(fmt.Sprintf("%s %s", gadgetsBinaryPath, test.command)).SetEnv([]string{})
 			if len(test.args) > 0 {
 				scenarioCmd.SetArgs(test.args...)
 			}
@@ -156,13 +180,12 @@ func TestAliasedCtxArgParsing(t *testing.T) {
 		},
 	}
 
-	setupBinaries(t, testFolder)
+	gadgetsBinaryPath := setupBinaries(t, testFolder)
 
 	for _, test := range tests {
 		t.Run(test.command, func(t *testing.T) {
 			// run the scenario
-			scenarioCmd := sh.Cmd("/tmp/gadgets " + test.command).SetEnv([]string{})
-			scenarioCmd.SetEnv([]string{})
+			scenarioCmd := sh.Cmd(fmt.Sprintf("%s %s", gadgetsBinaryPath, test.command)).SetEnv([]string{})
 			if len(test.args) > 0 {
 				scenarioCmd.SetArgs(test.args...)
 			}
@@ -194,13 +217,12 @@ func TestUniqueGoModArgParsing(t *testing.T) {
 		},
 	}
 
-	setupBinaries(t, testFolder)
+	gadgetsBinaryPath := setupBinaries(t, testFolder)
 
 	for _, test := range tests {
 		t.Run(test.command, func(t *testing.T) {
 			// run the scenario
-			scenarioCmd := sh.Cmd("/tmp/gadgets " + test.command).SetEnv([]string{})
-			scenarioCmd.SetEnv([]string{})
+			scenarioCmd := sh.Cmd(fmt.Sprintf("%s %s", gadgetsBinaryPath, test.command)).SetEnv([]string{})
 			if len(test.args) > 0 {
 				scenarioCmd.SetArgs(test.args...)
 			}
@@ -253,13 +275,12 @@ func TestFlagArgParsing(t *testing.T) {
 		},
 	}
 
-	setupBinaries(t, testFolder)
+	gadgetsBinaryPath := setupBinaries(t, testFolder)
 
 	for _, test := range tests {
 		t.Run(test.command, func(t *testing.T) {
 			// run the scenario
-			scenarioCmd := sh.Cmd("/tmp/gadgets " + test.command).SetEnv([]string{})
-			scenarioCmd.SetEnv([]string{})
+			scenarioCmd := sh.Cmd(fmt.Sprintf("%s %s", gadgetsBinaryPath, test.command)).SetEnv([]string{})
 			if len(test.args) > 0 {
 				scenarioCmd.SetArgs(test.args...)
 			}
@@ -311,13 +332,12 @@ func TestFlagAndPositionalArgs(t *testing.T) {
 		},
 	}
 
-	setupBinaries(t, testFolder)
+	gadgetsBinaryPath := setupBinaries(t, testFolder)
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			// run the scenario
-			scenarioCmd := sh.Cmd("/tmp/gadgets " + test.command).SetEnv([]string{})
-			scenarioCmd.SetEnv([]string{})
+			scenarioCmd := sh.Cmd(fmt.Sprintf("%s %s", gadgetsBinaryPath, test.command)).SetEnv([]string{})
 			if len(test.args) > 0 {
 				scenarioCmd.SetArgs(test.args...)
 			}

@@ -68,6 +68,9 @@ func Run(opts RunOpts, args []string) error {
 	if err != nil {
 		return err
 	}
+	if opts.SourceDir != "" {
+		cwd = opts.SourceDir
+	}
 
 	gogoFile, found, err := findLocalFunc(cwd, funcToRun, gogoTags, gogoFolders)
 	if err != nil {
@@ -83,7 +86,9 @@ func Run(opts RunOpts, args []string) error {
 		return err
 	}
 
-	opts.SourceDir = gogoFolder
+	if strings.EqualFold(strings.TrimSpace(opts.SourceDir), "") {
+		opts.SourceDir = gogoFolder
+	}
 
 	err = getBuiltBinary(debug, opts.BuildOpts)
 	if err != nil {
@@ -118,17 +123,44 @@ func BuildLocal(opts RunOpts) error {
 	if err != nil {
 		return err
 	}
-	cwd, err := os.Getwd()
+
+	gogoFiles, err := buildRequestedDir(opts)
 	if err != nil {
 		return err
 	}
-	gogoFiles, err := findLocalFiles(cwd, gogoFolders)
-	if err != nil {
-		return err
+	if len(gogoFiles) == 0 {
+		return fmt.Errorf("no gogo files found")
 	}
+
 	gogoFolder := path.Dir(gogoFiles[0])
 	opts.SourceDir = gogoFolder
 	return Build(debug, opts.BuildOpts)
+}
+
+func buildRequestedDir(opts RunOpts) ([]string, error) {
+	// if there is no source dir, assume it's the cwd
+	if opts.SourceDir == "" {
+		cwd, err := os.Getwd()
+		if err != nil {
+			return nil, err
+		}
+		gogoFiles, err := findLocalFiles(cwd, gogoFolders)
+		if err != nil {
+			return nil, err
+		}
+		return gogoFiles, nil
+	}
+	opts.GetLogger().Printf("Building requested directory: %s\n", opts.SourceDir)
+
+	// if we have a source dir, we need to check if it exists
+	if _, err := os.Stat(opts.SourceDir); os.IsNotExist(err) {
+		return nil, fmt.Errorf("source directory %s does not exist", opts.SourceDir)
+	}
+	gogoFiles, err := findGoFiles(opts.SourceDir)
+	if err != nil {
+		return nil, err
+	}
+	return gogoFiles, nil
 }
 
 func BuildGlobal(opts RunOpts) error {
@@ -140,6 +172,9 @@ func ShowFuncList(opts RunOpts) (int, error) {
 	wd, err := os.Getwd()
 	if err != nil {
 		return 0, err
+	}
+	if opts.SourceDir != "" {
+		wd = opts.SourceDir
 	}
 	// then we are listing the available functions
 	funcList, err := BuildFuncList(opts, wd)

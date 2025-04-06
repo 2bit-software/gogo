@@ -211,6 +211,7 @@ func GenerateMainFile(opts RunOpts) error {
 func Build(log *log.Logger, buildOpts BuildOpts) error {
 	mainFilePath := filepath.Join(buildOpts.SourceDir, MAIN_FILENAME)
 	log.Printf("Building main go file: %v\n", mainFilePath)
+
 	err := buildSource(true, buildOpts.SourceDir, mainFilePath)
 
 	// delete the main.gogo.go file when we're done
@@ -230,7 +231,11 @@ func Build(log *log.Logger, buildOpts BuildOpts) error {
 	}
 
 	// build binary
-	return buildBinary(buildOpts.Optimize, buildOpts.SourceDir, buildOpts.BinaryFilepath)
+	err = buildBinary(buildOpts.Optimize, buildOpts.SourceDir, buildOpts.BinaryFilepath)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // hashString hashes a string using SHA-256
@@ -252,10 +257,16 @@ func buildSource(formatOutput bool, inputDir, filePath string) error {
 	if err != nil {
 		return err
 	}
+	if funcs == nil {
+		return fmt.Errorf("no gogo functions found in %v", inputDir)
+	}
 	// then we need to convert the functions into the renderData
 	rd, err := convertToGoCmds(funcs)
 	if err != nil {
 		return err
+	}
+	if len(rd) == 0 {
+		return fmt.Errorf("no functions found in %v", inputDir)
 	}
 
 	cmd := rd[0]

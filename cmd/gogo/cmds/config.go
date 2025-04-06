@@ -27,7 +27,7 @@ func BuildOptions(ctx *cli.Context) (gadgets.RunOpts, error) {
 			KeepArtifacts:  ctx.Bool("keep-artifacts"),
 			DisableCache:   ctx.Bool("disable-cache"),
 			Optimize:       ctx.Bool("optimize"),
-			SourceDir:      getEnvOrDefault("GOGO_BUILD_DIR", ""),
+			SourceDir:      ctx.String("source"),
 			BinaryFilepath: ctx.String("output"),
 		},
 	}
