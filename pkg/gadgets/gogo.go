@@ -174,7 +174,12 @@ func ShowFuncList(opts RunOpts) (int, error) {
 		return 0, err
 	}
 	if opts.SourceDir != "" {
-		wd = opts.SourceDir
+		// get abs path to the source dir
+		absPath, err := filepath.Abs(opts.SourceDir)
+		if err != nil {
+			return 0, err
+		}
+		wd = absPath
 	}
 	// then we are listing the available functions
 	funcList, err := BuildFuncList(opts, wd)
@@ -197,7 +202,7 @@ func BuildFuncList(opts RunOpts, dir string) ([]function, error) {
 	if dir == "" {
 		dir = "."
 	}
-	localFiles, err := listLocalFiles(dir, opts)
+	localFiles, err := listLocalFiles(dir, opts.SourceDir != "")
 	if err != nil {
 		return nil, err
 	}
@@ -303,7 +308,14 @@ func generateFuncListOutput(funcs []function, width int) []string {
 	return lines
 }
 
-func listLocalFiles(cwd string, opts RunOpts) ([]string, error) {
+// listLocalFiles lists all the local files in the given directory
+// it normally searches for ".gogo" or "magefiles" directories, but if
+// we set it explicitly, it will only look in that exact directory
+func listLocalFiles(cwd string, exactDir bool) ([]string, error) {
+	if exactDir {
+		return findGoFiles(cwd)
+	}
+
 	// this returns a list of files that match our local search
 	localFiles, err := findLocalFiles(cwd, gogoFolders)
 	if err != nil {

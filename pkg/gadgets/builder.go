@@ -80,7 +80,7 @@ type BuildOpts struct {
 	Optimize       bool   `json:"GOGO_OPTIMIZE"`       // should the functions be compiled with optimization flags during this run
 	BinaryFilepath string `json:"GOGO_OUTPUT"`         // the output location of the binary. If this is provided, then we don't calculate the filename or the location
 	// The below properties are calculated by the build process
-	SourceDir          string // the location of the directory where we are currently building the source
+	SourceDir          string `json:"GOGO_SOURCE_DIR"` // the location of the directory where we are currently building the source
 	OutputDir          string // the output location of the binaries
 	OriginalWorkingDir string // the original working directory
 }
