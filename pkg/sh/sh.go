@@ -116,14 +116,16 @@ func (e *Executor) String() (string, error) {
 }
 
 // RunWithWriters executes the command and writes the output to the provided writers
-// If stdOut or stdErr are nil, they are not used.
+// If stdOut or stdErr are nil, they default to os.Stdout and os.Stderr respectively.
 func (e *Executor) RunWithWriters(stdOut, errOut io.Writer) error {
 	if stdOut == nil {
 		stdOut = os.Stdout
 	}
 	if errOut == nil {
-		e.stdErr = errOut
+		errOut = os.Stderr
 	}
+	e.stdOut = stdOut
+	e.stdErr = errOut
 	return e.Run()
 }
 
@@ -174,7 +176,7 @@ func (e *Executor) Run() error {
 	}
 	c.Env = e.env
 	c.Stdout = e.stdOut
-	c.Stderr = e.stdOut
+	c.Stderr = e.stdErr
 	c.Stdin = e.stdIn
 
 	err := c.Run()
