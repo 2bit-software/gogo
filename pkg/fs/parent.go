@@ -2,12 +2,9 @@ package fs
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 	"strings"
 )
-
-// WIP: This is in progress and is an optimization
 
 // PathInfo contains the common parent directory and relative paths
 type PathInfo struct {
@@ -45,11 +42,6 @@ func ParentDirWithRelatives(paths []string) (PathInfo, error) {
 		vol := filepath.VolumeName(p)
 		// Remove volume name if present and split remaining path
 		p = strings.TrimPrefix(p, vol)
-		// determine if the path is a file or a folder, if it's a file, just get the directory
-		fileInfo, err := os.Stat(p)
-		if err == nil && !fileInfo.IsDir() {
-			p = filepath.Dir(p)
-		}
 		components := strings.Split(filepath.Clean(p), string(filepath.Separator))
 		// Prepend volume name as first component if present
 		if vol != "" {
@@ -73,9 +65,9 @@ func ParentDirWithRelatives(paths []string) (PathInfo, error) {
 	}
 
 	// Construct common parent path
-	commonParent := filepath.Join(commonComponents...)
-	if !strings.HasPrefix(commonParent, filepath.VolumeName(commonParent)) {
-		commonParent = string(filepath.Separator) + commonParent
+	commonParent := strings.Join(commonComponents, string(filepath.Separator))
+	if commonParent == "" {
+		commonParent = string(filepath.Separator)
 	}
 
 	// Calculate relative paths
