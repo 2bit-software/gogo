@@ -28,7 +28,18 @@ func MeetsGoVersion(required string) (bool, error) {
 }
 
 func meetsGoVersionHelper(required, current string) (bool, error) {
-	// Compare version using semver library
+	if !strings.HasPrefix(required, "v") {
+		required = "v" + required
+	}
+	if !strings.HasPrefix(current, "v") {
+		current = "v" + current
+	}
+	if !semver.IsValid(required) {
+		return false, fmt.Errorf("invalid required version: %s", required)
+	}
+	if !semver.IsValid(current) {
+		return false, fmt.Errorf("invalid current version: %s", current)
+	}
 	compareResult := semver.Compare(required, current)
 	return compareResult <= 0, nil
 }
